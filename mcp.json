@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-obsidian",
+        "/Users/shane/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+      ]
+    }
+  }
+}

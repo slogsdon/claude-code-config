@@ -5,10 +5,19 @@ Personal configuration repository for Claude Code with custom agents, coding sta
 ## Structure
 
 - **`CLAUDE.md`** - Global coding standards, preferences, and workflow automation
+- **`mcp.json`** - MCP server configurations (reference copy mirroring Claude desktop config)
 - **`agents/`** - Specialized AI agents for development tasks (PHP, security, testing, etc.)
 - **`commands/`** - Custom commands for project management and development workflows
 - **`todos/`** - Task tracking and project coordination files
 - **`projects/`** - Project-specific session data and history
+
+## MCP Servers
+
+Configured in `mcp.json` (mirrors `~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+| Server | Package | Description |
+|--------|---------|-------------|
+| `obsidian` | `mcp-obsidian` | Access to Obsidian vault at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal` |
 
 ## Key Features
 
