@@ -1,5 +1,10 @@
 {
   "mcpServers": {
+    "ollama-agent": {
+      "command": "/opt/homebrew/bin/python3.13",
+      "args": ["/Users/shane/Code/claude-code-config/mcp-servers/ollama-agent/server.py"],
+      "env": {}
+    },
     "obsidian": {
       "command": "npx",
       "args": [
