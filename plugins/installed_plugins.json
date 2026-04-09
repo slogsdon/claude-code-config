@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "plugins": {
+    "example-skills@anthropic-agent-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/shane/.claude/plugins/cache/anthropic-agent-skills/example-skills/69c0b1a06741",
+        "version": "69c0b1a06741",
+        "installedAt": "2026-01-26T19:42:16.433Z",
+        "lastUpdated": "2026-01-26T19:42:16.433Z",
+        "gitCommitSha": "69c0b1a0674149f27b61b2635f935524b6add202"
+      }
+    ],
+    "superpowers@superpowers-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/shane/.claude/plugins/cache/superpowers-marketplace/superpowers/4.2.0",
+        "version": "4.2.0",
+        "installedAt": "2026-02-09T01:03:52.908Z",
+        "lastUpdated": "2026-02-09T01:03:52.908Z",
+        "gitCommitSha": "a98c5dfc9de0df5318f4980d91d24780a566ee60"
+      }
+    ],
+    "superpowers-developing-for-claude-code@superpowers-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/shane/.claude/plugins/cache/superpowers-marketplace/superpowers-developing-for-claude-code/0.3.1",
+        "version": "0.3.1",
+        "installedAt": "2026-02-10T02:13:53.129Z",
+        "lastUpdated": "2026-02-10T02:13:53.129Z",
+        "gitCommitSha": "74afe935da49efe782907e837a27ce618498099a"
+      }
+    ]
+  }
+}

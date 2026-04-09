@@ -4,3 +4,15 @@ projects/
 shell-snapshots/
 statsig/
 todos/
+debug/
+file-history/
+history.jsonl
+settings.json
+settings.local.json
+stats-cache.json
+mcp-needs-auth-cache.json
+session-env/
+sessions/
+cache/
+backups/
+.claude/
