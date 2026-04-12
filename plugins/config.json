@@ -1,3 +1,7 @@
 {
-  "repositories": {}
+  "repositories": {},
+  "skills": {
+    "prefix": "personal",
+    "path": "skills"
+  }
 }
