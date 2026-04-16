@@ -16,3 +16,8 @@ sessions/
 cache/
 backups/
 .claude/
+paste-cache/
+plugins/install-counts-cache.json
+telemetry/
+tasks/
+plugins/marketplaces/
