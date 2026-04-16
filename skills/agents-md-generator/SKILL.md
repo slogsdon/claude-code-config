@@ -79,7 +79,7 @@ For demo repos: note what is NOT production-ready and why (no auth, no encryptio
 
 Use this structure, targeting 80–120 lines:
 
-```markdown
+~~~markdown
 # [Project Name]
 
 > [One-sentence summary: verb + what + how + languages]
@@ -135,7 +135,7 @@ VAR_NAME=value   # explanation
 
 - [Language]: `package-name` vX.Y+
 ...
-```
+~~~
 
 ## Output Rules
 
