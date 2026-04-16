@@ -19,6 +19,22 @@ if ! command -v claude &>/dev/null; then
   exit 1
 fi
 
+# Ensure obsidian CLI symlink exists
+OBSIDIAN_APP="/Applications/Obsidian.app/Contents/MacOS/obsidian-cli"
+OBSIDIAN_LINK="/opt/homebrew/bin/obsidian"
+echo "Checking obsidian CLI..."
+if [[ -f "$OBSIDIAN_APP" ]]; then
+  if [[ ! -e "$OBSIDIAN_LINK" ]]; then
+    ln -s "$OBSIDIAN_APP" "$OBSIDIAN_LINK"
+    echo "  [OK] Created symlink: $OBSIDIAN_LINK -> $OBSIDIAN_APP"
+  else
+    echo "  [OK] obsidian symlink already exists"
+  fi
+else
+  echo "  [WARN] Obsidian.app not found — install with: brew install --cask obsidian"
+fi
+echo ""
+
 servers=$(jq -r '.mcpServers | keys[]' "$MCP_JSON")
 
 if [[ -z "$servers" ]]; then

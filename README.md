@@ -13,11 +13,27 @@ Personal configuration repository for Claude Code with custom agents, coding sta
 
 ## MCP Servers
 
-Configured in `mcp.json` (mirrors `~/Library/Application Support/Claude/claude_desktop_config.json`):
+Configured in `.mcp.json` and registered at user scope via `install.sh`:
 
-| Server | Package | Description |
-|--------|---------|-------------|
-| `obsidian` | `mcp-obsidian` | Access to Obsidian vault at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal` |
+| Server | Description |
+|--------|-------------|
+| `ollama-agent` | Local Ollama agent for Gemma model access (`mcp-servers/ollama-agent/server.py`) |
+
+The `obsidian` MCP has been removed. Vault access now uses the **obsidian CLI** directly via Bash commands (see below).
+
+## Obsidian CLI
+
+Vault access uses the `obsidian` CLI binary bundled with the Obsidian desktop app:
+
+```
+/Applications/Obsidian.app/Contents/MacOS/obsidian-cli
+```
+
+The `install.sh` script creates a symlink at `/opt/homebrew/bin/obsidian` for PATH access. Requires the Obsidian desktop app to be installed first:
+
+```bash
+brew install --cask obsidian
+```
 
 ## Key Features
 
