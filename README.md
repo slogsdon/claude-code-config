@@ -33,3 +33,12 @@ This repository automatically configures Claude Code with:
 - Automated agent triggering based on context
 - Task management and progress tracking
 - Proactive commit workflow with conventional messages
+
+## Cowork Plugin
+
+This repo doubles as a **Cowork plugin source** (`personal-skills`). It serves two roles simultaneously:
+
+- **Claude Code config** — `~/.claude` symlinks here, making all settings, skills, and MCP configs available in every Claude Code session.
+- **Cowork plugin** — the `.claude-plugin/plugin.json` manifest registers this repo as the `personal-skills` plugin, making its skills available to any Cowork-enabled session that installs it.
+
+Skills in `skills/` are available in both environments without duplication. MCP servers are defined in `.mcp.json` and auto-registered via `install.sh`.
