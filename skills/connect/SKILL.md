@@ -24,8 +24,8 @@ Find non-obvious bridges between '[argument]' and other concepts in the vault. W
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the relevant notes using `mcp__obsidian__read_notes`
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each
 3. Search for notes in adjacent and seemingly unrelated domains to cast a wide net
 4. Look for non-obvious connections:
    - Structural similarities: two ideas that have the same underlying pattern even though the surface topics differ

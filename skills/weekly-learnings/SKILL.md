@@ -25,8 +25,8 @@ Synthesize this week's vault additions and highlights into a meaningful weekly r
 Execute the skill directly:
 
 1. Determine the current week's date range (Monday–Sunday, YYYY-MM-DD)
-2. Read this week's daily notes using `mcp__obsidian__read_notes` (vault: Personal): `Daily Notes/[each date].md`
-3. Search for notes created or modified this week using `mcp__obsidian__search_notes`
+2. Read this week's daily notes by running `obsidian read file="Daily Notes/[date]"` via bash for each date in the week
+3. Run `obsidian search query="[key theme or topic from the week]" limit=15` via bash to surface active notes from this week
 4. Read the most active notes from this week
 5. Synthesize into a weekly reflection with these sections:
    - **Key learnings** (3–5 concrete insights, not summaries of activity)

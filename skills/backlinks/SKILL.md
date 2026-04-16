@@ -24,8 +24,8 @@ Audit the vault's backlink structure around '[argument]' (or broadly). Find orph
 
 Execute the skill directly:
 
-1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise perform broad searches to sample the vault
-2. Read a set of notes using `mcp__obsidian__read_notes` — look for `[[wikilinks]]` and `[[note references]]` embedded in them
+1. If `[argument]` is provided, run `obsidian search query="[argument]" limit=10` via bash; otherwise run broad searches (e.g. `obsidian search query="MOC OR index OR hub" limit=20`) via bash to sample the vault
+2. Read a set of notes by running `obsidian read file="[note name]"` via bash for each — look for `[[wikilinks]]` and `[[note references]]` embedded in them
 3. Identify backlink health:
    - **Orphaned notes:** notes that exist but appear nowhere as a `[[link]]` in other notes
    - **Dead links:** `[[links]]` that reference notes that don't exist yet

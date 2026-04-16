@@ -24,8 +24,8 @@ Find logical tensions, contradictions, or inconsistencies in the vault related t
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal); if no argument, cast broadly across beliefs, values, decisions, and principles
-2. Read 10–15 notes using `mcp__obsidian__read_notes`, prioritizing notes that state positions or make claims
+1. Run `obsidian search query="[argument]" limit=15` via bash; if no argument, run broad searches via bash: `obsidian search query="believe" limit=10`, `obsidian search query="value" limit=10`, `obsidian search query="decided" limit=10`
+2. Read 10–15 notes by running `obsidian read file="[note name]"` via bash for each, prioritizing notes that state positions or make claims
 3. Look for contradictions:
    - Direct contradictions: two notes asserting opposite things about the same topic
    - Contextual contradictions: a stated belief that conflicts with a stated decision or habit

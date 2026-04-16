@@ -30,10 +30,10 @@ Execute the skill directly:
 
 1. **Check inbox** — same as main step 1
 2. Determine the current week's Monday–Sunday date range (YYYY-MM-DD)
-3. Read using `mcp__obsidian__read_notes` (vault: Personal):
-   - `Context/patterns.md`
-   - `Context/accountability.md`
-   - Each `Daily Notes/[date].md` that exists for the week
+3. Read the following files via bash:
+   - `obsidian read file="Context/patterns"`
+   - `obsidian read file="Context/accountability"`
+   - `obsidian read file="Daily Notes/[date]"` for each date in the week that exists
 4. Aggregate signals:
    - **Deferred 2+ times this week:** count how many EOD Audits each task appeared in as deferred
    - **PATTERN ALERTs:** collect any PATTERN ALERT lines from the week's EOD Audits

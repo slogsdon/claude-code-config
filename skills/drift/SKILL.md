@@ -24,8 +24,8 @@ Analyze the gap between Shane's stated intentions and actual behavior patterns i
 
 Execute the skill directly:
 
-1. Search the vault for stated intentions, goals, and values using `mcp__obsidian__search_notes` (vault: Personal) — search terms like "want to", "should", "goal", "intend", "commit", "value"
-2. Also read `Context/accountability.md` and `Context/patterns.md` using `mcp__obsidian__read_notes`
+1. Search for stated intentions via bash: `obsidian search query="want to" limit=10`, `obsidian search query="goal" limit=10`, `obsidian search query="intend" limit=10`, `obsidian search query="commit" limit=10`, `obsidian search query="value" limit=10`
+2. Also read `Context/accountability.md` and `Context/patterns.md` by running `obsidian read file="Context/accountability"` and `obsidian read file="Context/patterns"` via bash
 3. If `[argument]` is provided, scope the search to that domain; otherwise cast broadly
 4. Compare stated intentions against observable behavior:
    - What does Shane say he values? What does the vault show him actually spending time/attention on?

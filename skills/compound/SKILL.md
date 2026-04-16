@@ -24,8 +24,8 @@ Show how knowledge about '[argument]' has accumulated and compounded in the vaul
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the relevant notes using `mcp__obsidian__read_notes`, ordered chronologically where possible
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each, ordered chronologically where possible
 3. Map the compounding structure:
    - What was the seed insight — the first or simplest version of the idea?
    - What was added on top? Which later notes build explicitly on earlier ones?

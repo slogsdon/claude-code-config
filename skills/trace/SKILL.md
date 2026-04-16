@@ -24,8 +24,8 @@ Map the chronological evolution of Shane's thinking about '[argument]' in the va
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the relevant notes using `mcp__obsidian__read_notes`, paying attention to note dates and timestamps
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each, paying attention to note dates and timestamps
 3. Sort the notes chronologically by creation/modification date
 4. Identify the evolution of thinking:
    - What was the earliest framing of the idea?

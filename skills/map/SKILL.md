@@ -24,8 +24,8 @@ Audit the structure and health of the knowledge graph around '[argument]' (or th
 
 Execute the skill directly:
 
-1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise perform broad searches across several topic clusters
-2. Read a sampling of notes using `mcp__obsidian__read_notes` — aim for breadth across different sections of the vault
+1. If `[argument]` is provided, run `obsidian search query="[argument]" limit=15` via bash; otherwise run broad searches across topic clusters via bash (e.g. `obsidian search query="MOC" limit=10`, `obsidian search query="projects" limit=10`, `obsidian search query="ideas" limit=10`)
+2. Read a sampling of notes by running `obsidian read file="[note name]"` via bash for each — aim for breadth across different sections of the vault
 3. Assess knowledge graph health:
    - **Well-connected:** notes with rich cross-references and backlinks to other notes
    - **Orphaned:** notes that exist but aren't referenced from anywhere (no inbound links)

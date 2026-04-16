@@ -29,10 +29,10 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
 Execute the skill directly:
 
 1. Determine today's date (YYYY-MM-DD)
-2. Read using `mcp__obsidian__read_notes` (vault: Personal):
-   - `Daily Notes/[today's date].md`
-   - `Context/patterns.md`
-   - `Context/accountability.md`
+2. Read the following files via bash:
+   - `obsidian read file="Daily Notes/[today's date]"`
+   - `obsidian read file="Context/patterns"`
+   - `obsidian read file="Context/accountability"`
 3. Diff focus vs session log:
    - Extract items from `## Today's Focus`
    - Extract completed items from `## Session Log`

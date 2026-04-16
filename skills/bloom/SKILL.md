@@ -24,8 +24,8 @@ Map how the question '[argument]' branches into sub-questions across the vault. 
 
 Execute the skill directly:
 
-1. Search the vault for notes touching on `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the most relevant notes using `mcp__obsidian__read_notes`
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes touching on the topic
+2. Read the most relevant notes by running `obsidian read file="[note name]"` via bash for each
 3. Generate a bloom of inquiry — map the question space branching from `[argument]`:
    - **Level 1 (direct sub-questions):** What are the immediate follow-on questions this topic raises?
    - **Level 2 (adjacent questions):** What related topics does this connect to? What domains share the same underlying structure?
