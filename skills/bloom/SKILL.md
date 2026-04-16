@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md), `obsidian append file=\"Note Name\" content=\"TEXT\"`. Map how the question '[argument]' branches into sub-questions across the vault. What related questions does it open up? Create a bloom of inquiry."
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md), `obsidian append file='Note Name' content='TEXT'`. Map how the question '[argument]' branches into sub-questions across the vault. What related questions does it open up? Create a bloom of inquiry."
    - `skill`: "bloom"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md).
 
 Map how the question '[argument]' branches into sub-questions across the vault. What related questions does it open up? Create a bloom of inquiry.
 
@@ -26,8 +26,8 @@ Map how the question '[argument]' branches into sub-questions across the vault. 
 
 Execute the skill directly:
 
-1. Run `obsidian search query="[argument]" limit=10` via bash to find notes touching on the topic
-2. Read the most relevant notes by running `obsidian read file="[note name]"` via bash for each
+1. Run `obsidian search query='[argument]' limit=10` via bash to find notes touching on the topic
+2. Read the most relevant notes by running `obsidian read file='[note name]'` via bash for each
 3. Generate a bloom of inquiry — map the question space branching from `[argument]`:
    - **Level 1 (direct sub-questions):** What are the immediate follow-on questions this topic raises?
    - **Level 2 (adjacent questions):** What related topics does this connect to? What domains share the same underlying structure?

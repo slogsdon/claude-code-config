@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md). Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?"
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?"
    - `skill`: "connect"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md).
 
 Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?
 
@@ -26,8 +26,8 @@ Find non-obvious bridges between '[argument]' and other concepts in the vault. W
 
 Execute the skill directly:
 
-1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
-2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each
+1. Run `obsidian search query='[argument]' limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file='[note name]'` via bash for each
 3. Search for notes in adjacent and seemingly unrelated domains to cast a wide net
 4. Look for non-obvious connections:
    - Structural similarities: two ideas that have the same underlying pattern even though the surface topics differ

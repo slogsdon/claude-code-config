@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md). Steelman the strongest opposition to '[argument]'. Identify the most vulnerable assumptions, surface counterevidence from the vault, and pressure-test the position rigorously."
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Steelman the strongest opposition to '[argument]'. Identify the most vulnerable assumptions, surface counterevidence from the vault, and pressure-test the position rigorously."
    - `skill`: "challenge"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md).
 
 Steelman the strongest opposition to '[argument]'. Identify the most vulnerable assumptions, surface counterevidence from the vault, and pressure-test the position rigorously.
 
@@ -26,8 +26,8 @@ Steelman the strongest opposition to '[argument]'. Identify the most vulnerable 
 
 Execute the skill directly:
 
-1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
-2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each — look especially for where Shane states the position most confidently
+1. Run `obsidian search query='[argument]' limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file='[note name]'` via bash for each — look especially for where Shane states the position most confidently
 3. Steelman the opposition:
    - Build the strongest possible case against `[argument]` — not a strawman, the actual best version
    - Find the most vulnerable assumptions underlying `[argument]`; name them explicitly

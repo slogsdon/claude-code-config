@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md), `obsidian backlinks file=\"Note Name\"`. Audit the vault's backlink structure around '[argument]' (or broadly). Find orphaned notes, broken connections, and opportunities to strengthen the knowledge graph."
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md), `obsidian backlinks file='Note Name'`. Audit the vault's backlink structure around '[argument]' (or broadly). Find orphaned notes, broken connections, and opportunities to strengthen the knowledge graph."
    - `skill`: "backlinks"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md), `obsidian backlinks file="Note Name"`.
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md), `obsidian backlinks file='Note Name'`.
 
 Audit the vault's backlink structure around '[argument]' (or broadly). Find orphaned notes, broken connections, and opportunities to strengthen the knowledge graph.
 
@@ -26,8 +26,8 @@ Audit the vault's backlink structure around '[argument]' (or broadly). Find orph
 
 Execute the skill directly:
 
-1. If `[argument]` is provided, run `obsidian search query="[argument]" limit=10` via bash; otherwise run broad searches (e.g. `obsidian search query="MOC OR index OR hub" limit=20`) via bash to sample the vault
-2. Read a set of notes by running `obsidian read file="[note name]"` via bash for each — look for `[[wikilinks]]` and `[[note references]]` embedded in them
+1. If `[argument]` is provided, run `obsidian search query='[argument]' limit=10` via bash; otherwise run broad searches (e.g. `obsidian search query='MOC OR index OR hub' limit=20`) via bash to sample the vault
+2. Read a set of notes by running `obsidian read file='[note name]'` via bash for each — look for `[[wikilinks]]` and `[[note references]]` embedded in them
 3. Identify backlink health:
    - **Orphaned notes:** notes that exist but appear nowhere as a `[[link]]` in other notes
    - **Dead links:** `[[links]]` that reference notes that don't exist yet

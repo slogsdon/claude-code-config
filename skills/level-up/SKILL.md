@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md). Assess Shane's current proficiency with '[argument]' based on vault evidence. What's the next growth edge? What specific actions would level him up?"
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Assess Shane's current proficiency with '[argument]' based on vault evidence. What's the next growth edge? What specific actions would level him up?"
    - `skill`: "level-up"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md).
 
 Assess Shane's current proficiency with '[argument]' based on vault evidence. What's the next growth edge? What specific actions would level him up?
 
@@ -26,8 +26,8 @@ Assess Shane's current proficiency with '[argument]' based on vault evidence. Wh
 
 Execute the skill directly:
 
-1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
-2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each
+1. Run `obsidian search query='[argument]' limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file='[note name]'` via bash for each
 3. Assess current proficiency based on vault evidence:
    - What does Shane demonstrate understanding of? (concepts he explains, applies, or questions at depth)
    - What's still surface-level? (concepts mentioned but not interrogated)
