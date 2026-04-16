@@ -22,4 +22,15 @@ Show how knowledge about '[argument]' has accumulated and compounded in the vaul
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the relevant notes using `mcp__obsidian__read_notes`, ordered chronologically where possible
+3. Map the compounding structure:
+   - What was the seed insight — the first or simplest version of the idea?
+   - What was added on top? Which later notes build explicitly on earlier ones?
+   - Where did combining two ideas produce a third that neither implied alone?
+   - What's the current frontier — the most sophisticated form this knowledge has reached?
+4. Identify the compounding trajectory: is the knowledge still actively compounding or has it plateaued?
+5. Present as a narrative arc: seed → accumulations → synthesis → current frontier → next potential compound
+6. Note any gaps where compounding stalled and why

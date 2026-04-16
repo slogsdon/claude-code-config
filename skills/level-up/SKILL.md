@@ -22,4 +22,17 @@ Assess Shane's current proficiency with '[argument]' based on vault evidence. Wh
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the relevant notes using `mcp__obsidian__read_notes`
+3. Assess current proficiency based on vault evidence:
+   - What does Shane demonstrate understanding of? (concepts he explains, applies, or questions at depth)
+   - What's still surface-level? (concepts mentioned but not interrogated)
+   - What's conspicuously absent? (things an expert in this area would typically grapple with)
+4. Identify the next growth edge — the specific capability gap that, if closed, would unlock the most
+5. Propose 2–3 concrete actions to level up (not generic advice — specific to what the vault shows):
+   - A thing to read/learn
+   - A thing to practice or build
+   - A thing to write or reflect on to solidify the knowledge
+6. Present the assessment to Shane

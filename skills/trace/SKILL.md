@@ -22,4 +22,14 @@ Map the chronological evolution of Shane's thinking about '[argument]' in the va
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the relevant notes using `mcp__obsidian__read_notes`, paying attention to note dates and timestamps
+3. Sort the notes chronologically by creation/modification date
+4. Identify the evolution of thinking:
+   - What was the earliest framing of the idea?
+   - What shifted, and what triggered each shift?
+   - What's the current settled position (if any), or what remains unresolved?
+5. Present a chronological narrative showing how the idea developed, with specific note references and dates
+6. Highlight inflection points — moments where the thinking meaningfully changed direction
