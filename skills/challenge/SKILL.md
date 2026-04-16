@@ -24,8 +24,8 @@ Steelman the strongest opposition to '[argument]'. Identify the most vulnerable 
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the relevant notes using `mcp__obsidian__read_notes` — look especially for where Shane states the position most confidently
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each — look especially for where Shane states the position most confidently
 3. Steelman the opposition:
    - Build the strongest possible case against `[argument]` — not a strawman, the actual best version
    - Find the most vulnerable assumptions underlying `[argument]`; name them explicitly

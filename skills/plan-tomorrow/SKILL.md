@@ -26,10 +26,10 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
 Execute the skill directly:
 
 1. Determine today's and tomorrow's dates (YYYY-MM-DD)
-2. Read using `mcp__obsidian__read_notes` (vault: Personal):
-   - `Daily Notes/[today's date].md` — look for `## EOD Audit`; if missing, tell Shane to run /eod first
-   - `Context/accountability.md`
-   - `Context/patterns.md`
+2. Read the following files via bash:
+   - `obsidian read file="Daily Notes/[today's date]"` — look for `## EOD Audit`; if missing, tell Shane to run /eod first
+   - `obsidian read file="Context/accountability"`
+   - `obsidian read file="Context/patterns"`
 3. Analyze the EOD Audit:
    - Note deferred items and their deferral counts
    - Note any PATTERN ALERT items

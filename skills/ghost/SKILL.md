@@ -24,10 +24,10 @@ Answer the question or topic '[argument]' in Shane's authentic voice. Use the Gh
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Also search for notes that reveal Shane's voice patterns — how he frames arguments, what language he uses, what he finds interesting
-3. Read the Ghost Writer Context file if it exists: search for "Ghost Writer" or "voice" in the vault
-4. Read 5–8 relevant notes using `mcp__obsidian__read_notes` to absorb his vocabulary and reasoning style
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Run `obsidian search query="voice OR style OR writing" limit=10` via bash to find notes that reveal Shane's voice patterns
+3. Run `obsidian search query="Ghost Writer" limit=5` via bash to find the Ghost Writer Context file if it exists
+4. Read 5–8 relevant notes by running `obsidian read file="[note name]"` via bash for each, to absorb his vocabulary and reasoning style
 5. Produce the content in Shane's voice:
    - Mirror his vocabulary (direct, specific, no hedging)
    - Use his reasoning style (builds from first principles, acknowledges tradeoffs)

@@ -24,8 +24,8 @@ Assess Shane's current proficiency with '[argument]' based on vault evidence. Wh
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the relevant notes using `mcp__obsidian__read_notes`
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the relevant notes by running `obsidian read file="[note name]"` via bash for each
 3. Assess current proficiency based on vault evidence:
    - What does Shane demonstrate understanding of? (concepts he explains, applies, or questions at depth)
    - What's still surface-level? (concepts mentioned but not interrogated)

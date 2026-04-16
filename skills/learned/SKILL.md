@@ -24,8 +24,8 @@ Transform Shane's vault insights about '[argument]' into a polished written piec
 
 Execute the skill directly:
 
-1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
-2. Read the top 5–10 most relevant notes using `mcp__obsidian__read_notes`
+1. Run `obsidian search query="[argument]" limit=10` via bash to find notes related to the topic
+2. Read the top 5–10 most relevant notes by running `obsidian read file="[note name]"` via bash for each
 3. Extract key insights, observations, and recurring ideas from those notes
 4. Transform them into a polished written piece in Shane's voice:
    - Use first-person, direct prose (not listicles unless the content demands it)

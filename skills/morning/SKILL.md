@@ -25,15 +25,15 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 Execute the skill directly:
 
 1. Determine today's and yesterday's dates (YYYY-MM-DD)
-2. Read `Context/accountability.md` using `mcp__obsidian__read_notes` (vault: Personal)
-3. Read `Daily Notes/[yesterday's date].md` if it exists
+2. Run `obsidian read file="Context/accountability"` via bash
+3. Run `obsidian read file="Daily Notes/[yesterday's date]"` via bash if it exists
 4. Identify carry-overs: compare the `## Today's Focus` section against the `## Session Log` section in yesterday's note — any focus item absent from the session log is a carry-over
 5. Read the active OKRs and avoidance patterns from `accountability.md`
 6. Propose today's focus:
    - **Primary:** highest-priority OKR-aligned item (prefer carry-overs with 2+ prior deferrals)
    - **Secondary (2 items):** next most important OKR-aligned tasks
    - Flag any item matching a known avoidance pattern
-7. Write the following block to `Daily Notes/[today's date].md` under `## Today's Focus` using `mcp__obsidian__write_notes`:
+7. Run `obsidian append file="Daily Notes/[today's date]" content="..."` via bash to write the following block under `## Today's Focus`:
    ```
    **Primary:** [primary focus]
    **Secondary:**

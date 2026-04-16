@@ -24,8 +24,8 @@ Build an outside-observer portrait of Shane based on the vault, focusing on '[ar
 
 Execute the skill directly:
 
-1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise read broadly across notes
-2. Read 10–15 notes using `mcp__obsidian__read_notes`, sampling across different topics, time periods, and note types
+1. If `[argument]` is provided, run `obsidian search query="[argument]" limit=15` via bash; otherwise run broad topic searches via bash (e.g. `obsidian search query="work" limit=10`, `obsidian search query="ideas" limit=10`, `obsidian search query="journal" limit=10`)
+2. Read 10–15 notes by running `obsidian read file="[note name]"` via bash for each, sampling across different topics, time periods, and note types
 3. Adopt the perspective of a perceptive stranger reading these notes cold — no insider context, no charity
 4. Build a portrait based purely on what the notes reveal:
    - What does this person clearly care about most?
