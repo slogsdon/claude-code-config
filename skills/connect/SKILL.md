@@ -11,12 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?"
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md). Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?"
    - `skill`: "connect"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
+
+Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
 
 Find non-obvious bridges between '[argument]' and other concepts in the vault. What unexpected connections exist? What synthesis hasn't been made yet?
 
