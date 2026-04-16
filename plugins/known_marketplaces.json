@@ -5,7 +5,7 @@
       "repo": "anthropics/skills"
     },
     "installLocation": "/Users/shane/.claude/plugins/marketplaces/anthropic-agent-skills",
-    "lastUpdated": "2026-02-09T01:03:53.685Z"
+    "lastUpdated": "2026-04-09T18:22:49.964Z"
   },
   "superpowers-marketplace": {
     "source": {
@@ -13,7 +13,7 @@
       "repo": "obra/superpowers-marketplace"
     },
     "installLocation": "/Users/shane/.claude/plugins/marketplaces/superpowers-marketplace",
-    "lastUpdated": "2026-02-08T17:10:10.934Z"
+    "lastUpdated": "2026-04-09T18:22:51.387Z"
   },
   "claude-plugins-official": {
     "source": {
@@ -21,6 +21,14 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/shane/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-04-08T16:12:33.692Z"
+    "lastUpdated": "2026-04-16T14:14:05.543Z"
+  },
+  "addy-agent-skills": {
+    "source": {
+      "source": "github",
+      "repo": "addyosmani/agent-skills"
+    },
+    "installLocation": "/Users/shane/.claude/plugins/marketplaces/addy-agent-skills",
+    "lastUpdated": "2026-04-14T22:41:53.232Z"
   }
 }

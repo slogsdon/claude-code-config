@@ -30,6 +30,16 @@
         "lastUpdated": "2026-02-10T02:13:53.129Z",
         "gitCommitSha": "74afe935da49efe782907e837a27ce618498099a"
       }
+    ],
+    "agent-skills@addy-agent-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/shane/.claude/plugins/cache/addy-agent-skills/agent-skills/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-04-14T22:42:04.701Z",
+        "lastUpdated": "2026-04-14T22:42:04.701Z",
+        "gitCommitSha": "bf2fa6994407c9c888fc19a03fd54957991cfa0e"
+      }
     ]
   }
 }
