@@ -22,4 +22,15 @@ Find logical tensions, contradictions, or inconsistencies in the vault related t
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal); if no argument, cast broadly across beliefs, values, decisions, and principles
+2. Read 10–15 notes using `mcp__obsidian__read_notes`, prioritizing notes that state positions or make claims
+3. Look for contradictions:
+   - Direct contradictions: two notes asserting opposite things about the same topic
+   - Contextual contradictions: a stated belief that conflicts with a stated decision or habit
+   - Temporal contradictions: a position that changed without acknowledgment
+   - Value contradictions: two stated values that pull in opposite directions
+4. For each contradiction found, present it as: "In [note A], you say [X]. In [note B], you say [Y]. These are in tension because [reason]."
+5. Distinguish between healthy tension (holding complexity) and actual inconsistency (one must be wrong)
+6. Present 3–5 most significant contradictions to Shane, with note references

@@ -22,4 +22,14 @@ Transform Shane's vault insights about '[argument]' into a polished written piec
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the top 5–10 most relevant notes using `mcp__obsidian__read_notes`
+3. Extract key insights, observations, and recurring ideas from those notes
+4. Transform them into a polished written piece in Shane's voice:
+   - Use first-person, direct prose (not listicles unless the content demands it)
+   - Lead with the most surprising or hard-won insight
+   - Build a narrative arc: what changed, what was learned, why it matters
+   - End with an open question or implication
+5. Present the piece to Shane

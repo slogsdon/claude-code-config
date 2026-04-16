@@ -22,4 +22,14 @@ Audit the structure and health of the knowledge graph around '[argument]' (or th
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise perform broad searches across several topic clusters
+2. Read a sampling of notes using `mcp__obsidian__read_notes` — aim for breadth across different sections of the vault
+3. Assess knowledge graph health:
+   - **Well-connected:** notes with rich cross-references and backlinks to other notes
+   - **Orphaned:** notes that exist but aren't referenced from anywhere (no inbound links)
+   - **Stub clusters:** areas with shallow coverage — a topic that should have depth but only has surface notes
+   - **Missing nodes:** concepts that appear as `[[links]]` in notes but don't have their own notes yet
+4. If scoped to `[argument]`, produce a local map of that cluster; if broad, produce a top-level structural overview
+5. Present findings as: what's healthy, what's orphaned, what's missing, and 2–3 recommended connections to add

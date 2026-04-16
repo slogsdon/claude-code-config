@@ -23,4 +23,31 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
 
 ## Fallback (if run_gemma_task unavailable)
 
-Read the EOD audit directly and propose a plan based on OKR alignment.
+Execute the skill directly:
+
+1. Determine today's and tomorrow's dates (YYYY-MM-DD)
+2. Read using `mcp__obsidian__read_notes` (vault: Personal):
+   - `Daily Notes/[today's date].md` — look for `## EOD Audit`; if missing, tell Shane to run /eod first
+   - `Context/accountability.md`
+   - `Context/patterns.md`
+3. Analyze the EOD Audit:
+   - Note deferred items and their deferral counts
+   - Note any PATTERN ALERT items
+4. Review active OKRs in `accountability.md` and avoidance patterns in `patterns.md`
+5. Propose tomorrow's plan:
+   - **Primary (1):** most important OKR-aligned item; if a 3+ deferral item is genuinely high priority, either re-commit with a specific reason or explicitly recommend removing it
+   - **Secondary (2):** next two OKR-aligned tasks
+   - For each 3+ deferral item: either include it with a "re-commit reason" or mark "suggest removing — not actually a priority"
+6. Write the following block to `Daily Notes/[today's date].md` under `## Tomorrow ([tomorrow's date])`:
+   ```markdown
+   ## Tomorrow ([tomorrow's date])
+
+   **Primary:** [task]
+   **Secondary:**
+   - [task 1]
+   - [task 2]
+
+   **On deferred items:**
+   - [task]: [re-commit reason] OR [suggest removing]
+   ```
+7. Present the plan to Shane

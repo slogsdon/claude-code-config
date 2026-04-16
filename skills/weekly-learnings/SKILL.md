@@ -22,4 +22,16 @@ Synthesize this week's vault additions and highlights into a meaningful weekly r
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Determine the current week's date range (Monday–Sunday, YYYY-MM-DD)
+2. Read this week's daily notes using `mcp__obsidian__read_notes` (vault: Personal): `Daily Notes/[each date].md`
+3. Search for notes created or modified this week using `mcp__obsidian__search_notes`
+4. Read the most active notes from this week
+5. Synthesize into a weekly reflection with these sections:
+   - **Key learnings** (3–5 concrete insights, not summaries of activity)
+   - **Recurring themes** (what kept coming up across different contexts?)
+   - **Open questions** (what is still unresolved or needs more thinking?)
+   - **What surprised me** (anything that shifted existing assumptions?)
+6. If `[argument]` was provided, scope the reflection to that topic
+7. Present the reflection to Shane — format as a written piece, not a bullet dump

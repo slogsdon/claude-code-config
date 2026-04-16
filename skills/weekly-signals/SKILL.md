@@ -23,4 +23,32 @@ Weekly pattern aggregator. Delegate to Gemma; output a paste-ready block.
 
 ## Fallback (if run_gemma_task unavailable)
 
-Read patterns.md and daily notes directly and generate the signals block manually.
+Execute the skill directly:
+
+1. Determine the current week's Monday–Sunday date range (YYYY-MM-DD)
+2. Read using `mcp__obsidian__read_notes` (vault: Personal):
+   - `Context/patterns.md`
+   - `Context/accountability.md`
+   - Each `Daily Notes/[date].md` that exists for the week
+3. Aggregate signals:
+   - **Deferred 2+ times this week:** count how many EOD Audits each task appeared in as deferred
+   - **PATTERN ALERTs:** collect any PATTERN ALERT lines from the week's EOD Audits
+   - **Logging gaps:** note any days where the session log was empty or missing
+   - **OKR alignment:** for each day's session log, classify each logged item as OKR-aligned or not; compute a rough percentage
+4. Output the following block to Shane (do NOT write to vault — Shane pastes manually):
+   ```markdown
+   ## Accountability Signals — Week of [Monday date]
+
+   **Deferred 2+ times:**
+   - [task] — deferred [N] times
+
+   **Pattern Alerts:**
+   - [PATTERN ALERT items from patterns.md with 3+ deferrals]
+
+   **Logging Gaps:** [days with no session log, or "none"]
+
+   **OKR Alignment:** ~[N]% of logged work mapped to active OKRs
+   - Aligned: [examples]
+   - Off-OKR: [examples]
+   ```
+5. Offer to explain any signal in more detail

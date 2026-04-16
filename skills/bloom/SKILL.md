@@ -22,4 +22,14 @@ Map how the question '[argument]' branches into sub-questions across the vault. 
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes touching on `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the most relevant notes using `mcp__obsidian__read_notes`
+3. Generate a bloom of inquiry — map the question space branching from `[argument]`:
+   - **Level 1 (direct sub-questions):** What are the immediate follow-on questions this topic raises?
+   - **Level 2 (adjacent questions):** What related topics does this connect to? What domains share the same underlying structure?
+   - **Level 3 (meta questions):** What assumptions are baked into how `[argument]` is framed? What would a fundamentally different framing look like?
+4. Note which branches are already explored in the vault vs. which are blank
+5. Present the bloom as a structured map — not a flat list, but a tree showing how questions relate and nest
+6. Suggest 1–2 unexplored branches most worth pursuing

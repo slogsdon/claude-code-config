@@ -26,4 +26,33 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
 
 ## Fallback (if run_gemma_task unavailable)
 
-Read the files directly, do the diff manually, and write the audit block.
+Execute the skill directly:
+
+1. Determine today's date (YYYY-MM-DD)
+2. Read using `mcp__obsidian__read_notes` (vault: Personal):
+   - `Daily Notes/[today's date].md`
+   - `Context/patterns.md`
+   - `Context/accountability.md`
+3. Diff focus vs session log:
+   - Extract items from `## Today's Focus`
+   - Extract completed items from `## Session Log`
+   - Items in focus but NOT in session log = deferred today
+4. For each deferred item, check `Context/patterns.md` Deferred Tasks Log:
+   - If it exists: increment the deferral count
+   - If new: add a row with count = 1
+   - If count reaches 3+: add a PATTERN ALERT line
+5. Build the EOD Audit block:
+   ```markdown
+   ## EOD Audit
+
+   **Completed:** [items from session log that matched focus]
+   **Deferred:**
+   - [task] (deferred [N] times total) [PATTERN ALERT if N >= 3]
+
+   **Logging gaps:** [note if session log was empty]
+   **OKR alignment:** [brief assessment of whether completed work mapped to active OKRs]
+   ```
+6. Append the audit block to `Daily Notes/[today's date].md`
+7. Update the Deferred Tasks Log section in `Context/patterns.md` with new/incremented rows
+8. If the session log was empty, also add a `## Logging Gap` entry to today's note
+9. Present the audit summary to Shane

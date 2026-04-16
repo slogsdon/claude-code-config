@@ -22,4 +22,19 @@ Audit the vault's backlink structure around '[argument]' (or broadly). Find orph
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise perform broad searches to sample the vault
+2. Read a set of notes using `mcp__obsidian__read_notes` — look for `[[wikilinks]]` and `[[note references]]` embedded in them
+3. Identify backlink health:
+   - **Orphaned notes:** notes that exist but appear nowhere as a `[[link]]` in other notes
+   - **Dead links:** `[[links]]` that reference notes that don't exist yet
+   - **One-way links:** A links to B, but B never links back to A despite being clearly related
+   - **Hub notes:** notes that are referenced frequently — check they're actually well-developed
+4. If scoped to `[argument]`, analyze the local backlink cluster; if broad, sample across the vault
+5. Present findings as:
+   - Orphaned notes (list with brief description of what's isolated)
+   - Dead links / missing notes worth creating
+   - Recommended reciprocal links to add
+   - Hub notes that need more development
+6. Prioritize the top 3–5 highest-value repairs

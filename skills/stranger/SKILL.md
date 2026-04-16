@@ -22,4 +22,16 @@ Build an outside-observer portrait of Shane based on the vault, focusing on '[ar
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. If `[argument]` is provided, search for it using `mcp__obsidian__search_notes` (vault: Personal); otherwise read broadly across notes
+2. Read 10–15 notes using `mcp__obsidian__read_notes`, sampling across different topics, time periods, and note types
+3. Adopt the perspective of a perceptive stranger reading these notes cold — no insider context, no charity
+4. Build a portrait based purely on what the notes reveal:
+   - What does this person clearly care about most?
+   - What patterns of thinking are immediately visible?
+   - What does this person seem to be afraid of or avoiding?
+   - What would a stranger guess about their core beliefs, even unstated ones?
+   - What would seem strange, inconsistent, or surprising from the outside?
+5. Be unflinching — a stranger has no reason to protect Shane's self-image
+6. Present the portrait to Shane, with specific evidence from notes for each observation

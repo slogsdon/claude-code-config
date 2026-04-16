@@ -22,4 +22,25 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 ## Fallback (if run_gemma_task unavailable)
 
-Read `Context/accountability.md` directly, surface yesterday's unlogged items manually, and prompt Shane for today's focus.
+Execute the skill directly:
+
+1. Determine today's and yesterday's dates (YYYY-MM-DD)
+2. Read `Context/accountability.md` using `mcp__obsidian__read_notes` (vault: Personal)
+3. Read `Daily Notes/[yesterday's date].md` if it exists
+4. Identify carry-overs: compare the `## Today's Focus` section against the `## Session Log` section in yesterday's note — any focus item absent from the session log is a carry-over
+5. Read the active OKRs and avoidance patterns from `accountability.md`
+6. Propose today's focus:
+   - **Primary:** highest-priority OKR-aligned item (prefer carry-overs with 2+ prior deferrals)
+   - **Secondary (2 items):** next most important OKR-aligned tasks
+   - Flag any item matching a known avoidance pattern
+7. Write the following block to `Daily Notes/[today's date].md` under `## Today's Focus` using `mcp__obsidian__write_notes`:
+   ```
+   **Primary:** [primary focus]
+   **Secondary:**
+   - [secondary 1]
+   - [secondary 2]
+
+   **Carry-overs from yesterday:** [list or "none"]
+   **Pattern flags:** [any avoidance pattern matches or "none"]
+   ```
+8. Present the focus summary to Shane

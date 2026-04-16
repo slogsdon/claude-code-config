@@ -22,4 +22,15 @@ Answer the question or topic '[argument]' in Shane's authentic voice. Use the Gh
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Also search for notes that reveal Shane's voice patterns — how he frames arguments, what language he uses, what he finds interesting
+3. Read the Ghost Writer Context file if it exists: search for "Ghost Writer" or "voice" in the vault
+4. Read 5–8 relevant notes using `mcp__obsidian__read_notes` to absorb his vocabulary and reasoning style
+5. Produce the content in Shane's voice:
+   - Mirror his vocabulary (direct, specific, no hedging)
+   - Use his reasoning style (builds from first principles, acknowledges tradeoffs)
+   - Match his tone (intellectually engaged, occasionally dry, no fluff)
+   - Cite specific vault material where relevant, as he would
+6. Present the ghost-written content to Shane

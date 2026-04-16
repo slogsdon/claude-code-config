@@ -22,4 +22,17 @@ Steelman the strongest opposition to '[argument]'. Identify the most vulnerable 
 
 ## Fallback (if run_gemma_task unavailable)
 
-Execute the skill directly using `mcp__obsidian__search_notes` and `mcp__obsidian__read_notes` to query the vault at ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal.
+Execute the skill directly:
+
+1. Search the vault for notes related to `[argument]` using `mcp__obsidian__search_notes` (vault: Personal)
+2. Read the relevant notes using `mcp__obsidian__read_notes` — look especially for where Shane states the position most confidently
+3. Steelman the opposition:
+   - Build the strongest possible case against `[argument]` — not a strawman, the actual best version
+   - Find the most vulnerable assumptions underlying `[argument]`; name them explicitly
+   - Search the vault for any counterevidence — places where Shane's own notes undermine the position
+4. Pressure-test the position:
+   - What would have to be true for `[argument]` to be wrong?
+   - What's the most common smart objection to this position?
+   - What would a rigorous critic say?
+5. Don't soften it — the value is in the discomfort
+6. Present the challenge to Shane as: the strongest opposition case, the most vulnerable assumptions, and the counterevidence found in his own vault
