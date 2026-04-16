@@ -27,7 +27,7 @@ VAR=value
 ````
 
 **After:**
-~~~
+~~~~
 ~~~markdown
 ## Example
 
@@ -35,7 +35,7 @@ VAR=value
 VAR=value
 ```
 ~~~
-~~~
+~~~~
 
 ## Steps
 
