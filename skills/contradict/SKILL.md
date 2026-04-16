@@ -11,14 +11,14 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 
 1. Parse Shane's request and extract the argument/topic (if provided)
 2. Call `mcp__ollama-agent__run_gemma_task` with:
-   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query=\"TERM\" limit=10`, `obsidian read file=\"Note Name\"` (no .md). Find logical tensions, contradictions, or inconsistencies in the vault related to '[argument]' (or across the full vault). Where does Shane contradict himself or hold competing beliefs?"
+   - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Find logical tensions, contradictions, or inconsistencies in the vault related to '[argument]' (or across the full vault). Where does Shane contradict himself or hold competing beliefs?"
    - `skill`: "contradict"
    - `context`: any relevant context from the current conversation
 3. Review Gemma's response, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
-Vault access (bash only, no MCP tools): `obsidian search query="TERM" limit=10`, `obsidian read file="Note Name"` (no .md).
+Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md).
 
 Find logical tensions, contradictions, or inconsistencies in the vault related to '[argument]' (or across the full vault). Where does Shane contradict himself or hold competing beliefs?
 
@@ -26,8 +26,8 @@ Find logical tensions, contradictions, or inconsistencies in the vault related t
 
 Execute the skill directly:
 
-1. Run `obsidian search query="[argument]" limit=15` via bash; if no argument, run broad searches via bash: `obsidian search query="believe" limit=10`, `obsidian search query="value" limit=10`, `obsidian search query="decided" limit=10`
-2. Read 10–15 notes by running `obsidian read file="[note name]"` via bash for each, prioritizing notes that state positions or make claims
+1. Run `obsidian search query='[argument]' limit=15` via bash; if no argument, run broad searches via bash: `obsidian search query='believe' limit=10`, `obsidian search query='value' limit=10`, `obsidian search query='decided' limit=10`
+2. Read 10–15 notes by running `obsidian read file='[note name]'` via bash for each, prioritizing notes that state positions or make claims
 3. Look for contradictions:
    - Direct contradictions: two notes asserting opposite things about the same topic
    - Contextual contradictions: a stated belief that conflicts with a stated decision or habit

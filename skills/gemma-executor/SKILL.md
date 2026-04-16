@@ -13,12 +13,12 @@ Gemma does **not** have access to MCP tools. For any task that requires reading 
 
 ```
 Vault access (bash only — no MCP tools):
-- Search: `obsidian search query="TERM" limit=10`
-- Read:   `obsidian read file="Note Name"` (no .md extension)
-- Write:  `obsidian append file="Note Name" content="TEXT"`
-- Backlinks: `obsidian backlinks file="Note Name"`
+- Search: `obsidian search query='TERM' limit=10`
+- Read:   `obsidian read file='Note Name'` (no .md extension)
+- Write:  `obsidian append file='Note Name' content='TEXT'`
+- Backlinks: `obsidian backlinks file='Note Name'`
 - Daily note (read):  `obsidian daily:read`
-- Daily note (write): `obsidian daily:append content="TEXT"`
+- Daily note (write): `obsidian daily:append content='TEXT'`
 ```
 
 This applies to all vault skills: /bloom, /ghost, /challenge, /emerge, /contradict, /drift, /trace, /connect, /compound, /stranger, /map, /level-up, /learned, /weekly-learnings, /backlinks. Each of those skills' task descriptions already includes this preamble.

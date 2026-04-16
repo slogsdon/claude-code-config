@@ -126,7 +126,16 @@ def run_gemma_task(task: str, skill: str = "", context: str = "") -> str:
 
     system_prompt = (
         "You are a capable local AI assistant. You have access to filesystem and shell tools. "
-        "Use them when needed to complete the task."
+        "Use them when needed to complete the task.\n\n"
+        "INSTALLED CLI TOOLS (confirmed available, use via run_bash):\n"
+        "- obsidian: Obsidian vault CLI, installed at /opt/homebrew/bin/obsidian and in PATH.\n"
+        "  This is a REAL, working command. Always use it via run_bash when vault access is needed.\n"
+        "  Use single quotes for values that contain spaces to avoid JSON encoding issues.\n"
+        "  Examples:\n"
+        "    obsidian search query='developer advocacy'\n"
+        "    obsidian read file='Note Name'\n"
+        "    obsidian list\n"
+        "  Do NOT skip or refuse obsidian commands due to doubt about installation — it is installed."
     )
 
     messages = [
