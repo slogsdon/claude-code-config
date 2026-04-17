@@ -1,0 +1,17 @@
+{
+  "name": "slogsdon-claude-code-config",
+  "owner": {
+    "name": "Shane Logsdon",
+    "email": "shane@shanelogsdon.com"
+  },
+  "metadata": {
+    "description": "Shane's personal Claude configuration — vault workflow, knowledge exploration, and dev skills"
+  },
+  "plugins": [
+    {
+      "name": "shane-config",
+      "source": "./plugins/shane-config",
+      "description": "All personal skills and MCP config"
+    }
+  ]
+}
