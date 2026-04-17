@@ -18,7 +18,12 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
    - `skill`: "morning"
    - `context`: full content of both files concatenated
 4. Write Gemma's output to today's daily note at `Daily Notes/[today's date].md` under the heading `## Today's Focus`
-5. Present the focus summary to Shane
+5. Commit the vault change:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: write today's focus to [today's date] daily note"
+   ```
+6. Present the focus summary to Shane
 
 ## Fallback (if run_gemma_task unavailable)
 
@@ -43,4 +48,9 @@ Execute the skill directly:
    **Carry-overs from yesterday:** [list or "none"]
    **Pattern flags:** [any avoidance pattern matches or "none"]
    ```
-8. Present the focus summary to Shane
+8. Commit the vault change:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: write today's focus to [today's date] daily note"
+   ```
+9. Present the focus summary to Shane

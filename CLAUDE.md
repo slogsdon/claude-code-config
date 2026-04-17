@@ -37,8 +37,19 @@
 ## Skills
 All specialized workflows (code review, PRD writing, architecture review, security audits, etc.) are handled by skills in the skills/ directory. Invoke them when relevant — don't replicate their logic here.
 
+## Obsidian / Vault
+
+- **Never** access vault files via Read, Write, Edit, Grep, Glob, or direct bash file paths
+- Always use the `obsidian` skill or `obsidian` CLI commands for all vault operations
+- After **any** vault write (create, append, or update), commit atomically:
+  ```bash
+  VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+  git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: [brief description]"
+  ```
+- This applies whether the write comes from the obsidian skill, a vault skill, or a fallback path
+
 ## Accountability
-At the start of every session, read `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Context/accountability.md` to load current OKRs and known avoidance patterns. Use it to:
+At the start of every session, use the obsidian skill to read `Context/accountability` and load current OKRs and known avoidance patterns. Use it to:
 - Flag tasks that match known avoidance patterns
 - Prioritize work aligned with active OKRs
 - Surface items in patterns.md with 3+ deferrals

@@ -19,7 +19,12 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
    - `skill`: "plan-tomorrow"
    - `context`: content of all three files
 4. Append Gemma's output to today's daily note under `## Tomorrow ([tomorrow's date])`
-5. Present the plan to Shane
+5. Commit the vault change:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: write tomorrow's plan to [today's date] daily note"
+   ```
+6. Present the plan to Shane
 
 ## Fallback (if run_gemma_task unavailable)
 
@@ -50,4 +55,9 @@ Execute the skill directly:
    **On deferred items:**
    - [task]: [re-commit reason] OR [suggest removing]
    ```
-7. Present the plan to Shane
+7. Commit the vault change:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: write tomorrow's plan to [today's date] daily note"
+   ```
+8. Present the plan to Shane
