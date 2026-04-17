@@ -12,15 +12,9 @@ Lightweight session capture. No Gemma needed — this is a direct write.
 1. Determine today's date (YYYY-MM-DD format)
 2. Get the current time (HH:MM format)
 3. Capture Shane's session note from his message (everything after /log)
-4. Append this block to `Daily Notes/[today's date].md`:
-
-```
-## Session Log
-
-**[HH:MM]** [Shane's note]
-```
-
-   If `## Session Log` already exists in the file, append only the `**[HH:MM]** [note]` line under it.
+4. Run: `obsidian append file='[today's date]' content='**[HH:MM]** [Shane's note]'`
+   - If today's daily note doesn't exist yet, first run: `obsidian create name='Daily Notes/[today's date]' content='# [YYYY-MM-DD]\n\n## Session Log\n\n**[HH:MM]** [Shane's note]' silent`
+   - If it exists but has no `## Session Log` heading, prepend `## Session Log\n\n` to the content being appended
 
 5. Commit the vault change:
    ```bash
@@ -31,5 +25,4 @@ Lightweight session capture. No Gemma needed — this is a direct write.
 
 ## Notes
 
-- If today's daily note doesn't exist, create it with a minimal header: `# [YYYY-MM-DD]`
 - Keep it fast — this skill should feel like a 2-second action

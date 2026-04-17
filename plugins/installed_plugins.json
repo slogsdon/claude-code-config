@@ -40,6 +40,16 @@
         "lastUpdated": "2026-04-14T22:42:04.701Z",
         "gitCommitSha": "bf2fa6994407c9c888fc19a03fd54957991cfa0e"
       }
+    ],
+    "shane-config@slogsdon-claude-code-config": [
+      {
+        "scope": "user",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/shane-config/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-04-17T14:37:40.326Z",
+        "lastUpdated": "2026-04-17T14:37:40.326Z",
+        "gitCommitSha": "079e975d414a0c7aa4d0c8ecaf7e7c4a204386c7"
+      }
     ]
   }
 }

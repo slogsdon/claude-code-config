@@ -10,15 +10,15 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
 ## Steps
 
 1. Determine today's and tomorrow's dates (YYYY-MM-DD format)
-2. Read these files:
-   - `Daily Notes/[today's date].md` (must contain EOD Audit — run /eod first if missing)
-   - `Context/accountability.md`
-   - `Context/patterns.md`
+2. Read these files using obsidian CLI:
+   - `obsidian read file='Daily Notes/[today's date]'` (must contain EOD Audit — run /eod first if missing)
+   - `obsidian read file='Context/accountability'`
+   - `obsidian read file='Context/patterns'`
 3. Call `mcp__ollama-agent__run_gemma_task` with:
    - `task`: "You are Shane's planning agent. Based on today's EOD audit, known OKRs, and avoidance patterns (all provided), propose tomorrow's plan: 1 primary focus and 2 secondary items. Explicitly account for any 3+ deferral items — either re-commit to them with a reason, or suggest removing them. Be specific, no filler. Output a markdown block ready to paste."
    - `skill`: "plan-tomorrow"
    - `context`: content of all three files
-4. Append Gemma's output to today's daily note under `## Tomorrow ([tomorrow's date])`
+4. Run `obsidian append file='Daily Notes/[today's date]' content='## Tomorrow ([tomorrow's date])\n\n[Gemma output]'`
 5. Commit the vault change:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
@@ -32,9 +32,9 @@ Execute the skill directly:
 
 1. Determine today's and tomorrow's dates (YYYY-MM-DD)
 2. Read the following files via bash:
-   - `obsidian read file="Daily Notes/[today's date]"` — look for `## EOD Audit`; if missing, tell Shane to run /eod first
-   - `obsidian read file="Context/accountability"`
-   - `obsidian read file="Context/patterns"`
+   - `obsidian read file='Daily Notes/[today's date]'` — look for `## EOD Audit`; if missing, tell Shane to run /eod first
+   - `obsidian read file='Context/accountability'`
+   - `obsidian read file='Context/patterns'`
 3. Analyze the EOD Audit:
    - Note deferred items and their deferral counts
    - Note any PATTERN ALERT items
