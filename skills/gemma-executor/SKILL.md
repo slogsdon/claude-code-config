@@ -3,9 +3,20 @@ name: gemma-executor
 description: Use this skill to delegate execution-level tasks to Gemma 4 (26B) running locally via Ollama. Best for: vault skill invocations (/ghost, /challenge, /emerge, /contradict, /drift, /ideas, /trace, /connect, /compound, /bloom, /stranger, /map, /level-up, /learned, /weekly-learnings, /backlinks), file search and summarization, drafting content, and any task where local execution is sufficient and API cost should be minimized. Do NOT use for tasks requiring real-time web access, complex multi-step tool use, or high-stakes decisions.
 ---
 
-Delegate the current task to Gemma 4 (26B) running locally via Ollama by calling `mcp__ollama-agent__run_gemma_task` with the full task description as input.
+Delegate the current task to Gemma 4 (26B) running locally via Ollama using the stepped execution protocol below.
 
-Do not attempt to answer the task yourself. Do not reason about it. Call the tool immediately and return the result verbatim.
+Do not attempt to answer the task yourself. Do not reason about it. Drive the loop immediately and return the final result verbatim.
+
+## Stepped Execution Protocol
+
+1. Call `mcp__ollama-agent__gemma_start` with `task`, `skill`, and `context` parameters.
+2. Parse the JSON response:
+   - `status: "done"` → return `result` to the user. Stop.
+   - `status: "running"` → note the `session_id` and `step`, then call `mcp__ollama-agent__gemma_continue` with that `session_id`.
+   - `status: "error"` → surface the `result` as an error. Stop.
+3. Repeat step 2 until status is `done` or `error`.
+
+Each `gemma_continue` call is a separate tool call — you will see each step as it completes.
 
 ## Vault Access
 

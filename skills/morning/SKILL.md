@@ -5,7 +5,7 @@ description: Use when /morning is invoked or when Shane wants to start his day w
 
 # Skill: /morning
 
-Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
+Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma executes.
 
 ## Steps
 
@@ -13,20 +13,21 @@ Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
 2. Read both of these files using obsidian CLI:
    - `obsidian read file='Context/accountability'`
    - `obsidian read file='Daily Notes/[yesterday's date]'` (skip if it doesn't exist)
-3. Call `mcp__ollama-agent__run_gemma_task` with:
+3. Call `mcp__ollama-agent__gemma_start` with:
    - `task`: "You are Shane's morning accountability agent. Review his accountability context and yesterday's daily note (provided). Surface any carry-over tasks that weren't logged as complete. Then ask: what is today's one primary focus? Propose 2 secondary items based on OKR alignment and known patterns. Be direct, no fluff."
    - `skill`: "morning"
    - `context`: full content of both files concatenated
-4. Write Gemma's output to today's daily note using: `obsidian append file='Daily Notes/[today's date]' content='## Today's Focus\n\n[Gemma output]'`
-   If today's note doesn't exist: `obsidian create name='Daily Notes/[today's date]' content='# [today's date]\n\n## Today's Focus\n\n[Gemma output]' silent`
-5. Commit the vault change:
+4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+5. Write Gemma's `result` to today's daily note using: `obsidian append file='Daily Notes/[today's date]' content='## Today's Focus\n\n[Gemma result]'`
+   If today's note doesn't exist: `obsidian create name='Daily Notes/[today's date]' content='# [today's date]\n\n## Today's Focus\n\n[Gemma result]' silent`
+6. Commit the vault change:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
    git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: write today's focus to [today's date] daily note"
    ```
-6. Present the focus summary to Shane
+8. Present the focus summary to Shane
 
-## Fallback (if run_gemma_task unavailable)
+## Fallback (if gemma_start/gemma_continue unavailable)
 
 Execute the skill directly:
 
