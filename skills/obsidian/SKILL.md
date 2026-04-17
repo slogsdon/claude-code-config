@@ -75,3 +75,18 @@ The user's phrasing is often loose — your job is to figure out which operation
 ## Note naming
 
 When creating notes, use title case and be descriptive. Good names are searchable: `Gemma CLI Quoting Bug`, `Developer Advocacy 2026 OKRs`, `CatalystForms Launch Checklist`. Avoid generic names like `Ideas` or `Notes`.
+
+## Post-write protocol
+
+After any `create` or `append` operation, commit the change:
+
+```bash
+VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: [brief description of what was written]"
+```
+
+Use conventional commit style. Examples:
+- `docs: log session entry 14:32`
+- `docs: write today's focus to 2026-04-17 daily note`
+- `docs: append EOD audit to 2026-04-17`
+- `docs: create note Gemma CLI Quoting Bug`

@@ -22,7 +22,12 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
    - Append the EOD Audit block to today's daily note under `## EOD Audit`
    - Update `Context/patterns.md` Deferred Tasks Log with new/incremented rows
 5. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
-6. Present the audit summary to Shane
+6. Commit the vault changes:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: append EOD audit to [today's date]"
+   ```
+7. Present the audit summary to Shane
 
 ## Fallback (if run_gemma_task unavailable)
 
@@ -55,4 +60,9 @@ Execute the skill directly:
 6. Append the audit block to `Daily Notes/[today's date].md`
 7. Update the Deferred Tasks Log section in `Context/patterns.md` with new/incremented rows
 8. If the session log was empty, also add a `## Logging Gap` entry to today's note
-9. Present the audit summary to Shane
+9. Commit the vault changes:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: append EOD audit to [today's date]"
+   ```
+10. Present the audit summary to Shane

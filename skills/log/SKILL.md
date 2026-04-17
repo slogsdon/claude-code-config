@@ -22,7 +22,12 @@ Lightweight session capture. No Gemma needed — this is a direct write.
 
    If `## Session Log` already exists in the file, append only the `**[HH:MM]** [note]` line under it.
 
-5. Confirm to Shane: "Logged at [HH:MM]."
+5. Commit the vault change:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: log session entry [HH:MM]"
+   ```
+6. Confirm to Shane: "Logged at [HH:MM]."
 
 ## Notes
 
