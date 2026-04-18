@@ -7,10 +7,6 @@ description: Process the Obsidian Inbox interactively — reads all files, gener
 
 Interactive inbox triage. Review each item, confirm the action, execute.
 
-## Vault Root
-
-`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/`
-
 ## Fixtures to Skip
 
 These files are permanent Inbox fixtures — do not include them in processing:
@@ -39,7 +35,8 @@ These files are permanent Inbox fixtures — do not include them in processing:
    - If inbox is empty: report "Inbox is clear." and stop
 
 2. **Read each file briefly**
-   - Read the first 30–50 lines of each file (enough to understand what it is)
+   - For each file, strip the `.md` extension and run: `obsidian read file='Note Name'`
+   - Skim the output for content type and intent (first ~40 lines is enough)
    - Note the filename and content type
 
 3. **Generate recommendations upfront**
@@ -66,9 +63,9 @@ These files are permanent Inbox fixtures — do not include them in processing:
    - Valid responses: "yes" / "ok" / blank → execute recommendation; "skip" / "keep" → note and move on; any other instruction → execute that instead
 
 5. **Execute each confirmed action**
-   - **Move**: `mv "[Inbox/filename]" "[Destination/filename]"` using full vault paths
-   - **Archive**: `mv "[Inbox/filename]" "[Inbox/Archive/filename]"` (create Archive/ if needed)
-   - **Delete**: `rm "[Inbox/filename]"`
+   - **Move**: `mv "[full vault path/Inbox/filename]" "[full vault path/Destination/filename]"` — bash exception; obsidian CLI has no move command
+   - **Archive**: `mv "[full vault path/Inbox/filename]" "[full vault path/Inbox/Archive/filename]"` (create Archive/ if needed)
+   - **Delete**: `rm "[full vault path/Inbox/filename]"` — bash exception; obsidian CLI has no delete command
    - **Keep in Inbox**: no action, note it
    - **Raw meeting note → Meetings/**: remind Shane to run `/meeting [filename]` first; skip the move for now
 
