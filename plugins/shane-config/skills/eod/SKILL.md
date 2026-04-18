@@ -10,29 +10,35 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
 ## Steps
 
 1. Determine today's date (YYYY-MM-DD format)
-2. Read these files from the vault:
-   - `Daily Notes/[today's date].md`
-   - `Context/patterns.md`
-   - `Context/accountability.md`
-3. Call `mcp__ollama-agent__run_gemma_task` with:
+2. Read these files using obsidian CLI:
+   - `obsidian read file='Daily Notes/[today's date]'`
+   - `obsidian read file='Context/patterns'`
+   - `obsidian read file='Context/accountability'`
+3. Call `mcp__ollama-agent__gemma_start` with:
    - `task`: "You are Shane's EOD accountability agent. Compare the 'Today's Focus' section against the 'Session Log' section in today's daily note (provided). For each focus item NOT reflected in the session log, flag it as deferred. Check patterns.md for existing deferral counts and increment them. Flag any item now at 3+ deferrals with: 'PATTERN ALERT: [task] has been deferred [N] times. Is this actually a priority?' Output: (1) EOD Audit block for the daily note, (2) updated rows for patterns.md Deferred Tasks Log."
    - `skill`: "eod"
    - `context`: content of all three files
-4. Parse Gemma's output:
-   - Append the EOD Audit block to today's daily note under `## EOD Audit`
-   - Update `Context/patterns.md` Deferred Tasks Log with new/incremented rows
-5. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
-6. Present the audit summary to Shane
+4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+5. Parse Gemma's `result`:
+   - Run `obsidian append file='Daily Notes/[today's date]' content='## EOD Audit\n\n[audit block]'`
+   - Run `obsidian append file='Context/patterns' content='[updated deferral rows]'` (or use read→edit cycle if replacing existing rows)
+6. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
+7. Commit the vault changes:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: append EOD audit to [today's date]"
+   ```
+8. Present the audit summary to Shane
 
-## Fallback (if run_gemma_task unavailable)
+## Fallback (if gemma_start/gemma_continue unavailable)
 
 Execute the skill directly:
 
 1. Determine today's date (YYYY-MM-DD)
 2. Read the following files via bash:
-   - `obsidian read file="Daily Notes/[today's date]"`
-   - `obsidian read file="Context/patterns"`
-   - `obsidian read file="Context/accountability"`
+   - `obsidian read file='Daily Notes/[today's date]'`
+   - `obsidian read file='Context/patterns'`
+   - `obsidian read file='Context/accountability'`
 3. Diff focus vs session log:
    - Extract items from `## Today's Focus`
    - Extract completed items from `## Session Log`
@@ -55,4 +61,9 @@ Execute the skill directly:
 6. Append the audit block to `Daily Notes/[today's date].md`
 7. Update the Deferred Tasks Log section in `Context/patterns.md` with new/incremented rows
 8. If the session log was empty, also add a `## Logging Gap` entry to today's note
-9. Present the audit summary to Shane
+9. Commit the vault changes:
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: append EOD audit to [today's date]"
+   ```
+10. Present the audit summary to Shane

@@ -5,16 +5,29 @@ description: Use when asked to trace the evolution of an idea over time in the v
 
 # Skill: /trace [argument]
 
-Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
+Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma executes.
 
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__run_gemma_task` with:
+2. Call `mcp__ollama-agent__gemma_start` with:
    - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Map the chronological evolution of Shane's thinking about '[argument]' in the vault. Show how the idea developed, shifted, or matured over time."
    - `skill`: "trace"
    - `context`: any relevant context from the current conversation
-3. Review Gemma's response, synthesize if needed, and present to Shane
+3. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Review Gemma's `result`, synthesize if needed, and present to Shane
+5. Ask Shane: "Save this as a Concept page? (yes/no)"
+   - If no: done.
+   - If yes: ask "What's your take on this?" and wait for Shane's verbatim response
+   - Create the Concept page:
+     ```
+     obsidian create name='Concepts/[topic]' content='## Shane'\''s Take\n\n[Shane'\''s words]\n\n## Summary / Key Points / Cross-references\n\n[synthesis output]' silent
+     ```
+   - Commit:
+     ```bash
+     VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+     git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: add Concept page for [topic]"
+     ```
 
 ## Task description for Gemma
 
@@ -22,7 +35,7 @@ Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`,
 
 Map the chronological evolution of Shane's thinking about '[argument]' in the vault. How did the idea develop, shift, or mature over time?
 
-## Fallback (if run_gemma_task unavailable)
+## Fallback (if gemma_start/gemma_continue unavailable)
 
 Execute the skill directly:
 
@@ -35,3 +48,15 @@ Execute the skill directly:
    - What's the current settled position (if any), or what remains unresolved?
 5. Present a chronological narrative showing how the idea developed, with specific note references and dates
 6. Highlight inflection points — moments where the thinking meaningfully changed direction
+7. Ask Shane: "Save this as a Concept page? (yes/no)"
+   - If no: done.
+   - If yes: ask "What's your take on this?" and wait for Shane's verbatim response
+   - Create the Concept page:
+     ```
+     obsidian create name='Concepts/[topic]' content='## Shane'\''s Take\n\n[Shane'\''s words]\n\n## Summary / Key Points / Cross-references\n\n[synthesis output]' silent
+     ```
+   - Commit:
+     ```bash
+     VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+     git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: add Concept page for [topic]"
+     ```
