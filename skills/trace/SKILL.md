@@ -16,6 +16,18 @@ Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma
    - `context`: any relevant context from the current conversation
 3. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 4. Review Gemma's `result`, synthesize if needed, and present to Shane
+5. Ask Shane: "Save this as a Concept page? (yes/no)"
+   - If no: done.
+   - If yes: ask "What's your take on this?" and wait for Shane's verbatim response
+   - Create the Concept page:
+     ```
+     obsidian create name='Concepts/[topic]' content='## Shane'\''s Take\n\n[Shane'\''s words]\n\n## Summary / Key Points / Cross-references\n\n[synthesis output]' silent
+     ```
+   - Commit:
+     ```bash
+     VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+     git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: add Concept page for [topic]"
+     ```
 
 ## Task description for Gemma
 
@@ -36,3 +48,15 @@ Execute the skill directly:
    - What's the current settled position (if any), or what remains unresolved?
 5. Present a chronological narrative showing how the idea developed, with specific note references and dates
 6. Highlight inflection points — moments where the thinking meaningfully changed direction
+7. Ask Shane: "Save this as a Concept page? (yes/no)"
+   - If no: done.
+   - If yes: ask "What's your take on this?" and wait for Shane's verbatim response
+   - Create the Concept page:
+     ```
+     obsidian create name='Concepts/[topic]' content='## Shane'\''s Take\n\n[Shane'\''s words]\n\n## Summary / Key Points / Cross-references\n\n[synthesis output]' silent
+     ```
+   - Commit:
+     ```bash
+     VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+     git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: add Concept page for [topic]"
+     ```
