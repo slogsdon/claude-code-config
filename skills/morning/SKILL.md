@@ -22,6 +22,13 @@ Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma
 6. Write focus + briefing to today's daily note:
    - If note exists: `obsidian append file='Daily Notes/[today's date]' content='## Today'\''s Focus\n\n[Gemma result]\n\n## Knowledge Briefing\n\n[briefing output]'`
    - If note doesn't exist: `obsidian create name='Daily Notes/[today's date]' content='# [today'\''s date]\n\n## Today'\''s Focus\n\n[Gemma result]\n\n## Knowledge Briefing\n\n[briefing output]' silent`
+6a. Walk check (yesterday):
+   - Scan yesterday's daily note content (loaded in step 2) for `🚶 Walk:`
+   - If found: skip to step 7
+   - If not found: ask "Did you walk yesterday? (y/n)"
+     - yes → `obsidian append file='Daily Notes/[yesterday's date]' content='**[HH:MM]** 🚶 Walk: yes'`
+     - no → note briefly ("No walk logged for yesterday — noted."), continue
+   - Nudge: "Walk scheduled for today?" (one-liner, no reply required)
 7. Commit the vault change:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
@@ -106,6 +113,13 @@ Execute the skill directly:
    **Open questions:** [list or "none"]
    **Vault delta:** [summary or "no changes"]
    ```
+8a. Walk check (yesterday):
+    - Scan yesterday's note content (loaded in step 3) for `🚶 Walk:`
+    - If found: skip to step 9
+    - If not found: ask "Did you walk yesterday? (y/n)"
+      - yes → `obsidian append file='Daily Notes/[yesterday's date]' content='**[HH:MM]** 🚶 Walk: yes'` via bash
+      - no → note briefly ("No walk logged for yesterday — noted."), continue
+    - Nudge: "Walk scheduled for today?" (one-liner)
 9. Commit the vault change:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
