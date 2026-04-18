@@ -5,16 +5,17 @@ description: Use when Shane wants to pressure-test a belief, steelman an opposin
 
 # Skill: /challenge [argument]
 
-Delegate to Gemma via `run_gemma_task`. Claude orchestrates; Gemma executes.
+Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma executes.
 
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__run_gemma_task` with:
+2. Call `mcp__ollama-agent__gemma_start` with:
    - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Steelman the strongest opposition to '[argument]'. Identify the most vulnerable assumptions, surface counterevidence from the vault, and pressure-test the position rigorously."
    - `skill`: "challenge"
    - `context`: any relevant context from the current conversation
-3. Review Gemma's response, synthesize if needed, and present to Shane
+3. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Review Gemma's `result`, synthesize if needed, and present to Shane
 
 ## Task description for Gemma
 
@@ -22,7 +23,7 @@ Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`,
 
 Steelman the strongest opposition to '[argument]'. Identify the most vulnerable assumptions, surface counterevidence from the vault, and pressure-test the position rigorously.
 
-## Fallback (if run_gemma_task unavailable)
+## Fallback (if gemma_start/gemma_continue unavailable)
 
 Execute the skill directly:
 
