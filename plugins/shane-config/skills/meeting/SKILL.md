@@ -7,16 +7,12 @@ description: Process a raw conversation note from the Obsidian Inbox into a clea
 
 Process a raw note from the Obsidian Inbox into a structured Meetings note.
 
-## Vault Root
-
-`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/`
-
 ## Steps
 
 1. **Find the raw note**
-   - If the user named a note (e.g. "Chat with Sean"), find the matching file in `Inbox/`
-   - Otherwise, list files in `Inbox/` and pick the most recently modified one
-   - Read the raw note content
+   - If the user named a note (e.g. "Chat with Sean"), run: `obsidian search query='Chat with Sean'` to confirm it exists, then `obsidian read file='Chat with Sean'`
+   - If no name given, run `ls "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Inbox/"` and pick the most recently modified non-fixture file, then `obsidian read file='Note Name'` (strip .md)
+   - Read the full note content
 
 2. **Extract structured content**
    - Identify the other person(s) in the conversation
@@ -27,7 +23,7 @@ Process a raw note from the Obsidian Inbox into a structured Meetings note.
 
 3. **Write the processed note**
    - Determine the date from the filename or content (format: YYYY-MM-DD)
-   - Write to `Meetings/[original filename].md` using this format:
+   - Run `obsidian create name='Meetings/[original filename without .md]' silent` with the following content:
 
    ```markdown
    ---
@@ -46,8 +42,8 @@ Process a raw note from the Obsidian Inbox into a structured Meetings note.
    ```
 
 4. **Check/create Person note**
-   - Check if `People/[PersonName].md` exists
-   - If not, create a minimal stub:
+   - Run `obsidian read file='PersonName'` — if it errors or returns empty, the note doesn't exist
+   - If missing, run `obsidian create name='People/PersonName' silent` with this stub:
 
    ```markdown
    ---
@@ -67,9 +63,17 @@ Process a raw note from the Obsidian Inbox into a structured Meetings note.
    ```
 
 5. **Handle the raw Inbox note**
-   - Delete the raw note from `Inbox/` (or move to `Inbox/Archive/` if the user prefers to keep it)
+   - Delete the raw note from Inbox/ using bash (obsidian CLI has no delete command):
+     `rm "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Inbox/[filename].md"`
+   - Or move to Archive/ if user prefers to keep it
    - Default: delete unless user says otherwise
 
-6. **Confirm**
+6. **Commit vault changes**
+   ```bash
+   VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
+   git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: process meeting note [filename]"
+   ```
+
+7. **Confirm**
    - Tell Shane what was written and where
    - Surface any action items that need immediate attention
