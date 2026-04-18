@@ -19,16 +19,21 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
    - `skill`: "eod"
    - `context`: content of all three files
 4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
-5. Parse Gemma's `result`:
+5. Walk check:
+   - Ask Shane: "Did you walk today? (y/n / skipped)"
+   - Log to today's session log: `obsidian append file='Daily Notes/[today's date]' content='**[HH:MM]** 🚶 Walk: [yes/no/skipped]'`
+   - If yes: in patterns.md find `walk_streak_missed` and reset to 0 (skip if field absent)
+   - If no or skipped: find or add `walk_streak_missed` in patterns.md, increment by 1; flag if 3+
+6. Parse Gemma's `result`:
    - Run `obsidian append file='Daily Notes/[today's date]' content='## EOD Audit\n\n[audit block]'`
    - Run `obsidian append file='Context/patterns' content='[updated deferral rows]'` (or use read→edit cycle if replacing existing rows)
-6. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
-7. Commit the vault changes:
+7. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
+8. Commit the vault changes:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
    git -C "$VAULT" add -A && git -C "$VAULT" commit -m "docs: append EOD audit to [today's date]"
    ```
-8. Present the audit summary to Shane
+9. Present the audit summary to Shane
 
 ## Fallback (if gemma_start/gemma_continue unavailable)
 
@@ -43,6 +48,11 @@ Execute the skill directly:
    - Extract items from `## Today's Focus`
    - Extract completed items from `## Session Log`
    - Items in focus but NOT in session log = deferred today
+3a. Walk check:
+    - Ask "Did you walk today? (y/n / skipped)"
+    - Note current time (HH:MM); log: `obsidian append file='Daily Notes/[today's date]' content='**[HH:MM]** 🚶 Walk: [yes/no/skipped]'`
+    - If yes: find `walk_streak_missed` in patterns.md; reset to 0 if present
+    - If no or skipped: find or add `walk_streak_missed` in patterns.md, increment by 1; add PATTERN ALERT if 3+
 4. For each deferred item, check `Context/patterns.md` Deferred Tasks Log:
    - If it exists: increment the deferral count
    - If new: add a row with count = 1
