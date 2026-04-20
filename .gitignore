@@ -21,3 +21,4 @@ plugins/install-counts-cache.json
 telemetry/
 tasks/
 plugins/marketplaces/
+__pycache__/
