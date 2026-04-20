@@ -10,11 +10,11 @@ Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__gemma_start` with:
+2. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Map the chronological evolution of Shane's thinking about '[argument]' in the vault. Show how the idea developed, shifted, or matured over time."
    - `skill`: "trace"
    - `context`: any relevant context from the current conversation
-3. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+3. Loop: if `status` is `"running"`, call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 4. Review Gemma's `result`, synthesize if needed, and present to Shane
 5. Ask Shane: "Save this as a Concept page? (yes/no)"
    - If no: done.

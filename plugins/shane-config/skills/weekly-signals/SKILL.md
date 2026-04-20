@@ -17,11 +17,11 @@ Weekly pattern aggregator. Delegate to Gemma; output a paste-ready block.
    - `Context/patterns.md`
    - `Context/accountability.md`
    - All `Daily Notes/[date].md` files for the current week (read each that exists)
-4. Call `mcp__ollama-agent__gemma_start` with:
+4. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: "You are Shane's weekly accountability analyst. Review this week's daily notes and patterns.md (provided). Surface: (1) tasks deferred 2+ times this week, (2) any PATTERN ALERT items, (3) logging gaps (days with no session log), (4) OKR alignment score — what % of logged work maps to the 3 active OKRs? Output a markdown block titled '## Accountability Signals' ready to paste into a Weekly Review note. Be honest, not cheerful."
    - `skill`: "weekly-signals"
    - `context`: content of all files concatenated
-5. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+5. Loop: if `status` is `"running"`, call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 6. Output Gemma's `result` to Shane — do NOT write to the Weekly Review automatically. Shane pastes it manually.
 7. Offer to explain any pattern or signal in more detail.
 

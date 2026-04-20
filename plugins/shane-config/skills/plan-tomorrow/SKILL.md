@@ -14,11 +14,11 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
    - `obsidian read file='Daily Notes/[today's date]'` (must contain EOD Audit — run /eod first if missing)
    - `obsidian read file='Context/accountability'`
    - `obsidian read file='Context/patterns'`
-3. Call `mcp__ollama-agent__gemma_start` with:
+3. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: "You are Shane's planning agent. Based on today's EOD audit, known OKRs, and avoidance patterns (all provided), propose tomorrow's plan: 1 primary focus and 2 secondary items. Explicitly account for any 3+ deferral items — either re-commit to them with a reason, or suggest removing them. Be specific, no filler. Output a markdown block ready to paste."
    - `skill`: "plan-tomorrow"
    - `context`: content of all three files
-4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Loop: if `status` is `"running"`, call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 5. Run `obsidian append file='Daily Notes/[today's date]' content='## Tomorrow ([tomorrow's date])\n\n[Gemma result]'`
 6. Commit the vault change:
    ```bash

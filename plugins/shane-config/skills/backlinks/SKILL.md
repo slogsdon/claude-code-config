@@ -10,12 +10,12 @@ Delegate to Gemma via the stepped execution protocol. Claude drives the loop; Ge
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__gemma_start` with:
+2. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: (see Task description for Gemma below, substituting `[argument]` if provided)
    - `skill`: "backlinks"
    - `context`: any relevant context from the current conversation
 3. Parse the JSON response and loop:
-   - `status: "running"` → call `mcp__ollama-agent__gemma_continue` with the `session_id`
+   - `status: "running"` → call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with the `session_id`
    - `status: "done"` → proceed to step 4
    - `status: "error"` → surface the error and stop
 4. Review Gemma's `result`, synthesize if needed, and present to Shane
