@@ -10,11 +10,11 @@ Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__gemma_start` with:
+2. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: "Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md). Answer the question or topic '[argument]' in Shane's authentic voice. Use the Ghost Writer Context file and vault notes to mirror his vocabulary, reasoning style, and tone. Produce content as Shane would write it."
    - `skill`: "ghost"
    - `context`: any relevant context from the current conversation
-3. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+3. Loop: if `status` is `"running"`, call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 4. Review Gemma's `result`, synthesize if needed, and present to Shane
 
 ## Task description for Gemma

@@ -14,11 +14,11 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
    - `obsidian read file='Daily Notes/[today's date]'`
    - `obsidian read file='Context/patterns'`
    - `obsidian read file='Context/accountability'`
-3. Call `mcp__ollama-agent__gemma_start` with:
+3. Call `mcp__plugin_shane-config_ollama-agent__gemma_start` with:
    - `task`: "You are Shane's EOD accountability agent. Compare the 'Today's Focus' section against the 'Session Log' section in today's daily note (provided). For each focus item NOT reflected in the session log, flag it as deferred. Check patterns.md for existing deferral counts and increment them. Flag any item now at 3+ deferrals with: 'PATTERN ALERT: [task] has been deferred [N] times. Is this actually a priority?' Output: (1) EOD Audit block for the daily note, (2) updated rows for patterns.md Deferred Tasks Log."
    - `skill`: "eod"
    - `context`: content of all three files
-4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Loop: if `status` is `"running"`, call `mcp__plugin_shane-config_ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
 5. Parse Gemma's `result`:
    - Run `obsidian append file='Daily Notes/[today's date]' content='## EOD Audit\n\n[audit block]'`
    - Run `obsidian append file='Context/patterns' content='[updated deferral rows]'` (or use read→edit cycle if replacing existing rows)

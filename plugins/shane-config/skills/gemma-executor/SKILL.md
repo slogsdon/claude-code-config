@@ -7,12 +7,21 @@ Delegate the current task to Gemma 4 (26B) running locally via Ollama using the 
 
 Do not attempt to answer the task yourself. Do not reason about it. Drive the loop immediately and return the final result verbatim.
 
+## Tool Names
+
+The Ollama MCP server is registered under different namespaces depending on context:
+
+- **Cowork (plugin context):** `mcp__plugin_shane-config_ollama-agent__gemma_start` / `mcp__plugin_shane-config_ollama-agent__gemma_continue`
+- **Claude Code (standalone):** `mcp__ollama-agent__gemma_start` / `mcp__ollama-agent__gemma_continue`
+
+Check which tools are available in your current session and use whichever namespace is present. If neither is available, use the fallback below.
+
 ## Stepped Execution Protocol
 
-1. Call `mcp__ollama-agent__gemma_start` with `task`, `skill`, and `context` parameters.
+1. Call `gemma_start` (with the correct namespace prefix for your context) with `task`, `skill`, and `context` parameters.
 2. Parse the JSON response:
    - `status: "done"` → return `result` to the user. Stop.
-   - `status: "running"` → note the `session_id` and `step`, then call `mcp__ollama-agent__gemma_continue` with that `session_id`.
+   - `status: "running"` → note the `session_id` and `step`, then call `gemma_continue` with that `session_id`.
    - `status: "error"` → surface the `result` as an error. Stop.
 3. Repeat step 2 until status is `done` or `error`.
 
