@@ -64,7 +64,7 @@ Output: up to 3 top open questions with source note, or "none."
 ### vault-index delta since last session
 
 ```bash
-obsidian read file='Context/vault-index'
+obsidian read file='vault-index'
 ```
 
 Compare the current vault-index to the snapshot from yesterday's daily note (look for a `## Knowledge Briefing` section). Surface any new Concept pages, new Clippings folders, or deleted notes since then.
