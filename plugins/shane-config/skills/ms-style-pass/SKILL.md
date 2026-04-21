@@ -1,7 +1,7 @@
 ---
 name: ms-style-pass
 description: >
-  Apply Microsoft Writing Style Guide term preferences and bias-free language rules to a blog draft — without disrupting voice or structure that humanize already established. Use after the humanize skill when Shane says: "ms style pass", "apply the style guide", "style check this", "run the style guide on this", "check for outdated terms", "bias check this", "clean up the terminology". Also invoke proactively when a humanized draft contains terms like blacklist, whitelist, master/slave, sanity check, guys, or disability metaphors.
+  Apply Microsoft Writing Style Guide term preferences and bias-free language rules to a blog draft — without disrupting voice or structure that humanize already established. Use after the humanize skill when Shane says: "ms style pass", "apply the style guide", "style check this", "run the style guide on this", "check for outdated terms", "bias check this", "clean up the terminology", "add headings". Also invoke proactively when a humanized draft contains terms like blacklist, whitelist, master/slave, sanity check, guys, or disability metaphors.
 ---
 
 # MS Style Pass
@@ -50,6 +50,24 @@ These are unambiguous — apply them:
 - **Oxford comma**: A, B, and C — not A, B and C
 - **Numbers**: spell out zero through nine; numerals for 10 and above. Exception: use numerals when mixing with a numeral in the same sentence ("3 of the 10 checks passed")
 
+### 5. Headings — add if absent, correct if present
+
+Both Microsoft and Google style guides treat headings as an accessibility and scannability requirement, not just a formatting preference. Apply this check last, after all term substitutions are done.
+
+**If headings are already present:**
+- Convert title case to sentence case: capitalize only the first word and proper nouns. "Setting Up Your CI Pipeline" → "Setting up your CI pipeline"
+- Flag vague headings that label rather than describe: "Introduction", "Overview", "Background", "Conclusion", "Summary" → suggest something specific to the content
+- Check for parallel structure across headings at the same level — if two H2s are noun phrases and one is a question, flag the mismatch
+- Don't change heading levels the author set intentionally
+
+**If headings are absent:**
+- Add H2 headings if the draft has three or more distinct sections or runs longer than roughly 400 words. Short, single-topic posts don't need headings.
+- Don't add an H1 — that's the post title, set outside the draft
+- Aim for one H2 per major topic shift, not one per paragraph
+- Write headings that name what follows specifically — a reader skimming headings alone should understand the post's shape
+- Match the voice: sentence case, specific over generic, action-oriented or topic-focused where natural
+- Log all inserted headings in the changelog
+
 ### 4. Tech term capitalization
 
 Don't over-capitalize. Preserve what's actually a proper name or acronym:
@@ -67,16 +85,17 @@ The voice work is done. Don't:
 - Add or remove hedges, or rebalance tone
 - Break up or merge sentences
 - Touch inline code, code samples, variable names, or quoted strings
-- Apply MS structural conventions (numbered steps, procedure formatting, heading capitalization) — those are for Microsoft docs, not personal blog posts
+- Apply MS structural conventions (numbered steps, procedure formatting) beyond what's listed here — those are for Microsoft docs, not personal blog posts
 - Enforce any additional "clarity" edits beyond what's listed here — scope creep from this skill erodes humanize's work
 
 ## Process
 
-1. Read the full draft. Understand what terms appear and in what context (used vs. discussed).
+1. Read the full draft. Understand what terms appear and in what context (used vs. discussed). Assess whether headings are present and whether the draft is long enough to warrant them.
 2. Check the term list in `references/terms.md` — scan for any listed terms.
 3. Check for bias-free language issues.
 4. Apply the mechanical formatting conventions (email, internet, Oxford comma, numbers, capitalization).
-5. Return the edited draft followed by a brief changelog.
+5. Apply the heading check: correct existing headings (sentence case, specificity, parallel structure) or insert H2s if the draft needs them.
+6. Return the edited draft followed by a brief changelog.
 
 ## Changelog format
 
