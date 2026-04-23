@@ -1,14 +1,14 @@
 ---
 name: ms-style-pass
 description: >
-  Apply Microsoft Writing Style Guide term preferences and bias-free language rules to a blog draft — without disrupting voice or structure that humanize already established. Use after the humanize skill when Shane says: "ms style pass", "apply the style guide", "style check this", "run the style guide on this", "check for outdated terms", "bias check this", "clean up the terminology", "add headings". Also invoke proactively when a humanized draft contains terms like blacklist, whitelist, master/slave, sanity check, guys, or disability metaphors.
+  Apply Microsoft Writing Style Guide term preferences, bias-free language rules, and heading conventions to a blog draft — without disrupting voice or structure that humanize already established. Use after the humanize skill when Shane says: "ms style pass", "apply the style guide", "style check this", "run the style guide on this", "check for outdated terms", "bias check this", "clean up the terminology", "add headings". Also invoke proactively when a humanized draft contains terms like blacklist, whitelist, master/slave, sanity check, guys, or disability metaphors.
 ---
 
 # MS Style Pass
 
-This skill runs after humanize. Its job is narrow: catch the specific term preferences and bias-free language rules from the Microsoft Writing Style Guide that humanize doesn't cover, without touching the voice and structure humanize already established.
+This skill runs after humanize. Its job is to catch the specific term preferences, bias-free language rules, and heading conventions from the Microsoft Writing Style Guide that humanize doesn't cover, without touching the voice and structure humanize already established.
 
-Don't rewrite for clarity — humanize did that. Don't restructure — that's done. You're here to find specific terms and fix them.
+Don't rewrite for clarity — humanize did that. Don't restructure prose — that's done. You're here to fix specific terms and add or correct headings for scannability.
 
 ## What to check
 
