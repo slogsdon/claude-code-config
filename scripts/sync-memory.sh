@@ -30,4 +30,5 @@ fi
 if [ -n "$OUTPUT" ] && ! echo "$OUTPUT" | grep -q "^Error:"; then
   mkdir -p "$MEMORY_DIR"
   printf '%s\n' "$OUTPUT" > "$MEMORY_FILE"
+  printf '%s\n' "$OUTPUT" > "${CWD}/MEMORY.md"
 fi
