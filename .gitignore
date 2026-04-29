@@ -1,6 +1,9 @@
 ide/
 local/
 projects/
+auth.json
+bin/
+pi-crash.log
 shell-snapshots/
 statsig/
 todos/

@@ -50,5 +50,35 @@
   },
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "defaultModel": "qwen3.6-35b-a3b",
+  "defaultProvider": "lmstudio",
+  "lastChangelogVersion": "0.70.5",
+  "packages": [
+    "npm:pi-lens",
+    "npm:pi-mcp-adapter",
+    "npm:pi-web-access",
+    "npm:@tmustier/pi-ralph-wiggum",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@aliou/pi-guardrails",
+    "npm:pi-ask-user",
+    "npm:@jeonghyeon.net/pi-tasks",
+    "npm:@artale/pi-memory"
+  ],
+  "skills": [
+    "~/Code/claude-code-config/skills",
+    "~/Code/claude-code-config/plugins/agent-skills/skills",
+    "~/Code/claude-code-config/plugins/example-skills/skills",
+    "~/Code/claude-code-config/plugins/superpowers/skills",
+    "~/Code/claude-code-config/plugins/superpowers-developing-for-claude-code/skills"
+  ],
+  "retry": {
+    "enabled": true,
+    "provider": {
+      "timeoutMs": 7200000
+    }
+  },
+  "enableInstallTelemetry": false,
+  "defaultThinkingLevel": "medium",
+  "quietStartup": true
 }
