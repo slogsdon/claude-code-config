@@ -48,6 +48,16 @@ All specialized workflows (code review, PRD writing, architecture review, securi
   ```
 - This applies whether the write comes from the obsidian skill, a vault skill, or a fallback path
 
+## Memory
+
+Memory is stored in Obsidian, per-project, and synced to local at session start via a `SessionStart` hook.
+
+- **Source of truth:** `Context/Memory/<project-name>/MEMORY.md` in the vault (e.g., `Context/Memory/claude-code-config/MEMORY.md`)
+- **Local cache:** `~/.claude/projects/<project-key>/memory/MEMORY.md` — auto-synced from vault; do not write to it directly
+- **Add a memory:** `obsidian append path='Context/Memory/<project>/MEMORY.md' content='...'` then update the Index section
+- **Update/delete a memory:** use the Write tool directly on the vault file path (`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Context/Memory/<project>/MEMORY.md`) — this is an explicit exception to the no-direct-vault-access rule, limited to `Context/Memory/` files only
+- After any memory write, commit the vault
+
 ## Accountability
 At the start of every session, use the obsidian skill to read `Context/accountability` and load current OKRs and known avoidance patterns. Use it to:
 - Flag tasks that match known avoidance patterns

@@ -1,0 +1,54 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "MultiEdit(*)"
+    ]
+  },
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); model=$(echo \"$input\" | jq -r '.model.display_name'); dir=$(basename \"$cwd\"); if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" --no-optional-locks branch --show-current 2>/dev/null || echo 'detached'); if [ -n \"$(git -C \"$cwd\" --no-optional-locks status --porcelain 2>/dev/null)\" ]; then dirty='*'; else dirty=''; fi; printf '%s %s %s%s' \"$model\" \"$dir\" \"$branch\" \"$dirty\"; else printf '%s %s' \"$model\" \"$dir\"; fi"
+  },
+  "enabledPlugins": {
+    "example-skills@anthropic-agent-skills": true,
+    "superpowers@superpowers-marketplace": true,
+    "superpowers-developing-for-claude-code@superpowers-marketplace": true,
+    "agent-skills@addy-agent-skills": true,
+    "shane-config@slogsdon-claude-code-config": true
+  },
+  "extraKnownMarketplaces": {
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
+      }
+    },
+    "slogsdon-claude-code-config": {
+      "source": {
+        "source": "github",
+        "repo": "slogsdon/claude-code-config"
+      }
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/shane/.claude/scripts/sync-memory.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "preferredNotifChannel": "ghostty",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true
+}
