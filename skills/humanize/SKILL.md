@@ -66,10 +66,15 @@ Long sentences chained with "which" or "that" clauses feel generated. Split them
 - "consistently reach a state where" → "inevitably realize"
 - "productive shift" → "important thing the shift requires" (or whatever the actual substance is)
 - Technical labels → descriptions when speaking to a general audience ("computer scientists" → "people who built them"), but preserve precision when the audience is technical
+- Vague compounding → concrete cause-effect: "in ways that compound" → "those near misses compound"; "consistently, in ways that [verb]" → name what actually accumulates
 
 ### Add qualifiers where they're warranted
 
 Shane hedges accurately. Add: "so far", "with any certainty", "not only...but also" where the claim genuinely is uncertain or partial. Don't add hedges that weaken true claims.
+
+### Prefer precise connectives over weak ones
+
+In concessive clauses, prefer "albeit" over "just": "just with slightly better manners" → "albeit with slightly better manners." Prefer "nor" for negative parallels: "they can't ask a colleague, nor do they phone a friend."
 
 ### Remove moral-weight filler
 
@@ -96,15 +101,22 @@ Do not over-edit. These things should survive the pass:
 - **Technical precision** — If a specific term (JSONL, `run_started_at`, AX) is the right word, keep it. Don't replace technical accuracy with accessibility theater.
 - **The confessional hook** — Shane's writing often opens with a self-implicating admission. Preserve this register. "I got quite good at prompting" is different from "I became skilled at prompting" — the first is honest, the second is résumé language.
 - **First-person grounding** — Claims that start with "I" or "we" are load-bearing. Don't convert them to passive or impersonal constructions.
-- **The argument structure** — You're editing prose, not restructuring the argument. If a section makes a claim in a specific order, preserve that order.
-- **Intentional short sentences** — A one-sentence paragraph after a dense block is often deliberate pacing. Don't merge it.
+- **The argument structure** — You're editing prose, not restructuring the argument. Preserve the overall order of claims. Minor reordering within a paragraph or brief elaborations that sharpen the voice register are allowed — but flag them rather than treating them as transparent.
+- **Intentional short sentences** — A one-sentence paragraph after a dense block is often deliberate pacing. These can be preserved as-is or absorbed into surrounding prose if the merged version reads more naturally in Shane's voice. Use judgment; flag the choice.
 
 ## Process
 
 1. Read the full draft. Identify the core argument and voice register.
 2. Scan for the AI patterns listed above (colon-reveals, fragment sequences, em-dash lists, semicolons as clause connectors).
 3. Apply structural edits first, then vocabulary/phrasing.
-4. Read the result aloud (mentally). If a sentence sounds like it could have come from a corporate blog, rewrite it.
+4. Run an active enrichment pass — these are easy to skip but improve detection scores and voice fidelity:
+   - Did you add "so far" or "with any certainty" where a claim is genuinely partial?
+   - Did you use "not only...but also" where a list has an asymmetric emphasis?
+   - Did you swap a technical label for a description where the audience warrants it?
+   - Did you find one natural colloquial aside per section?
+   - Did you convert concessive "just" → "albeit" and negative parallels to "nor"?
+   - Did you make vague compounding language concrete?
+5. Read the result aloud (mentally). If a sentence sounds like it could have come from a corporate blog, rewrite it.
 5. Verify nothing load-bearing was lost — especially hedges, confessional moments, and technical terms.
 6. Return the edited draft. Note any places where you made a judgment call or where a TODO was present in the original — flag those explicitly rather than editing around them.
 

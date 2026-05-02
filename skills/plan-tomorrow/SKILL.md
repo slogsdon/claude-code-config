@@ -5,7 +5,7 @@ description: Use when /plan-tomorrow is invoked or after /eod. Reads today's EOD
 
 # Skill: /plan-tomorrow
 
-Tomorrow's plan based on today's audit. Delegate to Gemma.
+Tomorrow's plan based on today's audit. Delegate to Qwen.
 
 ## Steps
 
@@ -14,12 +14,12 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
    - `obsidian read file='Daily Notes/[today's date]'` (must contain EOD Audit — run /eod first if missing)
    - `obsidian read file='Context/accountability'`
    - `obsidian read file='Context/patterns'`
-3. Call `mcp__ollama-agent__gemma_start` with:
+3. Call `mcp__lmstudio-agent__qwen_start` (standalone) or `mcp__plugin_shane-config_lmstudio-agent__qwen_start` (plugin — use whichever is available) with:
    - `task`: "You are Shane's planning agent. Based on today's EOD audit, known OKRs, and avoidance patterns (all provided), propose tomorrow's plan: 1 primary focus and 2 secondary items. Explicitly account for any 3+ deferral items — either re-commit to them with a reason, or suggest removing them. Be specific, no filler. Output a markdown block ready to paste."
    - `skill`: "plan-tomorrow"
    - `context`: content of all three files
-4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
-5. Run `obsidian append file='Daily Notes/[today's date]' content='## Tomorrow ([tomorrow's date])\n\n[Gemma result]'`
+4. Loop: if `status` is `"running"`, call `mcp__lmstudio-agent__qwen_continue` (or `mcp__plugin_shane-config_lmstudio-agent__qwen_continue` in plugin) with `session_id`; repeat until `status` is `"done"` or `"error"`
+5. Run `obsidian append file='Daily Notes/[today's date]' content='## Tomorrow ([tomorrow's date])\n\n[Qwen result]'`
 6. Commit the vault change:
    ```bash
    VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"
@@ -27,7 +27,7 @@ Tomorrow's plan based on today's audit. Delegate to Gemma.
    ```
 7. Present the plan to Shane
 
-## Fallback (if gemma_start/gemma_continue unavailable)
+## Fallback (if qwen_start/qwen_continue unavailable)
 
 Execute the skill directly:
 
