@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>obs-scene-pack — sample artifact (Shane Logsdon · live coding scenes)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --color-surface: #fbfaf5;
+  --color-ink: #181b21;
+  --color-ink-soft: #404550;
+  --color-ink-3: #62686f;
+  --color-rule: #d6d8de;
+  --color-accent: #c26a3b;
+  --type-display: 'Fraunces', Georgia, serif;
+  --type-sans: 'Inter', system-ui, sans-serif;
+  --type-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: var(--type-sans); color: var(--color-ink); font-feature-settings: 'ss01', 'cv11', 'kern'; }
+
+/*
+  SAMPLE ARTIFACT — obs-scene-pack skill
+  Brand: Shane Logsdon (v1) — extends the existing stream-overlay vocabulary
+  (corner-frame L-marks, SL · | · Shane Logsdon mark)
+
+  Variation choices:
+    chrome:          bracketed (corner-frame L-marks — brand-canonical lineart)
+    mark-placement:  bottom-left
+    accent-usage:    none (alerts use accent; scene chrome stays monochrome)
+*/
+
+.scene { position: fixed; inset: 0; width: 1920px; height: 1080px; display: none; }
+.scene.is-active { display: block; }
+
+/* === #just-chatting === */
+#scene-just-chatting .topbar {
+  position: absolute; top: 64px; left: 80px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+#scene-just-chatting .topbar .label {
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink); background: var(--color-surface); padding: 8px 14px;
+  border: 1px solid var(--color-rule);
+}
+#scene-just-chatting .topbar .label .sigil { color: rgba(24,27,33,0.4); margin-right: 6px; }
+#scene-just-chatting .cam {
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -45%);
+  width: 720px; height: 405px;
+  background: transparent;
+  border: 1px solid var(--color-rule);
+}
+#scene-just-chatting .cam::before, #scene-just-chatting .cam::after {
+  content: ""; position: absolute; width: 14px; height: 14px;
+}
+#scene-just-chatting .cam::before { top: -1px; left: -1px; border-top: 1px solid var(--color-ink); border-left: 1px solid var(--color-ink); }
+#scene-just-chatting .cam::after { bottom: -1px; right: -1px; border-bottom: 1px solid var(--color-ink); border-right: 1px solid var(--color-ink); }
+#scene-just-chatting .lower-third {
+  position: absolute;
+  bottom: 96px; left: 80px; right: 80px;
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 32px; align-items: baseline;
+  background: var(--color-surface);
+  padding: 16px 24px;
+  border: 1px solid var(--color-rule);
+}
+#scene-just-chatting .lower-third::before, #scene-just-chatting .lower-third::after {
+  content: ""; position: absolute; width: 12px; height: 12px;
+}
+#scene-just-chatting .lower-third::before { top: -1px; left: -1px; border-top: 1px solid var(--color-ink); border-left: 1px solid var(--color-ink); }
+#scene-just-chatting .lower-third::after { bottom: -1px; right: -1px; border-bottom: 1px solid var(--color-ink); border-right: 1px solid var(--color-ink); }
+#scene-just-chatting .lower-third .name {
+  font-family: var(--type-display); font-weight: 500;
+  font-size: 32px; letter-spacing: -0.008em; color: var(--color-ink);
+}
+#scene-just-chatting .lower-third .role {
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+}
+#scene-just-chatting .lower-third .handles {
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+}
+
+/* === #fullscreen-game === */
+#scene-fullscreen-game .corner-watermark {
+  position: absolute;
+  bottom: 32px; right: 40px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--type-display); font-weight: 500;
+  font-size: 16px; letter-spacing: -0.005em;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  padding: 6px 10px;
+  border: 1px solid var(--color-rule);
+  opacity: 0.85;
+}
+#scene-fullscreen-game .corner-watermark .init {
+  font-family: var(--type-mono); font-size: 10px; letter-spacing: 0.22em;
+  color: var(--color-ink-3); text-transform: uppercase;
+}
+#scene-fullscreen-game .corner-watermark .pipe {
+  display: inline-block; width: 1px; height: 12px; background: var(--color-rule);
+}
+
+/* === #guest-split === */
+#scene-guest-split .topbar {
+  position: absolute; top: 56px; left: 80px; right: 80px;
+  display: flex; justify-content: space-between; align-items: baseline;
+  background: var(--color-surface);
+  padding: 10px 16px;
+  border: 1px solid var(--color-rule);
+  font-family: var(--type-mono); font-size: 13px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink); position: relative;
+}
+#scene-guest-split .topbar::before, #scene-guest-split .topbar::after {
+  content: ""; position: absolute; width: 10px; height: 10px;
+}
+#scene-guest-split .topbar::before { top: -1px; left: -1px; border-top: 1px solid var(--color-ink); border-left: 1px solid var(--color-ink); }
+#scene-guest-split .topbar::after { bottom: -1px; right: -1px; border-bottom: 1px solid var(--color-ink); border-right: 1px solid var(--color-ink); }
+#scene-guest-split .topbar .sigil { color: rgba(24,27,33,0.4); }
+#scene-guest-split .frames {
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -45%);
+  display: grid; grid-template-columns: 720px 720px; gap: 32px;
+}
+#scene-guest-split .frame {
+  width: 720px; height: 405px;
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  position: relative;
+}
+#scene-guest-split .frame::before, #scene-guest-split .frame::after {
+  content: ""; position: absolute; width: 12px; height: 12px;
+}
+#scene-guest-split .frame::before { top: -1px; left: -1px; border-top: 1px solid var(--color-ink); border-left: 1px solid var(--color-ink); }
+#scene-guest-split .frame::after { bottom: -1px; right: -1px; border-bottom: 1px solid var(--color-ink); border-right: 1px solid var(--color-ink); }
+#scene-guest-split .frame .label {
+  position: absolute; top: 100%; left: 0;
+  margin-top: 12px;
+  background: var(--color-surface);
+  padding: 6px 10px;
+  border: 1px solid var(--color-rule);
+  font-family: var(--type-mono); font-size: 13px; letter-spacing: 0.06em;
+  color: var(--color-ink);
+}
+#scene-guest-split .frame .label .role {
+  display: block; margin-top: 2px; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--color-ink-3);
+}
+</style>
+</head>
+<body>
+
+<section id="scene-just-chatting" class="scene">
+  <div class="topbar">
+    <span class="label"><span class="sigil">§</span> Live · just chatting</span>
+  </div>
+  <div class="cam"></div>
+  <div class="lower-third">
+    <span class="name">Shane Logsdon</span>
+    <span class="role">live coding · payments stack</span>
+    <span class="handles">@shanelogsdon · github.com/shanelogsdon</span>
+  </div>
+</section>
+
+<section id="scene-fullscreen-game" class="scene">
+  <span class="corner-watermark"><span class="init">SL</span><span class="pipe"></span>Shane Logsdon</span>
+</section>
+
+<section id="scene-guest-split" class="scene">
+  <div class="topbar">
+    <span><span class="sigil">§</span> Live · guest interview</span>
+    <span>Working Notes · episode 04</span>
+  </div>
+  <div class="frames">
+    <div class="frame">
+      <span class="label">Shane Logsdon<span class="role">host</span></span>
+    </div>
+    <div class="frame">
+      <span class="label">Priya Mehta<span class="role">guest · platform engineer</span></span>
+    </div>
+  </div>
+</section>
+
+<script>
+function activateScene() {
+  var hash = (window.location.hash || '#just-chatting').slice(1);
+  var scenes = document.querySelectorAll('.scene');
+  var matched = false;
+  scenes.forEach(function(el) {
+    var isMatch = el.id === 'scene-' + hash;
+    el.classList.toggle('is-active', isMatch);
+    if (isMatch) matched = true;
+  });
+  if (!matched) document.getElementById('scene-just-chatting').classList.add('is-active');
+}
+window.addEventListener('hashchange', activateScene);
+activateScene();
+</script>
+</body>
+</html>
