@@ -5,7 +5,7 @@ description: Use when /log is invoked or when Shane wants to capture a lightweig
 
 # Skill: /log
 
-Lightweight session capture. No Gemma needed — this is a direct write.
+Lightweight session capture. No Qwen needed — this is a direct write.
 
 ## Steps
 

@@ -81,9 +81,9 @@ STALE: Concepts/[page]
   → Update claim or add caveat in Concepts/[page]
 ```
 
-## Fallback (if gemma unavailable)
+## Fallback (if qwen unavailable)
 
-Execute all four scans directly using `obsidian search` and `obsidian read` commands via bash. Apply the same logic described above. The scans are bash-executable without Gemma.
+Execute all four scans directly using `obsidian search` and `obsidian read` commands via bash. Apply the same logic described above. The scans are bash-executable without Qwen.
 
 ## Output structure
 

@@ -1,6 +1,6 @@
 ---
 name: obsidian
-description: "General-purpose Obsidian vault skill — use this whenever the user wants to do anything with their vault or personal notes. Covers reading notes by name, searching vault content, creating new notes, appending to existing ones, checking backlinks, and working with daily notes. Trigger immediately on phrases like: 'look up my note on X', 'add this to my vault', 'what does my note say about Y', 'find notes about Z', 'log this to my vault', 'update my daily note', 'create a note for...', 'what links to X', 'search my vault for...', 'show me what I know about...', 'check my notes on...', or any time the user mentions Obsidian, their vault, or personal notes. If the user is asking about something they might have written down, reach for this skill first."
+description: General-purpose Obsidian vault skill — use this whenever the user wants to do anything with their vault or personal notes. Covers reading notes by name, searching vault content, creating new notes, appending to existing ones, checking backlinks, and working with daily notes. Trigger immediately on phrases like: "look up my note on X", "add this to my vault", "what does my note say about Y", "find notes about Z", "log this to my vault", "update my daily note", "create a note for...", "what links to X", "search my vault for...", "show me what I know about...", "check my notes on...", or any time the user mentions Obsidian, their vault, or personal notes. If the user is asking about something they might have written down, reach for this skill first.
 ---
 
 # Obsidian Vault Skill
@@ -74,7 +74,7 @@ The user's phrasing is often loose — your job is to figure out which operation
 
 ## Note naming
 
-When creating notes, use title case and be descriptive. Good names are searchable: `Gemma CLI Quoting Bug`, `Developer Advocacy 2026 OKRs`, `CatalystForms Launch Checklist`. Avoid generic names like `Ideas` or `Notes`.
+When creating notes, use title case and be descriptive. Good names are searchable: `Qwen CLI Quoting Bug`, `Developer Advocacy 2026 OKRs`, `CatalystForms Launch Checklist`. Avoid generic names like `Ideas` or `Notes`.
 
 ## Post-write protocol
 
@@ -89,4 +89,4 @@ Use conventional commit style. Examples:
 - `docs: log session entry 14:32`
 - `docs: write today's focus to 2026-04-17 daily note`
 - `docs: append EOD audit to 2026-04-17`
-- `docs: create note Gemma CLI Quoting Bug`
+- `docs: create note Qwen CLI Quoting Bug`
