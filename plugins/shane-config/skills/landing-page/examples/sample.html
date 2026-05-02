@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AX Shift — Shane Logsdon</title>
+<meta name="description" content="Software interfaces went UX → DX → AX. The primary consumer of your specs, configs, and documentation is now an AI agent operating autonomously between sessions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --color-surface: #fbfaf5;
+  --color-paper-tint: #ebe8e2;
+  --color-ink: #181b21;
+  --color-ink-soft: #404550;
+  --color-ink-3: #62686f;
+  --color-rule: #d6d8de;
+  --color-rule-strong: #a4a9b3;
+  --color-accent: #c26a3b;
+  --color-accent-hover: #a0542a;
+  --type-display: 'Fraunces', Georgia, serif;
+  --type-sans: 'Inter', system-ui, sans-serif;
+  --type-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--type-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  font-feature-settings: 'ss01', 'cv11', 'kern';
+}
+
+/*
+  SAMPLE ARTIFACT — landing-page skill
+  Brand: Shane Logsdon (v1)
+  Page: landing for "The AX Shift" article + Working Notes series
+
+  Hero archetype: headline-led (NOT chrome-led — explicitly avoiding the AI-default template)
+  Features: 3 numbered text blocks, NO icons-in-circles, NO cards-with-shadows
+  CTA: btn-arrow (text + arrow), NOT a filled blue button
+*/
+
+.container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+/* Header */
+.site-header { padding: 32px 0; }
+.site-header__bar { display: flex; justify-content: space-between; align-items: baseline; }
+.wordmark {
+  font-family: var(--type-display); font-weight: 500; font-size: 18px;
+  letter-spacing: -0.005em; color: var(--color-ink); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.wordmark .init {
+  font-family: var(--type-mono); font-size: 11px; letter-spacing: 0.22em;
+  color: var(--color-ink-3); text-transform: uppercase;
+}
+.wordmark .pipe { display: inline-block; width: 1px; height: 12px; background: var(--color-rule); }
+.site-nav { display: flex; gap: 32px; list-style: none; padding: 0; margin: 0; }
+.site-nav a {
+  font-family: var(--type-mono); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--color-ink-3); text-decoration: none;
+}
+.site-nav a:hover { color: var(--color-ink); }
+
+/* Hero */
+.hero {
+  padding: 96px 0 144px;
+  border-top: 1px solid var(--color-rule);
+}
+.hero .eyebrow {
+  font-family: var(--type-mono); font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin: 0 0 24px;
+}
+.hero .eyebrow .sigil { color: rgba(24,27,33,0.4); margin-right: 6px; }
+.hero h1 {
+  font-family: var(--type-display); font-weight: 400;
+  font-size: clamp(56px, 9vw, 120px);
+  line-height: 0.98; letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 18ch;
+}
+.hero h1 em { font-style: italic; color: var(--color-ink-soft); font-weight: 400; }
+.hero .dek {
+  font-size: 21px; line-height: 1.6;
+  color: var(--color-ink-soft);
+  max-width: 56ch;
+  margin: 48px 0 48px;
+}
+
+/* Features */
+.features {
+  padding: 96px 0;
+  border-top: 1px solid var(--color-rule);
+}
+.features__head { margin-bottom: 80px; }
+.features__head .label {
+  font-family: var(--type-mono); font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin: 0 0 24px;
+}
+.features__head .label .sigil { color: rgba(24,27,33,0.4); margin-right: 6px; }
+.features__head h2 {
+  font-family: var(--type-display); font-weight: 500;
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.1; letter-spacing: -0.015em;
+  margin: 0;
+  max-width: 28ch;
+}
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 64px;
+}
+.feature__num {
+  font-family: var(--type-mono); font-size: 12px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+  margin: 0 0 20px;
+}
+.feature__num .pos { color: var(--color-ink); }
+.feature h3 {
+  font-family: var(--type-display); font-weight: 500;
+  font-size: 28px; line-height: 1.18; letter-spacing: -0.012em;
+  margin: 0 0 16px;
+}
+.feature p {
+  font-size: 16px; line-height: 1.6;
+  color: var(--color-ink-soft);
+  margin: 0;
+}
+
+/* CTA — paper-tint feature register (v1 canon) */
+.cta {
+  margin-top: 96px;
+  padding: 96px 0 96px;
+  background: var(--color-paper-tint);
+  border-top: 1px solid var(--color-rule-strong);
+  border-bottom: 1px solid var(--color-rule-strong);
+}
+.cta .container {
+  display: grid;
+  grid-template-columns: 3fr 9fr;
+  gap: 48px;
+  align-items: end;
+}
+.cta .label {
+  font-family: var(--type-mono); font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin: 0;
+}
+.cta .label .sigil { color: rgba(24,27,33,0.4); margin-right: 6px; }
+.cta h2 {
+  font-family: var(--type-display); font-weight: 400;
+  font-size: clamp(36px, 6vw, 60px);
+  line-height: 1.04; letter-spacing: -0.018em;
+  margin: 0 0 32px;
+  max-width: 24ch;
+}
+.btn-arrow {
+  display: inline; font-size: 19px; font-weight: 400;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+.btn-arrow::after { content: ' →'; font-family: var(--type-mono); font-size: 0.85em; }
+.btn-arrow:hover { color: var(--color-accent-hover); text-decoration-color: var(--color-accent-hover); }
+
+/* Footer */
+.site-foot {
+  padding: 48px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--type-mono); font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-3);
+}
+.site-foot .pos { color: var(--color-ink); }
+
+@media (max-width: 720px) {
+  .container { padding: 0 24px; }
+  .hero { padding: 64px 0 96px; }
+  .features { padding: 64px 0; }
+  .features__grid { grid-template-columns: 1fr; gap: 48px; }
+  .cta { padding: 64px 0; }
+  .cta .container { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="wordmark" href="/"><span class="init">SL</span><span class="pipe"></span>Shane Logsdon</a>
+    <ul class="site-nav">
+      <li><a href="#">Working notes</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow"><span class="sigil">§</span> 01 / Field Note · 2026.04.27</p>
+      <h1>You're still designing for <em>yourself</em>.</h1>
+      <p class="dek">Software interfaces went UX → DX → AX. The primary consumer of your specs, configs, project notes, and documentation is now an AI agent operating autonomously between sessions. The drift you've been blaming on prompts is somewhere you haven't looked yet.</p>
+      <a class="btn-arrow" href="#read">Read the piece</a>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <div class="features__head">
+        <p class="label"><span class="sigil">§</span> 02 / Three observations</p>
+        <h2>The thing I kept adjusting wasn't the problem.</h2>
+      </div>
+      <div class="features__grid">
+        <div class="feature">
+          <p class="feature__num"><span class="pos">01</span> / The pattern</p>
+          <h3>UX → DX → AX.</h3>
+          <p>Each shift redesigned the same surfaces around a different reader. The latest reader is an agent operating autonomously between sessions, filling ambiguity with the most statistically probable answer.</p>
+        </div>
+        <div class="feature">
+          <p class="feature__num"><span class="pos">02</span> / The symptom</p>
+          <h3>When sessions drift, the prompt is rarely the problem.</h3>
+          <p>I refined prompts for six months. The corrections list looked nearly identical to month two. The drift was coming from the specs and project notes — everything the agent reads to infer intent.</p>
+        </div>
+        <div class="feature">
+          <p class="feature__num"><span class="pos">03</span> / The fix</p>
+          <h3>Write for the agent reading it cold.</h3>
+          <p>Stop assuming continuity that doesn't exist. Inference at the edges of the session is exactly what causes the drift.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="read">
+    <div class="container">
+      <p class="label"><span class="sigil">§</span> Read</p>
+      <div>
+        <h2>The drift was somewhere I hadn't looked yet.</h2>
+        <a class="btn-arrow" href="https://shane.logsdon.io/articles/technical-deep-dives/the-ax-shift">Read the original piece</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="container" style="display: flex; justify-content: space-between; align-items: baseline;">
+    <span>© 2026 Shane Logsdon · Louisville · GMT−5</span>
+    <span><span class="pos">shane.logsdon.io</span> · field notes from the payments stack</span>
+  </div>
+</footer>
+
+</body>
+</html>

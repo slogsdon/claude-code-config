@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>talk-slide — sample artifact (Shane Logsdon · The AX Shift talk)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --color-surface: #fbfaf5;
+  --color-paper-tint: #ebe8e2;
+  --color-ink: #181b21;
+  --color-ink-soft: #404550;
+  --color-ink-3: #62686f;
+  --color-rule: #d6d8de;
+  --color-accent: #c26a3b;
+  --type-display: 'Fraunces', Georgia, serif;
+  --type-sans: 'Inter', system-ui, sans-serif;
+  --type-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #2a2a2a; min-height: 100vh; font-family: var(--type-sans); font-feature-settings: 'ss01', 'cv11', 'kern'; }
+body { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 32px 0; }
+
+.slide-label { font-family: var(--type-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.65); align-self: center; }
+
+/*
+  SAMPLE ARTIFACT — talk-slide skill
+  Brand: Shane Logsdon (v1)
+  Talk: "The AX Shift: You're Still Designing for Yourself" — Strange Loop 2026
+
+  Variation choices (consistent across all 3 slides):
+    color:       paper-tint-feature (cream slides + ONE paper-tint section divider)
+    type-press:  display-led (Fraunces dominant)
+    composition: asymmetric (left-anchored across all slides)
+*/
+
+.canvas {
+  width: 1920px; height: 1080px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  position: relative; overflow: hidden;
+  padding: 96px 112px;
+  display: grid;
+}
+
+/* TITLE SLIDE */
+.canvas--title {
+  grid-template-rows: auto 1fr auto;
+  gap: 48px;
+}
+.canvas--title .running-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-rule);
+  font-family: var(--type-mono); font-size: 16px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+.canvas--title .running-head .sigil { color: rgba(24,27,33,0.4); }
+.canvas--title .running-head .pos { color: var(--color-ink); }
+.canvas--title .title {
+  align-self: center;
+  font-family: var(--type-display); font-weight: 400;
+  font-size: 132px; line-height: 0.96; letter-spacing: -0.022em;
+  margin: 0;
+  max-width: 1500px;
+}
+.canvas--title .title em {
+  font-style: italic; font-weight: 400;
+  color: var(--color-ink-soft);
+}
+.canvas--title .foot {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 32px; align-items: baseline;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-rule);
+}
+.canvas--title .speaker {
+  font-family: var(--type-display); font-weight: 500;
+  font-size: 28px; letter-spacing: -0.005em;
+  color: var(--color-ink);
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.canvas--title .speaker .init { font-family: var(--type-mono); font-size: 18px; letter-spacing: 0.22em; color: var(--color-ink-3); text-transform: uppercase; }
+.canvas--title .speaker .pipe { display: inline-block; width: 1px; height: 18px; background: var(--color-rule); }
+.canvas--title .role {
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+.canvas--title .venue {
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+}
+.canvas--title .venue .pos { color: var(--color-ink); }
+
+/* CONTENT SLIDE */
+.canvas--content {
+  grid-template-rows: auto auto 1fr auto;
+  gap: 32px;
+}
+.canvas--content .running-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-rule);
+  font-family: var(--type-mono); font-size: 13px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+.canvas--content .running-head .sigil { color: rgba(24,27,33,0.4); }
+.canvas--content .headline {
+  font-family: var(--type-display); font-weight: 500;
+  font-size: 72px; line-height: 1.05; letter-spacing: -0.018em;
+  margin: 0;
+  max-width: 1500px;
+}
+.canvas--content .body {
+  align-self: start;
+  margin-top: 32px;
+}
+.canvas--content .body-list {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 28px;
+  font-family: var(--type-sans); font-size: 30px; line-height: 1.45;
+  color: var(--color-ink);
+  max-width: 1320px;
+}
+.canvas--content .body-list li {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 28px; align-items: baseline;
+}
+.canvas--content .body-list .ord {
+  font-family: var(--type-mono); font-size: 18px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+}
+.canvas--content .body-list .ord .pos { color: var(--color-ink); }
+.canvas--content .foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+}
+.canvas--content .foot .pos { color: var(--color-ink); }
+
+/* SECTION DIVIDER — paper-tint feature register (v1 canon) */
+.canvas--divider {
+  background: var(--color-paper-tint);
+  grid-template-rows: auto 1fr auto;
+  gap: 64px;
+}
+.canvas--divider .top {
+  font-family: var(--type-mono); font-size: 16px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--color-ink-3);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-rule-strong);
+}
+.canvas--divider .top .sigil { color: rgba(24,27,33,0.4); }
+.canvas--divider .top .pos { color: var(--color-ink); }
+.canvas--divider .section-title {
+  align-self: center;
+  font-family: var(--type-display); font-weight: 400;
+  font-size: 200px; line-height: 0.94; letter-spacing: -0.025em;
+  margin: 0;
+  color: var(--color-ink);
+}
+.canvas--divider .section-title em {
+  font-style: italic; font-weight: 400;
+  color: var(--color-ink-soft);
+}
+.canvas--divider .foot {
+  display: flex; justify-content: space-between;
+  font-family: var(--type-mono); font-size: 14px;
+  letter-spacing: 0.06em; color: var(--color-ink-3);
+  padding-top: 18px;
+  border-top: 1px solid var(--color-rule-strong);
+}
+.canvas--divider .foot .pos { color: var(--color-ink); }
+</style>
+</head>
+<body>
+
+<span class="slide-label">→ Slide 1 · TITLE · 1920×1080</span>
+<article class="canvas canvas--title">
+  <header class="running-head">
+    <span><span class="sigil">§</span> Strange Loop · 2026.09.18</span>
+    <span>Session <span class="pos">04</span></span>
+  </header>
+  <h1 class="title">The AX Shift: you're still designing for <em>yourself</em>.</h1>
+  <footer class="foot">
+    <span class="speaker"><span class="init">SL</span><span class="pipe"></span>Shane Logsdon</span>
+    <span class="role">Technical Product Leader · Payments &amp; Platforms</span>
+    <span class="venue">shane.logsdon.io · <span class="pos">slide 01</span></span>
+  </footer>
+</article>
+
+<span class="slide-label">→ Slide 2 · CONTENT · 1920×1080 · template — duplicate + edit per slide</span>
+<article class="canvas canvas--content">
+  <header class="running-head">
+    <span><span class="sigil">§</span> The AX shift — three observations</span>
+    <span>Strange Loop 2026 · slide 06</span>
+  </header>
+  <h2 class="headline">The thing I kept adjusting wasn't the problem.</h2>
+  <div class="body">
+    <ol class="body-list">
+      <li><span class="ord"><span class="pos">01</span></span><span>Software interfaces went UX → DX → AX. Each shift redesigned the same surfaces around a different reader.</span></li>
+      <li><span class="ord"><span class="pos">02</span></span><span>The new primary reader is an agent operating autonomously between sessions.</span></li>
+      <li><span class="ord"><span class="pos">03</span></span><span>Agents fill ambiguity with the most statistically probable answer. Those near-misses compound.</span></li>
+    </ol>
+  </div>
+  <footer class="foot">
+    <span>shane.logsdon.io / the-ax-shift</span>
+    <span><span class="pos">06</span> / 24</span>
+  </footer>
+</article>
+
+<span class="slide-label">→ Slide 3 · SECTION DIVIDER · 1920×1080 · paper-tint feature register</span>
+<article class="canvas canvas--divider">
+  <header class="top">
+    <span><span class="sigil">§</span> Part Two · The Fix</span>
+  </header>
+  <h2 class="section-title">Write for the agent reading it <em>cold</em>.</h2>
+  <footer class="foot">
+    <span>Strange Loop 2026 · 2026.09.18</span>
+    <span><span class="pos">12</span> / 24</span>
+  </footer>
+</article>
+</body>
+</html>
