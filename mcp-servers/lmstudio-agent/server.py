@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP server that delegates tasks to Gemma via Ollama with agentic tool loop."""
+"""MCP server that delegates tasks to Qwen via LM Studio with agentic tool loop."""
 
 import asyncio
 import json
@@ -10,15 +10,15 @@ import uuid
 from openai import OpenAI
 from mcp.server.fastmcp import FastMCP, Context
 
-OLLAMA_BASE_URL = "http://127.0.0.1:11434/v1"
-MODEL = "shane-agent"
+LMSTUDIO_BASE_URL = "http://localhost:1234/v1"
+MODEL = "qwen"
 TIMEOUT = 120.0
 MAX_ITERATIONS = 25
 
-mcp = FastMCP("ollama-agent")
-client = OpenAI(base_url=OLLAMA_BASE_URL, api_key="ollama")
+mcp = FastMCP("lmstudio-agent")
+client = OpenAI(base_url=LMSTUDIO_BASE_URL, api_key="lm-studio")
 
-# Session state for stepped execution (gemma_start / gemma_continue)
+# Session state for stepped execution (qwen_start / qwen_continue)
 _sessions: dict[str, dict] = {}
 
 SYSTEM_PROMPT = (
@@ -150,8 +150,8 @@ def _jdump(obj: dict) -> str:
     return json.dumps(obj, ensure_ascii=False)
 
 
-async def _gemma_step(session_id: str) -> str:
-    """Run one Gemma inference + tool execution round. Returns JSON status."""
+async def _qwen_step(session_id: str) -> str:
+    """Run one Qwen inference + tool execution round. Returns JSON status."""
     if session_id not in _sessions:
         return _jdump({"status": "error", "result": f"Unknown session: {session_id}"})
 
@@ -179,7 +179,7 @@ async def _gemma_step(session_id: str) -> str:
         if msg.content:
             del _sessions[session_id]
             return _jdump({"status": "done", "result": msg.content})
-        # Empty response — nudge Gemma
+        # Empty response — nudge Qwen
         messages.append({"role": "assistant", "content": ""})
         messages.append({"role": "user", "content": "Please provide your complete response now."})
         return _jdump({
@@ -188,7 +188,7 @@ async def _gemma_step(session_id: str) -> str:
             "step": f"iter {iteration + 1}: empty response, nudging",
         })
 
-    # Execute all tool calls Gemma requested
+    # Execute all tool calls Qwen requested
     tool_summaries = []
     messages.append({
         "role": "assistant",
@@ -214,36 +214,36 @@ async def _gemma_step(session_id: str) -> str:
 
 
 @mcp.tool()
-async def gemma_start(task: str, skill: str = "", context: str = "") -> str:
+async def qwen_start(task: str, skill: str = "", context: str = "") -> str:
     """
-    Start a stepped Gemma task. Runs one inference round and returns JSON:
+    Start a stepped Qwen task. Runs one inference round and returns JSON:
       {"status": "running", "session_id": "<id>", "step": "<what happened>"}
       {"status": "done",    "result": "<final response>"}
       {"status": "error",   "result": "<message>"}
-    Call gemma_continue with session_id to advance running tasks.
+    Call qwen_continue with session_id to advance running tasks.
     """
     session_id = uuid.uuid4().hex[:8]
     _sessions[session_id] = {
         "messages": _build_messages(task, skill, context),
         "iteration": 0,
     }
-    return await _gemma_step(session_id)
+    return await _qwen_step(session_id)
 
 
 @mcp.tool()
-async def gemma_continue(session_id: str) -> str:
+async def qwen_continue(session_id: str) -> str:
     """
-    Advance a running Gemma task by one step. Returns the same JSON shape as gemma_start.
+    Advance a running Qwen task by one step. Returns the same JSON shape as qwen_start.
     Keep calling until status is 'done' or 'error'.
     """
-    return await _gemma_step(session_id)
+    return await _qwen_step(session_id)
 
 
 @mcp.tool()
-async def run_gemma_task(task: str, skill: str = "", context: str = "", ctx: Context = None) -> str:
+async def run_qwen_task(task: str, skill: str = "", context: str = "", ctx: Context = None) -> str:
     """
-    Delegate a task to Gemma 4 running locally via Ollama (single blocking call).
-    Prefer gemma_start + gemma_continue for long tasks where step visibility matters.
+    Delegate a task to Qwen running locally via LM Studio (single blocking call).
+    Prefer qwen_start + qwen_continue for long tasks where step visibility matters.
     """
     messages = _build_messages(task, skill, context)
     trace: list[str] = []
