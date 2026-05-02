@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: Generate a brand-agnostic DESIGN.md (Google design.md spec format) plus tokens.css and showcase.html for any branding project. Reads ./design/<brand-slug>/DESIGN-PLAN.md if present, otherwise asks for an inline brief. Use AFTER design-plan and BEFORE ui-components. Triggers include "design system for [brand]", "build a DESIGN.md", "generate design tokens", "/design-system".
+description: Generate a brand-agnostic DESIGN.md (Google design.md spec format) plus tokens.css and showcase.html for any branding project. Reads ./design/<brand-slug>/DESIGN-PLAN.md if present, otherwise asks for an inline brief. Use AFTER design-plan and BEFORE design-ui-components. Triggers include "design system for [brand]", "build a DESIGN.md", "generate design tokens", "/design-system".
 ---
 
 # Skill: design-system
@@ -8,7 +8,7 @@ description: Generate a brand-agnostic DESIGN.md (Google design.md spec format) 
 Generates three artifacts that together define a brand's visual system:
 
 1. **`DESIGN.md`** — portable spec following the [Google design.md format](https://github.com/google-labs-code/design.md). YAML frontmatter (machine-readable tokens) + 8 markdown sections (human rationale).
-2. **`tokens.css`** — CSS custom properties exported from the YAML, consumed by `ui-components` and every platform skill.
+2. **`tokens.css`** — CSS custom properties exported from the YAML, consumed by `design-ui-components` and every platform skill.
 3. **`showcase.html`** — single self-contained HTML page that renders every token in context. The visual proof that the system holds together.
 
 ## When to use
@@ -206,7 +206,7 @@ Variation choices:
 
 ## Components
 
-<Brief notes on button hierarchy, input states, card structure. Defer detail to ui-components — this section is just the rationale.>
+<Brief notes on button hierarchy, input states, card structure. Defer detail to design-ui-components — this section is just the rationale.>
 
 ## Do's and Don'ts
 
@@ -254,7 +254,7 @@ Write to `./design/<brand-slug>/tokens.css`:
   /* …all radii… */
 }
 
-/* Convenience utility classes — optional but useful for ui-components */
+/* Convenience utility classes — optional but useful for design-ui-components */
 .t-display-xl { font: var(--type-display-xl-weight) var(--type-display-xl-size)/var(--type-display-xl-leading) var(--type-display-xl-family); letter-spacing: var(--type-display-xl-tracking); }
 .t-display-lg { font: var(--type-display-lg-weight) var(--type-display-lg-size)/var(--type-display-lg-leading) var(--type-display-lg-family); letter-spacing: var(--type-display-lg-tracking); }
 /* …one utility per type level… */
@@ -298,7 +298,7 @@ Then tell the user:
 > - `./design/<brand-slug>/tokens.css` — CSS custom properties
 > - `./design/<brand-slug>/showcase.html` — visual proof
 >
-> Open `showcase.html` in a browser to verify. Next: run `/ui-components <brand-slug>` to generate the component library.
+> Open `showcase.html` in a browser to verify. Next: run `/design-ui-components <brand-slug>` to generate the component library.
 
 ## Rules
 

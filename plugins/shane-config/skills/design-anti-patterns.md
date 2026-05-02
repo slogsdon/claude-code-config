@@ -1,6 +1,6 @@
 # Design Anti-Patterns — Shared Reference
 
-> The marketing design skills (`design-plan`, `design-system`, `ui-components`, and the 5 platform skills) all read from this file. Update this file whenever a new AI-tell is observed in real output.
+> The marketing design skills (`design-plan`, `design-system`, `design-ui-components`, and the platform skills) all read from this file. Update this file whenever a new AI-tell is observed in real output.
 
 This file is the canonical anti-pattern list. Each platform skill references it and adds only its platform-specific tells inline. Treat every entry below as a hard rule unless a brand's `DESIGN-PLAN.md` explicitly waives it.
 
