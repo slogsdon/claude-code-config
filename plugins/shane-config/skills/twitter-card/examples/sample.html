@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>twitter-card — sample artifact (Tail, hypothetical observability brand)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root {
+  --color-ink: #e6e8ec; --color-ink-soft: #8b94a3; --color-ink-muted: #5b6371; --color-surface: #0d1015; --color-surface-muted: #161a21; --color-rule: #2a313c; --color-ok: #6dab7a; --color-warn: #d4a04c; --color-crit: #c75050;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #2a2a2a; min-height: 100vh; display: grid; place-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/*
+  SAMPLE ARTIFACT — twitter-card skill (feed mode)
+  Brand: Tail (hypothetical) — same brand as linkedin-post sample.
+
+  Mode: feed (1600×900)
+
+  Architecture archetype: pattern-led
+    A 7×7 grid of 49 alert dots IS the data. 47 are dim (auto-resolved),
+    2 are crit-red (real). The pattern carries the claim. Headline is
+    secondary, not primary.
+
+  Layout:        split (pattern left, headline right)
+  Type pressure: display-dominant
+  Color usage:   monochrome surface with semantic tri-state signals
+  Composition:   pattern-led + data-led overlay
+
+  Anti-tell verification (per design-anti-patterns.md):
+    §2 — no italics-emphasis; no single-word color-emphasis (the previous
+         iteration colored "mattered" red — fixed: word stays in ink, the
+         dot grid carries the meaning)
+    §4 — right panel has NO eyebrow / NO footer-row (just headline + caption)
+    §5 — no editorial-cosplay markers
+    §7 — brand mark sits embedded in caption, not as separate row
+*/
+
+.canvas {
+  width: 1600px;
+  height: 900px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid-panel {
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+
+.grid-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+}
+
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 22px;
+  align-items: center;
+  justify-items: center;
+}
+
+.dot {
+  width: 64px;
+  height: 64px;
+  background: var(--color-ink-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-surface);
+}
+
+.dot--crit { background: var(--color-crit); }
+.dot--ok { color: transparent; }
+
+.text-panel {
+  padding: 80px 80px 80px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.headline {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 76px;
+  line-height: 1.04;
+  letter-spacing: -0.016em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--color-ink-soft);
+  margin: 0;
+  max-width: 560px;
+}
+
+.caption .mark {
+  color: var(--color-ink);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+@page { size: 1600px 900px; margin: 0; }
+</style>
+</head>
+<body>
+<article class="canvas">
+  <section class="grid-panel">
+    <div class="grid-meta">
+      <span>Production · Mar 14 → May 02</span>
+      <span>49 alerts</span>
+    </div>
+    <div class="dot-grid">
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--crit">!</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+      <span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--crit">!</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span><span class="dot dot--ok">·</span>
+    </div>
+    <div class="grid-meta">
+      <span>One square = one alert</span>
+      <span>2 paged · 47 handled</span>
+    </div>
+  </section>
+  <section class="text-panel">
+    <h1 class="headline">Two of these mattered.</h1>
+    <p class="caption">The other 47 self-resolved before you would have opened your laptop. <span class="mark">Tail</span> kept them off your phone — at tail.dev.</p>
+  </section>
+</article>
+
+<!--
+COMPANION TWEET (claim style, ~245/280 chars):
+
+47 of our alerts last month were noise.
+2 woke up the on-call.
+
+If your monitoring tool reports them all the same way, your engineers learn to ignore the page.
+
+Tail is built around that math. Self-hosted, Apache 2.0, beta this month.
+
+tail.dev
+-->
+</body>
+</html>
