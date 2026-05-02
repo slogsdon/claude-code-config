@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>linkedin-post — sample artifact (Tail, hypothetical observability brand)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --color-ink: #e6e8ec; --color-ink-soft: #8b94a3; --color-ink-muted: #5b6371; --color-surface: #0d1015; --color-surface-muted: #161a21; --color-rule: #2a313c; --color-ok: #6dab7a; --color-warn: #d4a04c; --color-crit: #c75050;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #2a2a2a; min-height: 100vh; display: grid; place-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/*
+  SAMPLE ARTIFACT — linkedin-post skill
+  Brand: Tail (hypothetical) — on-call observability tool, technical direction,
+         single-family JetBrains Mono, dark terminal-warm surface.
+
+  Architecture archetype: inverse-text
+    The canvas IS its own thesis. A wall of log noise fills the frame; a
+    clean signal panel is carved from it on the right. Inner block is
+    intentionally minimal — just the headline. No eyebrow inside the panel,
+    no footer-row, no meta. The whole composition speaks once.
+
+  Layout:        full-bleed (logs run edge-to-edge)
+  Type pressure: mono-led (single family throughout)
+  Color usage:   monochrome surface with one signal-color punctuation (one CRIT line in --color-crit)
+  Composition:   inverse-text
+
+  Anti-tell verification (per design-anti-patterns.md):
+    §2 — no italics-emphasis, no single-word color emphasis
+    §4 — inner panel does NOT revert to chrome (no eyebrow, no footer-row)
+    §5 — no editorial-cosplay markers
+    §7 — brand mark embedded in log line, not as separate signature
+*/
+
+.canvas {
+  width: 1200px;
+  height: 627px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  position: relative;
+  overflow: hidden;
+}
+
+.logs {
+  position: absolute;
+  inset: 0;
+  padding: 24px 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--color-ink-muted);
+  white-space: pre;
+  overflow: hidden;
+  user-select: none;
+}
+
+.logs .crit { color: var(--color-crit); }
+
+.signal {
+  position: absolute;
+  top: 50%;
+  right: 56px;
+  transform: translateY(-50%);
+  width: 600px;
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-ok);
+  padding: 40px 36px;
+}
+
+.signal .headline {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 52px;
+  line-height: 1.04;
+  letter-spacing: -0.014em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.signal .headline .second-line {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-ok);
+  font-size: 36px;
+}
+
+@page { size: 1200px 627px; margin: 0; }
+</style>
+</head>
+<body>
+<article class="canvas">
+  <pre class="logs">[2026-05-02 14:23:01.014] INFO  api.users.list status=200 dur=47ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:01.118] INFO  api.users.list status=200 dur=52ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:01.224] INFO  api.posts.show status=200 dur=14ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:01.301] INFO  worker.process_email completed job=4912 attempts=1 backend=tail
+[2026-05-02 14:23:01.402] INFO  api.users.list status=200 dur=49ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:01.518] INFO  cache.redis_get key=session:0xa2 hit=true dur=2ms
+[2026-05-02 14:23:01.612] WARN  cache.redis_pool size=23/25 utilization=0.92 region=us-east-1
+[2026-05-02 14:23:01.704] INFO  api.posts.show status=200 dur=11ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:01.811] INFO  worker.send_notification completed job=4913 attempts=1
+[2026-05-02 14:23:01.918] INFO  api.users.list status=200 dur=44ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:02.011] INFO  api.posts.create status=201 dur=128ms host=api-7a3 region=us-east-1
+[2026-05-02 14:23:02.114] INFO  api.users.list status=200 dur=51ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:02.224] INFO  worker.process_email completed job=4914 attempts=1 backend=tail
+[2026-05-02 14:23:02.318] INFO  cache.redis_get key=session:0xb1 hit=true dur=1ms
+[2026-05-02 14:23:02.402] INFO  api.posts.show status=200 dur=12ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:02.518] INFO  api.users.list status=200 dur=46ms host=api-7a2 region=us-east-1
+<span class="crit">[2026-05-02 14:23:02.601] CRIT  payments.gateway.timeout vendor=stripe req=0xf47 dur=30001ms — paged @ 14:23:14 via tail.dev</span>
+[2026-05-02 14:23:02.704] INFO  worker.send_notification completed job=4915 attempts=1
+[2026-05-02 14:23:02.811] INFO  api.posts.show status=200 dur=10ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:02.918] INFO  api.users.list status=200 dur=43ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:03.011] INFO  cache.redis_get key=session:0xc2 hit=true dur=2ms
+[2026-05-02 14:23:03.118] INFO  api.posts.create status=201 dur=119ms host=api-7a3 region=us-east-1
+[2026-05-02 14:23:03.224] INFO  api.users.list status=200 dur=48ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:03.318] INFO  worker.process_email completed job=4916 attempts=1 backend=tail
+[2026-05-02 14:23:03.402] INFO  api.posts.show status=200 dur=13ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:03.518] INFO  api.users.list status=200 dur=46ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:03.612] INFO  cache.redis_get key=session:0xd1 hit=true dur=1ms
+[2026-05-02 14:23:03.704] INFO  api.posts.show status=200 dur=11ms host=api-7a4 region=us-east-1
+[2026-05-02 14:23:03.811] INFO  worker.send_notification completed job=4917 attempts=1
+[2026-05-02 14:23:03.918] INFO  api.users.list status=200 dur=42ms host=api-7a2 region=us-east-1
+[2026-05-02 14:23:04.011] INFO  api.posts.create status=201 dur=124ms host=api-7a3 region=us-east-1</pre>
+  <aside class="signal">
+    <h1 class="headline">Most alerts are noise.<span class="second-line">Tail is the signal.</span></h1>
+  </aside>
+</article>
+
+<!--
+COMPANION TEXT (claim style, ~850 chars):
+
+Last month we logged 14.2 million events across our infra.
+
+23 of them paged the on-call.
+
+2 actually mattered.
+
+If you've ever been woken up at 3 AM because a cache pool hit 92% utilization while everything was fine, you know the math: the more sources you wire into PagerDuty, the more 3 AM pages you get for things that resolved themselves before you opened your laptop.
+
+We built Tail because we got tired of it. It reads your logs the way you would — looking for the things that change behavior, not the things that cross a threshold. The thresholds your monitoring tool ships with were written by someone who has never been on call for your system.
+
+(Self-hosted. Apache 2.0. Beta this month.)
+-->
+</body>
+</html>
