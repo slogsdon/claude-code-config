@@ -43,13 +43,13 @@ Shane's personal Claude plugin — all skills and MCP config from `claude-code-c
 
 ### Meta & Utility
 - **biz-brief** — Business Context Brief before brainstorming/planning
-- **compress-prompt** — Token-efficient prompt compression via Gemma
+- **compress-prompt** — Token-efficient prompt compression via Qwen
 - **factory-check** — Evaluates build-vs-do for automation tasks
-- **gemma-executor** — Delegates tasks to local Gemma 4 via Ollama
+- **qwen-executor** — Delegates tasks to local Qwen via LM Studio
 - **work** / **work-tracking** — Markdown-based task tracking (TASKS.md)
 - **agents-md-generator** — Generates AGENTS.md for multi-language sample repos
 - **fix-nested-code-fences** — Repairs nested code fence rendering issues
 
 ## MCP Servers
 
-- **ollama-agent** — Local Gemma 4 (26B) via Ollama. Requires Ollama running at `localhost:11434` and the server script at `/Users/shane/Code/claude-code-config/mcp-servers/ollama-agent/server.py`.
+- **lmstudio-agent** — Local Qwen via LM Studio. Requires LM Studio running at `localhost:11434` and the server script at `/Users/shane/Code/claude-code-config/mcp-servers/lmstudio-agent/server.py`.

@@ -17,7 +17,7 @@ Configured in `.mcp.json` and registered at user scope via `install.sh`:
 
 | Server | Description |
 |--------|-------------|
-| `ollama-agent` | Local Ollama agent for Gemma model access (`mcp-servers/ollama-agent/server.py`) |
+| `lmstudio-agent` | Local LM Studio agent for Qwen model access (`mcp-servers/lmstudio-agent/server.py`) |
 
 The `obsidian` MCP has been removed. Vault access now uses the **obsidian CLI** directly via Bash commands (see below).
 
