@@ -5,28 +5,28 @@ description: Use when asked to audit backlinks or repair the knowledge graph str
 
 # Skill: /backlinks [argument]
 
-Delegate to Gemma via the stepped execution protocol. Claude drives the loop; Gemma executes.
+Delegate to Qwen via the stepped execution protocol. Claude drives the loop; Qwen executes.
 
 ## Steps
 
 1. Parse Shane's request and extract the argument/topic (if provided)
-2. Call `mcp__ollama-agent__gemma_start` with:
-   - `task`: (see Task description for Gemma below, substituting `[argument]` if provided)
+2. Call `mcp__lmstudio-agent__qwen_start` (standalone) or `mcp__plugin_shane-config_lmstudio-agent__qwen_start` (plugin — use whichever is available) with:
+   - `task`: (see Task description for Qwen below, substituting `[argument]` if provided)
    - `skill`: "backlinks"
    - `context`: any relevant context from the current conversation
 3. Parse the JSON response and loop:
-   - `status: "running"` → call `mcp__ollama-agent__gemma_continue` with the `session_id`
+   - `status: "running"` → call `mcp__lmstudio-agent__qwen_continue` (or `mcp__plugin_shane-config_lmstudio-agent__qwen_continue` in plugin) with the `session_id`
    - `status: "done"` → proceed to step 4
    - `status: "error"` → surface the error and stop
-4. Review Gemma's `result`, synthesize if needed, and present to Shane
+4. Review Qwen's `result`, synthesize if needed, and present to Shane
 
-## Task description for Gemma
+## Task description for Qwen
 
 Vault access (bash only, no MCP tools): `obsidian search query='TERM' limit=10`, `obsidian read file='Note Name'` (no .md), `obsidian backlinks file='Note Name'`.
 
 Audit the vault's backlink structure around '[argument]' (or broadly). Find orphaned notes, broken connections, and opportunities to strengthen the knowledge graph.
 
-## Fallback (if gemma_start/gemma_continue unavailable)
+## Fallback (if qwen_start/qwen_continue unavailable)
 
 Execute the skill directly:
 

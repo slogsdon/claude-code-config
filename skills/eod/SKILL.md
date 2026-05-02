@@ -5,7 +5,7 @@ description: Use when /eod is invoked or when Shane wants to close out his day. 
 
 # Skill: /eod
 
-End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writes.
+End-of-day accountability audit. Delegate analysis to Qwen; Claude handles writes.
 
 ## Steps
 
@@ -14,17 +14,17 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
    - `obsidian read file='Daily Notes/[today's date]'`
    - `obsidian read file='Context/patterns'`
    - `obsidian read file='Context/accountability'`
-3. Call `mcp__ollama-agent__gemma_start` with:
+3. Call `mcp__lmstudio-agent__qwen_start` (standalone) or `mcp__plugin_shane-config_lmstudio-agent__qwen_start` (plugin — use whichever is available) with:
    - `task`: "You are Shane's EOD accountability agent. Compare the 'Today's Focus' section against the 'Session Log' section in today's daily note (provided). For each focus item NOT reflected in the session log, flag it as deferred. Check patterns.md for existing deferral counts and increment them. Flag any item now at 3+ deferrals with: 'PATTERN ALERT: [task] has been deferred [N] times. Is this actually a priority?' Output: (1) EOD Audit block for the daily note, (2) updated rows for patterns.md Deferred Tasks Log."
    - `skill`: "eod"
    - `context`: content of all three files
-4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Loop: if `status` is `"running"`, call `mcp__lmstudio-agent__qwen_continue` (or `mcp__plugin_shane-config_lmstudio-agent__qwen_continue` in plugin) with `session_id`; repeat until `status` is `"done"` or `"error"`
 5. Walk check:
    - Ask Shane: "Did you walk today? (y/n / skipped)"
    - Log to today's session log: `obsidian append file='Daily Notes/[today's date]' content='**[HH:MM]** 🚶 Walk: [yes/no/skipped]'`
    - If yes: in patterns.md find `walk_streak_missed` and reset to 0 (skip if field absent)
    - If no or skipped: find or add `walk_streak_missed` in patterns.md, increment by 1; flag if 3+
-6. Parse Gemma's `result`:
+6. Parse Qwen's `result`:
    - Run `obsidian append file='Daily Notes/[today's date]' content='## EOD Audit\n\n[audit block]'`
    - Run `obsidian append file='Context/patterns' content='[updated deferral rows]'` (or use read→edit cycle if replacing existing rows)
 7. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
@@ -35,7 +35,7 @@ End-of-day accountability audit. Delegate analysis to Gemma; Claude handles writ
    ```
 9. Present the audit summary to Shane
 
-## Fallback (if gemma_start/gemma_continue unavailable)
+## Fallback (if qwen_start/qwen_continue unavailable)
 
 Execute the skill directly:
 

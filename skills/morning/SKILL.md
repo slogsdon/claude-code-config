@@ -5,7 +5,7 @@ description: Use when /morning is invoked or when Shane wants to start his day w
 
 # Skill: /morning
 
-Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma executes.
+Delegate to Qwen via the stepped execution protocol. Claude orchestrates; Qwen executes.
 
 ## Steps
 
@@ -13,15 +13,15 @@ Delegate to Gemma via the stepped execution protocol. Claude orchestrates; Gemma
 2. Read both of these files using obsidian CLI:
    - `obsidian read file='Context/accountability'`
    - `obsidian read file='Daily Notes/[yesterday's date]'` (skip if it doesn't exist)
-3. Call `mcp__ollama-agent__gemma_start` with:
+3. Call `mcp__lmstudio-agent__qwen_start` (standalone) or `mcp__plugin_shane-config_lmstudio-agent__qwen_start` (plugin — use whichever is available) with:
    - `task`: "You are Shane's morning accountability agent. Review his accountability context and yesterday's daily note (provided). Surface any carry-over tasks that weren't logged as complete. Then ask: what is today's one primary focus? Propose 2 secondary items based on OKR alignment and known patterns. Be direct, no fluff."
    - `skill`: "morning"
    - `context`: full content of both files concatenated
-4. Loop: if `status` is `"running"`, call `mcp__ollama-agent__gemma_continue` with `session_id`; repeat until `status` is `"done"` or `"error"`
+4. Loop: if `status` is `"running"`, call `mcp__lmstudio-agent__qwen_continue` (or `mcp__plugin_shane-config_lmstudio-agent__qwen_continue` in plugin) with `session_id`; repeat until `status` is `"done"` or `"error"`
 5. Run the **Knowledge Briefing** (see section below) and collect its output
 6. Write focus + briefing to today's daily note:
-   - If note exists: `obsidian append file='Daily Notes/[today's date]' content='## Today'\''s Focus\n\n[Gemma result]\n\n## Knowledge Briefing\n\n[briefing output]'`
-   - If note doesn't exist: `obsidian create name='Daily Notes/[today's date]' content='# [today'\''s date]\n\n## Today'\''s Focus\n\n[Gemma result]\n\n## Knowledge Briefing\n\n[briefing output]' silent`
+   - If note exists: `obsidian append file='Daily Notes/[today's date]' content='## Today'\''s Focus\n\n[Qwen result]\n\n## Knowledge Briefing\n\n[briefing output]'`
+   - If note doesn't exist: `obsidian create name='Daily Notes/[today's date]' content='# [today'\''s date]\n\n## Today'\''s Focus\n\n[Qwen result]\n\n## Knowledge Briefing\n\n[briefing output]' silent`
 6a. Walk check (yesterday):
    - Scan yesterday's daily note content (loaded in step 2) for `🚶 Walk:`
    - If found: skip to step 7
@@ -64,7 +64,7 @@ Output: up to 3 top open questions with source note, or "none."
 ### vault-index delta since last session
 
 ```bash
-obsidian read file='Context/vault-index'
+obsidian read file='vault-index'
 ```
 
 Compare the current vault-index to the snapshot from yesterday's daily note (look for a `## Knowledge Briefing` section). Surface any new Concept pages, new Clippings folders, or deleted notes since then.
@@ -81,7 +81,8 @@ Output: brief delta summary (e.g., "3 new Concepts, 5 new Clippings") or "no cha
 **Vault delta:** [summary or "no changes"]
 ```
 
-## Fallback (if gemma_start/gemma_continue unavailable)
+
+## Fallback (if qwen_start/qwen_continue unavailable)
 
 Execute the skill directly:
 
