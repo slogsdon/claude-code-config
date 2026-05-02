@@ -24,3 +24,24 @@ telemetry/
 tasks/
 plugins/marketplaces/
 __pycache__/
+
+# Dev artifacts
+.DS_Store
+node_modules/
+package.json
+package-lock.json
+*.html
+*-screenshots.js
+investigate-*.js
+*-screenshots/
+*-investigation.js
+*-investigation/
+prompts/
+scripts/gemma4-bench/
+skills/ms-style-pass-workspace/
+
+# Installed marketplace plugins
+plugins/agent-skills/
+plugins/example-skills/
+plugins/superpowers/
+plugins/superpowers-developing-for-claude-code/
