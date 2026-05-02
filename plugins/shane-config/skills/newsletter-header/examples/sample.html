@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>newsletter-header — sample artifact (Shane Logsdon · Working Notes Issue 003)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --color-surface: #fbfaf5;
+  --color-ink: #181b21;
+  --color-ink-3: #62686f;
+  --color-rule: #d6d8de;
+  --color-accent: #c26a3b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #2a2a2a; min-height: 100vh; display: grid; place-items: center; font-family: 'Inter', system-ui, sans-serif; font-feature-settings: 'ss01', 'cv11', 'kern'; }
+
+/*
+  SAMPLE ARTIFACT — newsletter-header skill
+  Brand: Shane Logsdon (v1)
+  Content: "Working Notes" — Issue 003 (May 2026)
+
+  Architecture: chrome-led (brand-earned for editorial mastheads)
+  Layout:    asymmetric (issue + dateline strip top, masthead center, tagline + URL bottom)
+  Color:     monochrome
+  Word count: masthead 2 words ("Working notes."), tagline 6 words
+*/
+
+.canvas {
+  width: 600px; height: 200px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  position: relative; overflow: hidden;
+  padding: 22px 32px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 8px;
+}
+
+.top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+.top .sigil { color: rgba(24,27,33,0.4); }
+.top .pos { color: var(--color-ink); }
+
+.masthead {
+  align-self: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 46px; line-height: 1.0;
+  letter-spacing: -0.018em;
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-rule);
+}
+.tagline {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px; line-height: 1.3;
+  color: var(--color-ink-3);
+  margin: 0;
+}
+.url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-ink);
+}
+</style>
+</head>
+<body>
+<article class="canvas">
+  <header class="top">
+    <span><span class="sigil">§</span> Issue <span class="pos">003</span></span>
+    <span>2026.05.02 · Louisville · GMT−5</span>
+  </header>
+  <h1 class="masthead">Working notes.</h1>
+  <footer class="foot">
+    <p class="tagline">Field notes from the payments and platforms stack.</p>
+    <span class="url">shane.logsdon.io</span>
+  </footer>
+</article>
+
+<!--
+EMBED:
+  Screenshot the .canvas at exact 600×200 → save as PNG → embed in your email template:
+    <img src="working-notes-003.png" width="600" alt="Working Notes — Issue 003 — May 2026">
+  The PNG renders identically in every email client (Outlook included) since the
+  email template only sees the image, not the underlying HTML.
+-->
+</body>
+</html>
