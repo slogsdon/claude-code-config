@@ -27,6 +27,7 @@ End-of-day accountability audit. Delegate analysis to Qwen; Claude handles write
 6. Parse Qwen's `result`:
    - Run `obsidian append file='Daily Notes/[today's date]' content='## EOD Audit\n\n[audit block]'`
    - Run `obsidian append file='Context/patterns' content='[updated deferral rows]'` (or use read→edit cycle if replacing existing rows)
+   - For each item Qwen marks as completed today: read `Context/accountability`, find the matching planning note status line (e.g., "visual polish remaining", "in progress"), and update it to reflect completion with the date. Use the Write tool on the vault file path directly (`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Context/accountability.md`). This keeps accountability.md current so /morning always sees accurate state.
 7. If any day had no session log entries at all, add a `## Logging Gap` entry to that day's note
 8. Commit the vault changes:
    ```bash
