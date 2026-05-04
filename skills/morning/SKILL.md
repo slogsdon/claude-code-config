@@ -10,13 +10,14 @@ Delegate to Qwen via the stepped execution protocol. Claude orchestrates; Qwen e
 ## Steps
 
 1. Determine today's date and yesterday's date (YYYY-MM-DD format)
-2. Read both of these files using obsidian CLI:
+2. Read these files using obsidian CLI:
    - `obsidian read file='Context/accountability'`
-   - `obsidian read file='Daily Notes/[yesterday's date]'` (skip if it doesn't exist)
+   - `obsidian read file='Context/patterns'`
+   - `obsidian read file='Daily Notes/[yesterday's date]'` — if it doesn't exist, try the 3 prior days in order (D-2, D-3, D-4) and use the most recent one found. Label the context clearly with the actual date so Qwen knows the gap.
 3. Call `mcp__lmstudio-agent__qwen_start` (standalone) or `mcp__plugin_shane-config_lmstudio-agent__qwen_start` (plugin — use whichever is available) with:
-   - `task`: "You are Shane's morning accountability agent. Review his accountability context and yesterday's daily note (provided). Surface any carry-over tasks that weren't logged as complete. Then ask: what is today's one primary focus? Propose 2 secondary items based on OKR alignment and known patterns. Be direct, no fluff."
+   - `task`: "You are Shane's morning accountability agent. You have three sources: (1) accountability.md — OKR context, may have stale status lines; (2) patterns.md — authoritative completion log, ✅ rows are definitively done; (3) the most recent daily note. Cross-reference all three. Do NOT flag items marked ✅ in patterns.md as carry-overs, even if accountability.md still mentions them as in-progress. Surface only items that are unresolved in patterns.md. Then propose today's one primary focus and 2 secondaries based on OKR alignment. Be direct, no fluff."
    - `skill`: "morning"
-   - `context`: full content of both files concatenated
+   - `context`: full content of all three files concatenated, with clear section headers indicating which file each block came from
 4. Loop: if `status` is `"running"`, call `mcp__lmstudio-agent__qwen_continue` (or `mcp__plugin_shane-config_lmstudio-agent__qwen_continue` in plugin) with `session_id`; repeat until `status` is `"done"` or `"error"`
 5. Run the **Knowledge Briefing** (see section below) and collect its output
 6. Write focus + briefing to today's daily note:
@@ -88,9 +89,10 @@ Execute the skill directly:
 
 1. Determine today's and yesterday's dates (YYYY-MM-DD)
 2. Run `obsidian read file='Context/accountability'` via bash
-3. Run `obsidian read file='Daily Notes/[yesterday's date]'` via bash if it exists
-4. Identify carry-overs: compare the `## Today's Focus` section against the `## Session Log` section in yesterday's note — any focus item absent from the session log is a carry-over
-5. Read the active OKRs and avoidance patterns from `accountability.md`
+3. Run `obsidian read file='Context/patterns'` via bash
+4. Run `obsidian read file='Daily Notes/[yesterday's date]'` via bash — if it doesn't exist, try D-2, D-3, D-4 in order; use the first one found and note the gap
+5. Identify carry-overs: check patterns.md Deferred Tasks Log — items without a ✅ COMPLETED marker are active. Do NOT surface items that have ✅ in patterns.md, even if accountability.md mentions them. Cross-check against the most recent daily note's EOD Audit for any same-day completions not yet in patterns.md.
+6. Read the active OKRs and avoidance patterns from `accountability.md`
 6. Propose today's focus:
    - **Primary:** highest-priority OKR-aligned item (prefer carry-overs with 2+ prior deferrals)
    - **Secondary (2 items):** next most important OKR-aligned tasks
