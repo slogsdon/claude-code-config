@@ -34,7 +34,7 @@ If a file has no matches, the script falls back to a full-page screenshot. `--fu
 From the project root where the design HTML lives (Playwright must resolve there):
 
 ```bash
-node scripts/screenshot-html.mjs <dir> [--output <dir>] [--width <px>] [--height <px>] [--full-page]
+node skills/screenshot-html/scripts/screenshot-html.mjs <dir> [--output <dir>] [--width <px>] [--height <px>] [--full-page]
 ```
 
 Flags:
@@ -56,7 +56,7 @@ If Playwright isn't installed, the script prints that exact hint and exits 1.
 
 ## Script location
 
-`scripts/screenshot-html.mjs` at the repo root. Always invoke with `node scripts/screenshot-html.mjs ...` from a directory where Playwright resolves — typically the project containing the design HTML, not this config repo.
+`skills/screenshot-html/scripts/screenshot-html.mjs` (lives alongside this skill in the config repo). Always invoke with `node skills/screenshot-html/scripts/screenshot-html.mjs ...` from a directory where Playwright resolves — typically the project containing the design HTML, not this config repo. The script is self-contained — no relative imports — so calling it by absolute path from any cwd works too.
 
 ## Output naming
 
@@ -81,7 +81,7 @@ For each top-level artifact in a file, the script derives a hint from the elemen
 
 ## Common patterns
 
-- **All artifacts in a brand folder:** `node scripts/screenshot-html.mjs ./design/<brand>/artifacts`
-- **Custom output dir:** `node scripts/screenshot-html.mjs ./design --output ./previews`
-- **Force full-page (deliverable pages):** `node scripts/screenshot-html.mjs ./design/landing-page --full-page`
+- **All artifacts in a brand folder:** `node skills/screenshot-html/scripts/screenshot-html.mjs ./design/<brand>/artifacts`
+- **Custom output dir:** `node skills/screenshot-html/scripts/screenshot-html.mjs ./design --output ./previews`
+- **Force full-page (deliverable pages):** `node skills/screenshot-html/scripts/screenshot-html.mjs ./design/landing-page --full-page`
 - **Tall canvases (story / channel art):** add `--height 2200` so the viewport contains the canvas before targeting kicks in.
