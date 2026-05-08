@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "lmstudio-agent": {
-      "command": "/opt/homebrew/bin/python3.13",
-      "args": ["/Users/shane/Code/claude-code-config/mcp-servers/lmstudio-agent/server.py"],
-      "env": {}
-    }
-  }
-}

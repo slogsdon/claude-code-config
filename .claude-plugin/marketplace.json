@@ -9,11 +9,6 @@
   },
   "plugins": [
     {
-      "name": "shane-config",
-      "source": "./plugins/shane-config",
-      "description": "DEPRECATED — kept for one release cycle so existing installs don't break. Migrate to the skills-* plugins."
-    },
-    {
       "name": "skills-design",
       "source": { "source": "github", "repo": "slogsdon/skills-design" },
       "description": "Brand-agnostic design system + 23 artifact generators + PNG export"
