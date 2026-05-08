@@ -1,12 +1,48 @@
 /**
  * Pi extension: Obsidian-primary memory sync
  *
- * session_start  → vault note → MEMORY.md (project root + Claude cache)
- * tool_result    → MEMORY.md  → vault note  (after memory_learn writes)
- * session_shutdown → MEMORY.md → vault note  (final flush)
+ * Runtime context
+ * ---------------
+ * This file is a Pi (Pi Coding Agent) extension intended to run on a Raspberry Pi
+ * acting as a persistent background agent for the user's Obsidian vault. "Pi" here
+ * refers to `@mariozechner/pi-coding-agent` — a long-running coding-agent host that
+ * loads extensions like this one and dispatches lifecycle events. It is not a
+ * Claude Code hook and is not invoked by Claude Code directly; it is loaded by the
+ * Pi runtime on the Pi device.
  *
- * Vault note path: Context/Memory/<project-name>/MEMORY.md
- * Auto-creates the vault note on first visit.
+ * What it does
+ * ------------
+ * Treats the Obsidian vault note `Context/Memory/<project-name>/MEMORY.md` as the
+ * source of truth for per-project memory and keeps two local mirrors in sync:
+ *   • `<cwd>/MEMORY.md`                                 (in-tree convenience copy)
+ *   • `~/.claude/projects/<cwd-key>/memory/MEMORY.md`   (Claude Code's local cache)
+ *
+ *   session_start    → vault note → both local mirrors (auto-creates the vault
+ *                                    note from a template on first visit)
+ *   tool_result      → in-tree MEMORY.md → vault note  (fires after writes from
+ *                                                       `memory_learn` / `remember`)
+ *   session_shutdown → in-tree MEMORY.md → vault note  (final flush)
+ *
+ * Each vault write is followed by an atomic `git add -A && git commit` inside the
+ * vault repo so memory edits are versioned alongside the rest of the vault.
+ *
+ * Requirements
+ * ------------
+ *   • Node.js 18+ (uses `node:fs`, `node:os`, `node:path`, `node:child_process`).
+ *   • The Pi runtime (`@mariozechner/pi-coding-agent`) installed on the device.
+ *   • The Obsidian iCloud vault present at the hardcoded VAULT path below — i.e.
+ *     `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal`. On the Pi
+ *     this implies iCloud-Drive sync (or an equivalent mount) is configured. Adjust
+ *     `VAULT` if your vault lives elsewhere.
+ *   • `git` on PATH; the vault directory must already be a git repo for commits to
+ *     succeed (failures are swallowed silently — see `commitVault`).
+ *
+ * How to run
+ * ----------
+ * Register this file as an extension with the Pi runtime per Pi's extension docs
+ * (typically a `pi.config.ts` / extensions directory pointer). The runtime calls
+ * the default export with its `ExtensionAPI` and this module wires up the three
+ * lifecycle handlers above. There is no standalone CLI entry point.
  */
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
