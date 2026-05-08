@@ -45,3 +45,6 @@ plugins/agent-skills/
 plugins/example-skills/
 plugins/superpowers/
 plugins/superpowers-developing-for-claude-code/
+
+# Build artifacts
+*.plugin
