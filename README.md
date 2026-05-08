@@ -41,8 +41,10 @@ brew install --cask obsidian
 
 - **Automated Workflows** - Proactive commit suggestions, task breakdown, and quality checks
 - **Specialized Agents** - Domain-specific agents for PHP, security, architecture, and more
+  > Roadmap: not yet implemented. Tracked as a future direction; today the repo provides skills, not bespoke agents.
 - **Coding Standards** - TypeScript, PHP 8.2+, PSR-12, conventional commits
 - **Quality Gates** - Automated testing, linting, security scanning, and code review
+  > Roadmap: not yet implemented. Aspirational — no enforced gates ship with this config today.
 
 ## Usage
 
