@@ -1,3 +1,5 @@
+> **[shane.logsdon.io](https://shane.logsdon.io)** — writing and projects on agentic workflows, web standards, and payments engineering.
+
 # Claude Code Configuration
 
 Personal configuration repository for Claude Code with custom agents, coding standards, and development workflows.
