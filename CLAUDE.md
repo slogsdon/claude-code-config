@@ -35,7 +35,19 @@
 - Use TASKS.md for multi-task coordination within a session
 
 ## Skills
-All specialized workflows (code review, PRD writing, architecture review, security audits, etc.) are handled by skills in the skills/ directory. Invoke them when relevant — don't replicate their logic here.
+All specialized workflows (code review, PRD writing, architecture review, security audits, etc.) are handled by skills in plugin submodules under `plugins/shane/`. Invoke them when relevant — don't replicate their logic here.
+
+Skills now live at `plugins/shane/<plugin>/skills/<skill>/`:
+- `plugins/shane/skills-design/` — design system + artifact generators
+- `plugins/shane/skills-vault-knowledge/` — vault knowledge work (obsidian, bloom, connect, etc.)
+- `plugins/shane/skills-vault-rituals/` — daily rituals (morning, eod, log)
+- `plugins/shane/skills-writing/` — humanize + ms-style-pass
+- `plugins/shane/skills-engineering-reference/` — language and standards references
+- `plugins/shane/skills-audit-business/` — commercial-grade audit + brief skills (PRIVATE)
+- `plugins/shane/skills-workflows/` — pipeline orchestrators
+- `plugins/shane/skills-meta-utils/` — compress-prompt, qwen-executor
+
+To add a new skill, add it inside the appropriate plugin directory. Don't create skills at the top-level repo.
 
 ## Obsidian / Vault
 

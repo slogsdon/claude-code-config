@@ -57,4 +57,15 @@ This repo doubles as a **Cowork plugin source** (`personal-skills`). It serves t
 - **Claude Code config** — `~/.claude` symlinks here, making all settings, skills, and MCP configs available in every Claude Code session.
 - **Cowork plugin** — the `.claude-plugin/plugin.json` manifest registers this repo as the `personal-skills` plugin, making its skills available to any Cowork-enabled session that installs it.
 
-Skills in `skills/` are available in both environments without duplication. MCP servers are defined in `.mcp.json` and auto-registered via `install.sh`.
+Skills now live in plugin directories under `plugins/shane/<plugin>/skills/<skill>/`. The monolithic `shane-config` plugin has been decomposed into 8 focused plugins registered in `.claude-plugin/marketplace.json`:
+
+- `plugins/shane/skills-design/` — design system + 23 artifact generators + PNG export
+- `plugins/shane/skills-vault-knowledge/` — vault knowledge work (obsidian, bloom, connect, etc.)
+- `plugins/shane/skills-vault-rituals/` — daily rituals (morning, eod, log)
+- `plugins/shane/skills-writing/` — humanize + ms-style-pass
+- `plugins/shane/skills-engineering-reference/` — language and standards references
+- `plugins/shane/skills-audit-business/` — commercial-grade audit + brief skills (PRIVATE)
+- `plugins/shane/skills-workflows/` — pipeline orchestrators
+- `plugins/shane/skills-meta-utils/` — compress-prompt, qwen-executor
+
+MCP servers are defined in `.mcp.json` and auto-registered via `install.sh`.

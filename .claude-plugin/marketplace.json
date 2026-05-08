@@ -5,13 +5,53 @@
     "email": "shane@shanelogsdon.com"
   },
   "metadata": {
-    "description": "Shane's personal Claude configuration — vault workflow, knowledge exploration, and dev skills"
+    "description": "Shane's personal Claude configuration — vault workflow, knowledge exploration, design, and dev skills"
   },
   "plugins": [
     {
       "name": "shane-config",
       "source": "./plugins/shane-config",
-      "description": "All personal skills and MCP config"
+      "description": "DEPRECATED — kept for one release cycle so existing installs don't break. Migrate to the skills-* plugins."
+    },
+    {
+      "name": "skills-design",
+      "source": { "source": "github", "repo": "slogsdon/skills-design" },
+      "description": "Brand-agnostic design system + 23 artifact generators + PNG export"
+    },
+    {
+      "name": "skills-vault-knowledge",
+      "source": { "source": "github", "repo": "slogsdon/skills-vault-knowledge" },
+      "description": "Vault knowledge exploration and synthesis — obsidian access, backlinks, and 20 knowledge-work skills"
+    },
+    {
+      "name": "skills-vault-rituals",
+      "source": { "source": "github", "repo": "slogsdon/skills-vault-rituals" },
+      "description": "Daily and session ritual skills — morning, eod, plan-tomorrow, log, inbox-process"
+    },
+    {
+      "name": "skills-writing",
+      "source": { "source": "github", "repo": "slogsdon/skills-writing" },
+      "description": "Writing quality and style skills — humanize and ms-style-pass"
+    },
+    {
+      "name": "skills-engineering-reference",
+      "source": { "source": "github", "repo": "slogsdon/skills-engineering-reference" },
+      "description": "Engineering language and standards reference — TypeScript, vanilla JS, CSS, PHP, web standards, database, dependencies, auth"
+    },
+    {
+      "name": "skills-audit-business",
+      "source": { "source": "github", "repo": "slogsdon/skills-audit-business" },
+      "description": "Commercial-grade audit and business strategy skills (PRIVATE) — AI visibility audit, design audit report, skill audit, factory-check, biz-brief"
+    },
+    {
+      "name": "skills-workflows",
+      "source": { "source": "github", "repo": "slogsdon/skills-workflows" },
+      "description": "Pipeline orchestration and workflow skills — publish-post, agents-md-generator, work-tracking, and 5 workflow orchestrators"
+    },
+    {
+      "name": "skills-meta-utils",
+      "source": { "source": "github", "repo": "slogsdon/skills-meta-utils" },
+      "description": "Meta-utility skills — compress-prompt and qwen-executor for local LLM delegation"
     }
   ]
 }

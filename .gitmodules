@@ -1,0 +1,24 @@
+[submodule "plugins/shane/skills-design"]
+	path = plugins/shane/skills-design
+	url = ssh://git@github.com/slogsdon/skills-design.git
+[submodule "plugins/shane/skills-vault-knowledge"]
+	path = plugins/shane/skills-vault-knowledge
+	url = ssh://git@github.com/slogsdon/skills-vault-knowledge.git
+[submodule "plugins/shane/skills-vault-rituals"]
+	path = plugins/shane/skills-vault-rituals
+	url = ssh://git@github.com/slogsdon/skills-vault-rituals.git
+[submodule "plugins/shane/skills-writing"]
+	path = plugins/shane/skills-writing
+	url = ssh://git@github.com/slogsdon/skills-writing.git
+[submodule "plugins/shane/skills-engineering-reference"]
+	path = plugins/shane/skills-engineering-reference
+	url = ssh://git@github.com/slogsdon/skills-engineering-reference.git
+[submodule "plugins/shane/skills-audit-business"]
+	path = plugins/shane/skills-audit-business
+	url = ssh://git@github.com/slogsdon/skills-audit-business.git
+[submodule "plugins/shane/skills-workflows"]
+	path = plugins/shane/skills-workflows
+	url = ssh://git@github.com/slogsdon/skills-workflows.git
+[submodule "plugins/shane/skills-meta-utils"]
+	path = plugins/shane/skills-meta-utils
+	url = ssh://git@github.com/slogsdon/skills-meta-utils.git

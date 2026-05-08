@@ -1,7 +1,7 @@
 {
   "name": "shane-config",
-  "version": "0.1.0",
-  "description": "Shane's personal Claude configuration — vault workflow, knowledge exploration, and dev skills",
+  "version": "0.3.0-deprecated",
+  "description": "DEPRECATED: skills migrated to skills-* plugins. Install those individually from the slogsdon-claude-code-config marketplace.",
   "author": {
     "name": "Shane Logsdon"
   }
