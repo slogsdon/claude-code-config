@@ -11,12 +11,12 @@
     {
       "name": "skills-design",
       "source": { "source": "github", "repo": "slogsdon/skills-design" },
-      "description": "Brand-agnostic design system + 23 artifact generators + PNG export"
+      "description": "Brand-agnostic design system — 20 artifact generators + design-system + design-plan + screenshot-html (23 skills)"
     },
     {
       "name": "skills-vault-knowledge",
       "source": { "source": "github", "repo": "slogsdon/skills-vault-knowledge" },
-      "description": "Vault knowledge exploration and synthesis — obsidian access, backlinks, and 20 knowledge-work skills"
+      "description": "Vault knowledge exploration and synthesis — obsidian access, backlinks, and 22 knowledge-work skills"
     },
     {
       "name": "skills-vault-rituals",
