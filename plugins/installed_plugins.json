@@ -3,52 +3,134 @@
   "plugins": {
     "example-skills@anthropic-agent-skills": [
       {
-        "scope": "user",
-        "installPath": "/Users/shane/.claude/plugins/cache/anthropic-agent-skills/example-skills/69c0b1a06741",
-        "version": "69c0b1a06741",
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/anthropic-agent-skills/example-skills/f458cee31a75",
+        "version": "f458cee31a75",
         "installedAt": "2026-01-26T19:42:16.433Z",
-        "lastUpdated": "2026-01-26T19:42:16.433Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
         "gitCommitSha": "69c0b1a0674149f27b61b2635f935524b6add202"
       }
     ],
     "superpowers@superpowers-marketplace": [
       {
-        "scope": "user",
-        "installPath": "/Users/shane/.claude/plugins/cache/superpowers-marketplace/superpowers/4.2.0",
-        "version": "4.2.0",
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/superpowers-marketplace/superpowers/5.1.0",
+        "version": "5.1.0",
         "installedAt": "2026-02-09T01:03:52.908Z",
-        "lastUpdated": "2026-02-09T01:03:52.908Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
         "gitCommitSha": "a98c5dfc9de0df5318f4980d91d24780a566ee60"
       }
     ],
     "superpowers-developing-for-claude-code@superpowers-marketplace": [
       {
-        "scope": "user",
+        "scope": "project",
+        "projectPath": "/Users/shane",
         "installPath": "/Users/shane/.claude/plugins/cache/superpowers-marketplace/superpowers-developing-for-claude-code/0.3.1",
         "version": "0.3.1",
         "installedAt": "2026-02-10T02:13:53.129Z",
-        "lastUpdated": "2026-02-10T02:13:53.129Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
         "gitCommitSha": "74afe935da49efe782907e837a27ce618498099a"
       }
     ],
     "agent-skills@addy-agent-skills": [
       {
-        "scope": "user",
+        "scope": "project",
+        "projectPath": "/Users/shane",
         "installPath": "/Users/shane/.claude/plugins/cache/addy-agent-skills/agent-skills/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-04-14T22:42:04.701Z",
-        "lastUpdated": "2026-04-14T22:42:04.701Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
         "gitCommitSha": "bf2fa6994407c9c888fc19a03fd54957991cfa0e"
       }
     ],
-    "shane-config@slogsdon-claude-code-config": [
+    "skills-audit-business@slogsdon-claude-code-config": [
       {
-        "scope": "user",
-        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/shane-config/0.1.0",
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-audit-business/0.1.0",
         "version": "0.1.0",
-        "installedAt": "2026-04-17T14:37:40.326Z",
-        "lastUpdated": "2026-04-17T14:37:40.326Z",
-        "gitCommitSha": "079e975d414a0c7aa4d0c8ecaf7e7c4a204386c7"
+        "installedAt": "2026-05-11T00:06:54.172Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "f2885c0e1fa9d36b774446b615a3cdfd7c4c027e"
+      }
+    ],
+    "skills-design@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-design/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:06:55.736Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "f0c22f913496782c0e4b4800454b826271d7f1bb"
+      }
+    ],
+    "skills-engineering-reference@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-engineering-reference/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:06:56.641Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "3ef70a30c7ef5ceccf4de8da072d258409eba328"
+      }
+    ],
+    "skills-meta-utils@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-meta-utils/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:06:57.537Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "6050ab97eb335ddf753a148b19066919931e108e"
+      }
+    ],
+    "skills-vault-knowledge@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-vault-knowledge/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:06:58.427Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "d67e0a0ba8fa57dba0a8ca3a8b46af9523661621"
+      }
+    ],
+    "skills-vault-rituals@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-vault-rituals/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:06:59.286Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "96a3554195ba39493c220feb6759562f010a836f"
+      }
+    ],
+    "skills-workflows@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-workflows/0.2.0",
+        "version": "0.2.0",
+        "installedAt": "2026-05-11T00:07:00.140Z",
+        "lastUpdated": "2026-05-13T02:04:35.171Z",
+        "gitCommitSha": "c2cfba7346066961d6d74d8a51412f2e3e77ca5e"
+      }
+    ],
+    "skills-writing@slogsdon-claude-code-config": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/shane",
+        "installPath": "/Users/shane/.claude/plugins/cache/slogsdon-claude-code-config/skills-writing/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-05-11T00:07:00.943Z",
+        "lastUpdated": "2026-05-12T13:04:05.668Z",
+        "gitCommitSha": "e02dbf979305c505ee27221c781a1e2092be4e47"
       }
     ]
   }
