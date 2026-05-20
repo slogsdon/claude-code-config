@@ -32,14 +32,14 @@
     "superpowers@superpowers-marketplace": true,
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
     "agent-skills@addy-agent-skills": true,
-    "skills-audit-business@slogsdon-claude-code-config": true,
+    "skills-audit-business@slogsdon-claude-code-config": false,
     "skills-design@slogsdon-claude-code-config": true,
-    "skills-engineering-reference@slogsdon-claude-code-config": true,
-    "skills-meta-utils@slogsdon-claude-code-config": true,
+    "skills-engineering-reference@slogsdon-claude-code-config": false,
+    "skills-meta-utils@slogsdon-claude-code-config": false,
     "skills-vault-knowledge@slogsdon-claude-code-config": true,
-    "skills-vault-rituals@slogsdon-claude-code-config": true,
-    "skills-workflows@slogsdon-claude-code-config": true,
-    "skills-writing@slogsdon-claude-code-config": true
+    "skills-vault-rituals@slogsdon-claude-code-config": false,
+    "skills-workflows@slogsdon-claude-code-config": false,
+    "skills-writing@slogsdon-claude-code-config": false
   },
   "extraKnownMarketplaces": {
     "addy-agent-skills": {
@@ -58,11 +58,10 @@
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "defaultModel": "qwen3.6-35b-a3b",
-  "defaultProvider": "lmstudio",
-  "lastChangelogVersion": "0.74.0",
+  "defaultModel": "lm-studio/qwen3.6-35b-a3b",
+  "defaultProvider": "litellm",
+  "lastChangelogVersion": "0.75.3",
   "packages": [
-    "npm:pi-lens",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:@tmustier/pi-ralph-wiggum",
@@ -93,6 +92,6 @@
     }
   },
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "off",
   "quietStartup": true
 }
