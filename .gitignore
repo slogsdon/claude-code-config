@@ -60,3 +60,6 @@ npm/
 plugins/installed_plugins.json
 plugins/known_marketplaces.json
 plugins/*-cache.json
+
+# Private OTel telemetry bridge (config lives in settings.local.json)
+otel-bridge.sh
