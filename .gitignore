@@ -48,3 +48,15 @@ plugins/superpowers-developing-for-claude-code/
 
 # Build artifacts
 *.plugin
+
+# Runtime state and caches
+.last-cleanup
+daemon.lock
+daemon.log
+daemon.status.json
+daemon/
+jobs/
+npm/
+plugins/installed_plugins.json
+plugins/known_marketplaces.json
+plugins/*-cache.json
