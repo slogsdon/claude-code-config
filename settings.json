@@ -32,14 +32,14 @@
     "superpowers@superpowers-marketplace": true,
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
     "agent-skills@addy-agent-skills": true,
-    "skills-audit-business@slogsdon-claude-code-config": false,
+    "skills-audit-business@slogsdon-claude-code-config": true,
     "skills-design@slogsdon-claude-code-config": true,
-    "skills-engineering-reference@slogsdon-claude-code-config": false,
-    "skills-meta-utils@slogsdon-claude-code-config": false,
+    "skills-engineering-reference@slogsdon-claude-code-config": true,
+    "skills-meta-utils@slogsdon-claude-code-config": true,
     "skills-vault-knowledge@slogsdon-claude-code-config": true,
-    "skills-vault-rituals@slogsdon-claude-code-config": false,
-    "skills-workflows@slogsdon-claude-code-config": false,
-    "skills-writing@slogsdon-claude-code-config": false
+    "skills-vault-rituals@slogsdon-claude-code-config": true,
+    "skills-workflows@slogsdon-claude-code-config": true,
+    "skills-writing@slogsdon-claude-code-config": true
   },
   "extraKnownMarketplaces": {
     "addy-agent-skills": {
