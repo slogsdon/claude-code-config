@@ -6,13 +6,13 @@
 #
 # This YAML is the human-readable source of truth. Two consumer configs are
 # kept in sync manually:
-#   - ~/Code/claude-code-config/models.json  (Pi-compatible providers config)
-#   - ~/Code/otel-local-ai/litellm/config.yaml  (the actual LiteLLM model_list)
+#   - ~/Code/claude-code-config/models.json       (Pi-compatible providers config)
+#   - ~/Code/otel-local-ai/litellm/config.yaml    (the actual LiteLLM model_list)
 
 proxy:
   name: litellm
   base_url: http://localhost:4000/v1
-  api_key_env: LITELLM_API_KEY      # clients read this
+  api_key_env: LITELLM_API_KEY        # clients read this
   master_key_env: LITELLM_MASTER_KEY  # also accepted, server-side master key
   master_key_location: ~/Code/otel-local-ai/.env
   notes: |
@@ -24,6 +24,18 @@ runtime:
   name: ollama
   base_url: http://localhost:11434       # internal only — do NOT call directly
   proxy_to_runtime_base: http://host.docker.internal:11434  # how LiteLLM (in Docker) reaches Ollama (on host)
+
+context_strategy:
+  description: |
+    LiteLLM's num_ctx defaults to each model's isolated-mode ceiling — chosen
+    so a single interactive CLI session (Pi, Hermes) can carry a long
+    conversation without hitting auto-compaction. Pair/triple workloads
+    should pass a smaller num_ctx in the request body, OR accept that
+    Ollama will swap models when memory is tight.
+
+    Values calibrated against weight + estimated KV cache to stay under
+    ~28 GB combined on the 32 GB host. The `-iso` variants were removed
+    on 2026-05-23 because they had become identical to the base routes.
 
 reasoning_concepts:
   description: |
@@ -40,23 +52,9 @@ reasoning_concepts:
          reasoning-capable model in the roster.
 
     Models WITH thinking channel:    general, reasoning, capable,
-                                     capable-large, flash, vision (and -iso)
+                                     capable-large, flash, vision
     Models WITHOUT thinking channel: code-autocomplete, fast-general,
                                      code-review, writing
-
-context_modes:
-  description: |
-    Each model has two context-window settings. Concurrent is the LiteLLM
-    default — small enough that two or three models can co-load on a 32 GB
-    host without OOM. Isolated is the model's effective max for solo use.
-    The big three (capable-large, flash, vision) expose an explicit `-iso`
-    alias for isolated mode; smaller models use a single alias with the
-    concurrent default and rely on per-request num_ctx overrides for
-    isolated work.
-  heuristic: |
-    Pair (two co-loaded models): cap each at ~50–60% of ollama_max.
-    Triple (three co-loaded models): cap each at ~40% of ollama_max.
-    Big models (>=15 GB weights) always run isolated.
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 aliases:
@@ -70,10 +68,6 @@ aliases:
   capable-large:      gpt-oss:20b
   flash:              glm-4.7-flash:q4_K_M
   vision:             qwen3-vl:30b
-  # Isolated-mode variants (full context, run-alone only):
-  capable-large-iso:  gpt-oss:20b
-  flash-iso:          glm-4.7-flash:q4_K_M
-  vision-iso:         qwen3-vl:30b
 
 models:
   - alias: code-autocomplete
@@ -82,10 +76,8 @@ models:
     use_case: Fast inline completion, Cursor/Copilot slot
     weight_size_gb: 1.9
     reasoning: false
-    context:
-      ollama_max: 32768
-      concurrent_default: 16384
-      isolated_max: 32768
+    context_window: 32768
+    ollama_max: 32768
     input: [text]
     notes: Base model — no chat template; use completion endpoint for fill-in-the-middle.
 
@@ -95,10 +87,8 @@ models:
     use_case: Skill delegation, quick Q&A, Obsidian ops
     weight_size_gb: 9.6
     reasoning: false
-    context:
-      ollama_max: 131072
-      concurrent_default: 32768
-      isolated_max: 65536
+    context_window: 65536
+    ollama_max: 131072
     input: [text]
     notes: MLX-optimized — Apple Silicon only. Default for the ollama-agent MCP.
 
@@ -108,10 +98,8 @@ models:
     use_case: Structured output, API doc work, IBM-style tasks
     weight_size_gb: 5.3
     reasoning: false
-    context:
-      ollama_max: 131072
-      concurrent_default: 32768
-      isolated_max: 65536
+    context_window: 65536
+    ollama_max: 131072
     input: [text]
 
   - alias: general
@@ -120,10 +108,8 @@ models:
     use_case: Default chat, fast reasoning, most automation
     weight_size_gb: 8.9
     reasoning: true
-    context:
-      ollama_max: 262144
-      concurrent_default: 32768
-      isolated_max: 131072
+    context_window: 131072
+    ollama_max: 262144
     input: [text]
     notes: MLX-optimized — Apple Silicon only. Roster default. Emits <think> channel; budget tokens accordingly.
 
@@ -133,10 +119,8 @@ models:
     use_case: Long-form drafts, blog, ghostwriting
     weight_size_gb: 7.1
     reasoning: false
-    context:
-      ollama_max: 1024000   # 1M ceiling per model card — practically unattainable on 32 GB
-      concurrent_default: 32768
-      isolated_max: 131072
+    context_window: 131072
+    ollama_max: 1024000   # 1M ceiling per model card — capped at 128K for memory
     input: [text]
 
   - alias: reasoning
@@ -145,10 +129,8 @@ models:
     use_case: Multi-step problems, planning, math
     weight_size_gb: 11
     reasoning: true
-    context:
-      ollama_max: 32768
-      concurrent_default: 16384
-      isolated_max: 32768
+    context_window: 32768
+    ollama_max: 32768
     input: [text]
     notes: Always thinks — `thinking_level=off` is unsupported.
 
@@ -158,10 +140,8 @@ models:
     use_case: Heavier tasks where quality > speed
     weight_size_gb: 9.3
     reasoning: true
-    context:
-      ollama_max: 40960
-      concurrent_default: 16384
-      isolated_max: 40960
+    context_window: 40960
+    ollama_max: 40960
     input: [text]
     notes: Emits <think> channel.
 
@@ -171,11 +151,8 @@ models:
     use_case: When 14B isn't enough but VL not needed
     weight_size_gb: 13
     reasoning: true
-    iso_alias: capable-large-iso
-    context:
-      ollama_max: 131072
-      concurrent_default: 8192    # alias `capable-large`
-      isolated_max: 65536         # alias `capable-large-iso`
+    context_window: 65536
+    ollama_max: 131072
     input: [text]
     notes: gpt-oss style chain-of-thought. Emits reasoning channel.
 
@@ -185,11 +162,8 @@ models:
     use_case: Chinese content, fast large-context tasks
     weight_size_gb: 19
     reasoning: true
-    iso_alias: flash-iso
-    context:
-      ollama_max: 202752
-      concurrent_default: 8192
-      isolated_max: 131072
+    context_window: 131072
+    ollama_max: 202752
     input: [text]
     notes: 19 GB on disk. Practically isolated-only on a 32 GB host. Emits <think> channel.
 
@@ -199,11 +173,8 @@ models:
     use_case: Any task with images, screenshots, video frames
     weight_size_gb: 19
     reasoning: true
-    iso_alias: vision-iso
-    context:
-      ollama_max: 262144
-      concurrent_default: 8192
-      isolated_max: 65536
+    context_window: 65536
+    ollama_max: 262144
     input: [text, image]
     notes: The only vision-capable model in the roster. 19 GB weights — isolated-only in practice. Emits <think> channel.
 

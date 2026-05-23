@@ -1,5 +1,5 @@
 {
-  "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/context_modes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. The `reasoning` flag below marks models that emit a <think> channel; set Pi's thinking level accordingly when calling these.",
+  "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/reasoning notes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. Context windows default to isolated-mode values so Pi has headroom for long conversations; concurrent multi-model workloads should override num_ctx per request.",
   "providers": {
     "litellm": {
       "baseUrl": "http://localhost:4000/v1",
@@ -16,32 +16,32 @@
           "name": "Code autocomplete (qwen2.5-coder 3B base)",
           "reasoning": false,
           "input": ["text"],
-          "contextWindow": 16384,
-          "maxTokens": 4096
+          "contextWindow": 32768,
+          "maxTokens": 8192
         },
         {
           "id": "fast-general",
           "name": "Fast general / vault (gemma4 e4b mlx)",
           "reasoning": false,
           "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 8192
+          "contextWindow": 65536,
+          "maxTokens": 16384
         },
         {
           "id": "code-review",
           "name": "Code review / enterprise (granite4.1 8B)",
           "reasoning": false,
           "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 8192
+          "contextWindow": 65536,
+          "maxTokens": 16384
         },
         {
           "id": "general",
           "name": "General purpose (qwen3.5 9B mlx)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 8192,
+          "contextWindow": 131072,
+          "maxTokens": 32768,
           "thinkingLevelMap": {
             "minimal": null,
             "low": "low",
@@ -55,16 +55,16 @@
           "name": "Writing / instruction (mistral-nemo 12B)",
           "reasoning": false,
           "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 8192
+          "contextWindow": 131072,
+          "maxTokens": 32768
         },
         {
           "id": "reasoning",
           "name": "Reasoning (phi4-reasoning:plus)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 16384,
-          "maxTokens": 8192,
+          "contextWindow": 32768,
+          "maxTokens": 16384,
           "thinkingLevelMap": {
             "off": null,
             "minimal": null,
@@ -79,8 +79,8 @@
           "name": "Reasoning + coding (qwen3 14B)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 16384,
-          "maxTokens": 8192,
+          "contextWindow": 40960,
+          "maxTokens": 16384,
           "thinkingLevelMap": {
             "minimal": null,
             "low": "low",
@@ -91,52 +91,7 @@
         },
         {
           "id": "capable-large",
-          "name": "Capable general (gpt-oss 20B) — concurrent ctx",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 8192,
-          "maxTokens": 4096,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "flash",
-          "name": "Multilingual / flash (glm-4.7-flash q4_K_M) — concurrent ctx",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 8192,
-          "maxTokens": 4096,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "vision",
-          "name": "Vision (qwen3-vl 30B) — concurrent ctx",
-          "reasoning": true,
-          "input": ["text", "image"],
-          "contextWindow": 8192,
-          "maxTokens": 4096,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "capable-large-iso",
-          "name": "Capable general (gpt-oss 20B) — isolated, run alone",
+          "name": "Capable general (gpt-oss 20B)",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 65536,
@@ -150,12 +105,12 @@
           }
         },
         {
-          "id": "flash-iso",
-          "name": "Multilingual / flash (glm-4.7-flash) — isolated, run alone",
+          "id": "flash",
+          "name": "Multilingual / flash (glm-4.7-flash q4_K_M)",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 16384,
+          "maxTokens": 32768,
           "thinkingLevelMap": {
             "minimal": null,
             "low": "low",
@@ -165,8 +120,8 @@
           }
         },
         {
-          "id": "vision-iso",
-          "name": "Vision (qwen3-vl 30B) — isolated, run alone",
+          "id": "vision",
+          "name": "Vision (qwen3-vl 30B)",
           "reasoning": true,
           "input": ["text", "image"],
           "contextWindow": 65536,
