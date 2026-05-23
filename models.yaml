@@ -1,0 +1,115 @@
+# Single source of truth for Shane's local model roster.
+#
+# ALL CALLS ROUTE THROUGH LITELLM — never direct to Ollama.
+# Clients send the role alias (e.g. "writing", "vision") to the LiteLLM proxy,
+# which then dispatches to the Ollama runtime. Ollama itself is internal-only.
+#
+# Update path: edit this file, then mirror changes into
+#   ~/Code/otel-local-ai/litellm/config.yaml  (the actual LiteLLM model_list)
+# Nothing parses this YAML programmatically — it is documentation.
+
+proxy:
+  name: litellm
+  base_url: http://localhost:4000/v1
+  api_key_env: LITELLM_API_KEY
+  master_key_location: ~/Code/otel-local-ai/.env  # LITELLM_MASTER_KEY=...
+  notes: |
+    All scripts, skills, agents, Windmill flows, Pi, and Hermes must point at
+    this proxy. The proxy applies OTel tracing, Langfuse callbacks, and routes
+    to the appropriate Ollama tag.
+
+runtime:
+  name: ollama
+  base_url: http://localhost:11434       # internal only — do NOT call directly
+  proxy_to_runtime_base: http://host.docker.internal:11434  # how LiteLLM (in Docker) reaches Ollama (on host)
+
+# Stable aliases callers should use. The left column is what you send to
+# LiteLLM as the `model` parameter; the right column is the Ollama tag the
+# proxy resolves it to.
+aliases:
+  code-autocomplete: qwen2.5-coder:3b-base
+  fast-general:      gemma4:e4b-mlx
+  code-review:       granite4.1:8b
+  general:           qwen3.5:9b-mlx
+  writing:           mistral-nemo:12b
+  reasoning:         phi4-reasoning:plus
+  capable:           qwen3:14b
+  capable-large:     gpt-oss:20b
+  flash:             glm-4.7-flash:q4_K_M
+  vision:            qwen3-vl:30b
+
+models:
+  - alias: code-autocomplete
+    ollama_tag: qwen2.5-coder:3b-base
+    role_label: Code autocomplete
+    use_case: Fast inline completion, Cursor/Copilot slot
+    context_window: 32768
+    input: [text]
+    notes: Base model — no chat template; use completion endpoint for fill-in-the-middle.
+
+  - alias: fast-general
+    ollama_tag: gemma4:e4b-mlx
+    role_label: Fast general / vault
+    use_case: Skill delegation, quick Q&A, Obsidian ops
+    context_window: 131072
+    input: [text]
+    notes: MLX-optimized — Apple Silicon only. Default for the ollama-agent MCP.
+
+  - alias: code-review
+    ollama_tag: granite4.1:8b
+    role_label: Code review / enterprise
+    use_case: Structured output, API doc work, IBM-style tasks
+    context_window: 131072
+    input: [text]
+
+  - alias: general
+    ollama_tag: qwen3.5:9b-mlx
+    role_label: General purpose
+    use_case: Default chat, fast reasoning, most automation
+    context_window: 262144
+    input: [text]
+    notes: MLX-optimized — Apple Silicon only. Roster default.
+
+  - alias: writing
+    ollama_tag: mistral-nemo:12b
+    role_label: Writing / instruction
+    use_case: Long-form drafts, blog, ghostwriting
+    context_window: 1024000
+    input: [text]
+
+  - alias: reasoning
+    ollama_tag: phi4-reasoning:plus
+    role_label: Reasoning
+    use_case: Multi-step problems, planning, math
+    context_window: 32768
+    input: [text]
+
+  - alias: capable
+    ollama_tag: qwen3:14b
+    role_label: Reasoning + coding
+    use_case: Heavier tasks where quality > speed
+    context_window: 40960
+    input: [text]
+
+  - alias: capable-large
+    ollama_tag: gpt-oss:20b
+    role_label: Capable general
+    use_case: When 14B isn't enough but VL not needed
+    context_window: 131072
+    input: [text]
+
+  - alias: flash
+    ollama_tag: glm-4.7-flash:q4_K_M
+    role_label: Multilingual / flash
+    use_case: Chinese content, fast large-context tasks
+    context_window: 202752
+    input: [text]
+    notes: 19GB on disk — slow first load, fast once warm.
+
+  - alias: vision
+    ollama_tag: qwen3-vl:30b
+    role_label: Vision
+    use_case: Any task with images, screenshots, video frames
+    context_window: 262144
+    input: [text, image]
+    notes: The only vision-capable model in the roster.

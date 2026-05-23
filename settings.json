@@ -58,8 +58,8 @@
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "defaultModel": "qwen3.5:9b-mlx",
-  "defaultProvider": "ollama",
+  "defaultModel": "general",
+  "defaultProvider": "litellm",
   "lastChangelogVersion": "0.75.4",
   "packages": [
     "npm:pi-mcp-adapter",

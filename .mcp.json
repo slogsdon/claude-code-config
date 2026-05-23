@@ -3,7 +3,10 @@
     "ollama-agent": {
       "command": "/opt/homebrew/bin/python3.13",
       "args": ["/Users/shane/Code/claude-code-config/mcp-servers/ollama-agent/server.py"],
-      "env": {}
+      "env": {
+        "LITELLM_BASE_URL": "http://localhost:4000/v1",
+        "OLLAMA_AGENT_MODEL": "fast-general"
+      }
     }
   }
 }

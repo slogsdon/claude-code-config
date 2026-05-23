@@ -21,7 +21,7 @@ Configured in `.mcp.json` and registered at user scope via `install.sh`:
 
 | Server | Description |
 |--------|-------------|
-| `ollama-agent` | Local Ollama delegation agent (`mcp-servers/ollama-agent/server.py`) — default target `gemma4:e4b-mlx`, override via `OLLAMA_AGENT_MODEL`. |
+| `ollama-agent` | Local-model delegation agent (`mcp-servers/ollama-agent/server.py`). Routes through the LiteLLM proxy at `http://localhost:4000`; default target is the `fast-general` role alias (override via `OLLAMA_AGENT_MODEL`). |
 
 The `obsidian` MCP has been removed. Vault access now uses the **obsidian CLI** directly via Bash commands (see below).
 

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""MCP server that delegates tasks to a local Ollama model with an agentic tool loop."""
+"""MCP server that delegates tasks to a local model via the LiteLLM proxy.
+
+All calls go through LiteLLM at http://localhost:4000 — never direct to Ollama.
+The model name should be a role alias from ~/Code/claude-code-config/models.yaml.
+"""
 
 import asyncio
 import json
@@ -10,15 +14,23 @@ import uuid
 from openai import OpenAI
 from mcp.server.fastmcp import FastMCP, Context
 
-OLLAMA_BASE_URL = "http://localhost:11434/v1"
-# Default target model — gemma4:e4b-mlx ("fast general / vault") per
-# the roster in ~/Code/claude-code-config/models.json.
-MODEL = os.environ.get("OLLAMA_AGENT_MODEL", "gemma4:e4b-mlx")
+LITELLM_BASE_URL = os.environ.get("LITELLM_BASE_URL", "http://localhost:4000/v1")
+# Accept either name — LITELLM_API_KEY (per-client) or LITELLM_MASTER_KEY
+# (the shared master key from ~/Code/otel-local-ai/.env). The latter is what
+# Shane's shell exports.
+LITELLM_API_KEY = (
+    os.environ.get("LITELLM_API_KEY")
+    or os.environ.get("LITELLM_MASTER_KEY")
+    or "sk-litellm-noop"
+)
+# Default target — "fast-general" alias (gemma4:e4b-mlx) per
+# ~/Code/claude-code-config/models.yaml. Override with OLLAMA_AGENT_MODEL.
+MODEL = os.environ.get("OLLAMA_AGENT_MODEL", "fast-general")
 TIMEOUT = 120.0
 MAX_ITERATIONS = 25
 
 mcp = FastMCP("ollama-agent")
-client = OpenAI(base_url=OLLAMA_BASE_URL, api_key="ollama")
+client = OpenAI(base_url=LITELLM_BASE_URL, api_key=LITELLM_API_KEY)
 
 # Session state for stepped execution (qwen_start / qwen_continue)
 _sessions: dict[str, dict] = {}
@@ -244,7 +256,7 @@ async def qwen_continue(session_id: str) -> str:
 @mcp.tool()
 async def run_qwen_task(task: str, skill: str = "", context: str = "", ctx: Context = None) -> str:
     """
-    Delegate a task to the local Ollama model (single blocking call).
+    Delegate a task to the configured model via LiteLLM (single blocking call).
     Prefer qwen_start + qwen_continue for long tasks where step visibility matters.
     """
     messages = _build_messages(task, skill, context)
