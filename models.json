@@ -4,7 +4,7 @@
     "litellm": {
       "baseUrl": "http://localhost:4000/v1",
       "api": "openai-completions",
-      "apiKey": "LITELLM_MASTER_KEY",
+      "apiKey": "!grep -E '^LITELLM_MASTER_KEY=' /Users/shane/Code/otel-local-ai/.env | cut -d= -f2",
       "authHeader": true,
       "compat": {
         "supportsDeveloperRole": false,
