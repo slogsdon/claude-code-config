@@ -58,9 +58,9 @@
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "defaultModel": "lm-studio/qwen3.6-35b-a3b",
-  "defaultProvider": "litellm",
-  "lastChangelogVersion": "0.75.3",
+  "defaultModel": "qwen3.5:9b-mlx",
+  "defaultProvider": "ollama",
+  "lastChangelogVersion": "0.75.4",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
@@ -93,5 +93,6 @@
   },
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "off",
-  "quietStartup": true
+  "quietStartup": true,
+  "enableSkillCommands": true
 }

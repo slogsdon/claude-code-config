@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP server that delegates tasks to Qwen via LM Studio with agentic tool loop."""
+"""MCP server that delegates tasks to a local Ollama model with an agentic tool loop."""
 
 import asyncio
 import json
@@ -10,13 +10,15 @@ import uuid
 from openai import OpenAI
 from mcp.server.fastmcp import FastMCP, Context
 
-LMSTUDIO_BASE_URL = "http://localhost:1234/v1"
-MODEL = "qwen"
+OLLAMA_BASE_URL = "http://localhost:11434/v1"
+# Default target model — gemma4:e4b-mlx ("fast general / vault") per
+# the roster in ~/Code/claude-code-config/models.json.
+MODEL = os.environ.get("OLLAMA_AGENT_MODEL", "gemma4:e4b-mlx")
 TIMEOUT = 120.0
 MAX_ITERATIONS = 25
 
-mcp = FastMCP("lmstudio-agent")
-client = OpenAI(base_url=LMSTUDIO_BASE_URL, api_key="lm-studio")
+mcp = FastMCP("ollama-agent")
+client = OpenAI(base_url=OLLAMA_BASE_URL, api_key="ollama")
 
 # Session state for stepped execution (qwen_start / qwen_continue)
 _sessions: dict[str, dict] = {}
@@ -242,7 +244,7 @@ async def qwen_continue(session_id: str) -> str:
 @mcp.tool()
 async def run_qwen_task(task: str, skill: str = "", context: str = "", ctx: Context = None) -> str:
     """
-    Delegate a task to Qwen running locally via LM Studio (single blocking call).
+    Delegate a task to the local Ollama model (single blocking call).
     Prefer qwen_start + qwen_continue for long tasks where step visibility matters.
     """
     messages = _build_messages(task, skill, context)

@@ -45,9 +45,9 @@ EOF
 cat > "$PLUGIN_DIR/.mcp.json" << 'EOF'
 {
   "mcpServers": {
-    "lmstudio-agent": {
+    "ollama-agent": {
       "command": "/opt/homebrew/bin/python3.13",
-      "args": ["/Users/shane/Code/claude-code-config/mcp-servers/lmstudio-agent/server.py"],
+      "args": ["/Users/shane/Code/claude-code-config/mcp-servers/ollama-agent/server.py"],
       "env": {}
     }
   }

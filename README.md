@@ -11,7 +11,7 @@ Personal configuration repository for Claude Code with custom agents, coding sta
 - **`.mcp.json`** - MCP server configuration (registered at user scope via `install.sh`)
 - **`.claude-plugin/`** - `marketplace.json` and `plugin.json` defining the plugin marketplace
 - **`plugins/shane/`** - 8 plugin submodules (each is its own GitHub repo)
-- **`mcp-servers/`** - Local MCP server source (currently `lmstudio-agent`)
+- **`mcp-servers/`** - Local MCP server source (currently `ollama-agent`)
 - **`scripts/`** - Repo utilities (`build-plugin.sh`, `sync-memory.sh`, `gemma4-agent`, `gemma4-bench`)
 - **`extensions/`** - Auxiliary configs (`guardrails.json`, `obsidian-memory.ts`)
 
@@ -21,7 +21,7 @@ Configured in `.mcp.json` and registered at user scope via `install.sh`:
 
 | Server | Description |
 |--------|-------------|
-| `lmstudio-agent` | Local LM Studio agent for Qwen model access (`mcp-servers/lmstudio-agent/server.py`) |
+| `ollama-agent` | Local Ollama delegation agent (`mcp-servers/ollama-agent/server.py`) — default target `gemma4:e4b-mlx`, override via `OLLAMA_AGENT_MODEL`. |
 
 The `obsidian` MCP has been removed. Vault access now uses the **obsidian CLI** directly via Bash commands (see below).
 
