@@ -24,7 +24,7 @@
           "name": "Fast general / vault (gemma4 e4b mlx)",
           "reasoning": false,
           "input": ["text"],
-          "contextWindow": 65536,
+          "contextWindow": 131072,
           "maxTokens": 16384
         },
         {
@@ -40,7 +40,7 @@
           "name": "General purpose (qwen3.6 35B mlx MoE — vision-capable)",
           "reasoning": true,
           "input": ["text", "image"],
-          "contextWindow": 65536,
+          "contextWindow": 131072,
           "maxTokens": 16384,
           "thinkingLevelMap": {
             "minimal": null,
@@ -94,7 +94,7 @@
           "name": "Capable general (gpt-oss 20B)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 65536,
+          "contextWindow": 131072,
           "maxTokens": 16384,
           "thinkingLevelMap": {
             "minimal": null,
@@ -109,7 +109,7 @@
           "name": "Vision (qwen3.6 35B mlx — same as general)",
           "reasoning": true,
           "input": ["text", "image"],
-          "contextWindow": 65536,
+          "contextWindow": 131072,
           "maxTokens": 16384,
           "thinkingLevelMap": {
             "minimal": null,
@@ -140,7 +140,7 @@
           "name": "Ultra-fast reasoning (lfm2.5-thinking 1.2B)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 32768,
+          "contextWindow": 128000,
           "maxTokens": 8192,
           "thinkingLevelMap": {
             "minimal": null,

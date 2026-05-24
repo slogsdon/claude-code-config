@@ -101,7 +101,7 @@ models:
     use_case: Skill delegation, quick Q&A, Obsidian ops
     weight_size_gb: 9.6
     reasoning: false
-    context_window: 65536
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — max-ctx run showed no throughput penalty
     ollama_max: 131072
     input: [text]
     notes: MLX-optimized — Apple Silicon only. Default for the ollama-agent MCP.
@@ -112,7 +112,7 @@ models:
     use_case: Structured output, API doc work, IBM-style tasks
     weight_size_gb: 5.3
     reasoning: false
-    context_window: 65536
+    context_window: 65536  # HELD at 64K 2026-05-24 — 128K dropped tps 22% in the max-ctx run
     ollama_max: 131072
     input: [text]
 
@@ -122,15 +122,16 @@ models:
     use_case: Default chat, vision-capable, most automation
     weight_size_gb: 21
     reasoning: true
-    context_window: 65536
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
     ollama_max: 262144
     input: [text, image]
     notes: |
       MLX-optimized MoE — Apple Silicon only. Replaced qwen3.5:9b-mlx 2026-05-23
       after the second benchmark; doubles as the `vision` alias. Emits <think>
       channel — clients should set think:false or low effort for trivial
-      prompts to avoid runaway reasoning. Conservative 64K default context to
-      keep KV cache + 21 GB weights under the 32 GB host budget.
+      prompts to avoid runaway reasoning. 128K default context (bumped from
+      64K) after the max-ctx benchmark proved the MoE held 35 tps from 64K
+      all the way to 256K with only a small cold-load tax.
 
   - alias: writing
     ollama_tag: mistral-nemo:12b
@@ -173,7 +174,7 @@ models:
       `efficient` (lfm2:24b) which is 6.8× faster on the same prompts.
     weight_size_gb: 13
     reasoning: true
-    context_window: 65536
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — held 26 tps at 128K, no penalty
     ollama_max: 131072
     input: [text]
     notes: gpt-oss style chain-of-thought. Emits reasoning channel.
@@ -184,7 +185,7 @@ models:
     use_case: Any task with images, screenshots, video frames
     weight_size_gb: 21
     reasoning: true
-    context_window: 65536
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — same MoE as general, same flat-tps story
     ollama_max: 262144
     input: [text, image]
     notes: |
@@ -200,7 +201,7 @@ models:
       cheaper-than-`general` alternative when reasoning isn't needed
     weight_size_gb: 9.1
     reasoning: false
-    context_window: 40960
+    context_window: 40960  # HELD at 40K 2026-05-24 — 256K cratered tps 54% in the max-ctx run; small dense models hate big KV
     ollama_max: 262144
     input: [text, image]
     notes: |
@@ -233,7 +234,7 @@ models:
       pre-flight validation steps
     weight_size_gb: 0.73
     reasoning: true
-    context_window: 32768
+    context_window: 128000  # bumped 32K -> 128K 2026-05-24 — 1.2B model holds 117 tps at the cap, KV is free here
     ollama_max: 128000
     input: [text]
     notes: |
