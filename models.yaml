@@ -52,22 +52,35 @@ reasoning_concepts:
          reasoning-capable model in the roster.
 
     Models WITH thinking channel:    general, reasoning, capable,
-                                     capable-large, flash, vision
+                                     capable-large, flash, vision,
+                                     tiny-reason
     Models WITHOUT thinking channel: code-autocomplete, fast-general,
-                                     code-review, writing
+                                     code-review, writing, instruct,
+                                     efficient
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
+#
+# Roster shuffle 2026-05-23 (post second benchmark):
+#   - qwen3.6:35b-mlx replaces both `general` (was qwen3.5:9b-mlx) and `vision`
+#     (was qwen3-vl:30b) — single MLX MoE that covers both roles.
+#   - New aliases: `instruct` (ministral-3:14b), `efficient` (lfm2:24b),
+#     `tiny-reason` (lfm2.5-thinking:1.2b).
+#   - qwen3.5:9b-mlx and qwen3-vl:30b remain pulled but un-aliased (callable
+#     by raw ollama tag for fallback / benchmarking).
 aliases:
   code-autocomplete:  qwen2.5-coder:3b-base
   fast-general:       gemma4:e4b-mlx
   code-review:        granite4.1:8b
-  general:            qwen3.5:9b-mlx
+  general:            qwen3.6:35b-mlx
   writing:            mistral-nemo:12b
   reasoning:          phi4-reasoning:plus
   capable:            qwen3:14b
   capable-large:      gpt-oss:20b
   flash:              glm-4.7-flash:q4_K_M
-  vision:             qwen3-vl:30b
+  vision:             qwen3.6:35b-mlx
+  instruct:           ministral-3:14b
+  efficient:          lfm2:24b
+  tiny-reason:        lfm2.5-thinking:1.2b
 
 models:
   - alias: code-autocomplete
@@ -103,15 +116,20 @@ models:
     input: [text]
 
   - alias: general
-    ollama_tag: qwen3.5:9b-mlx
+    ollama_tag: qwen3.6:35b-mlx
     role_label: General purpose
-    use_case: Default chat, fast reasoning, most automation
-    weight_size_gb: 8.9
+    use_case: Default chat, vision-capable, most automation
+    weight_size_gb: 21
     reasoning: true
-    context_window: 131072
+    context_window: 65536
     ollama_max: 262144
-    input: [text]
-    notes: MLX-optimized — Apple Silicon only. Roster default. Emits <think> channel; budget tokens accordingly.
+    input: [text, image]
+    notes: |
+      MLX-optimized MoE — Apple Silicon only. Replaced qwen3.5:9b-mlx 2026-05-23
+      after the second benchmark; doubles as the `vision` alias. Emits <think>
+      channel — clients should set think:false or low effort for trivial
+      prompts to avoid runaway reasoning. Conservative 64K default context to
+      keep KV cache + 21 GB weights under the 32 GB host budget.
 
   - alias: writing
     ollama_tag: mistral-nemo:12b
@@ -168,15 +186,66 @@ models:
     notes: 19 GB on disk. Practically isolated-only on a 32 GB host. Emits <think> channel.
 
   - alias: vision
-    ollama_tag: qwen3-vl:30b
-    role_label: Vision
+    ollama_tag: qwen3.6:35b-mlx
+    role_label: Vision (same backing model as `general`)
     use_case: Any task with images, screenshots, video frames
-    weight_size_gb: 19
+    weight_size_gb: 21
     reasoning: true
     context_window: 65536
     ollama_max: 262144
     input: [text, image]
-    notes: The only vision-capable model in the roster. 19 GB weights — isolated-only in practice. Emits <think> channel.
+    notes: |
+      Same backing model as `general` (qwen3.6:35b-mlx) — alias kept distinct
+      so vision-tagged traffic stays separable in Langfuse/observability. Was
+      qwen3-vl:30b prior to 2026-05-23; qwen3-vl remains pulled and callable
+      via raw ollama tag for comparison.
+
+  - alias: instruct
+    ollama_tag: ministral-3:14b
+    role_label: Instruction following + vision + tools
+    use_case: Structured output and tool-calling with optional image input;
+      cheaper-than-`general` alternative when reasoning isn't needed
+    weight_size_gb: 9.1
+    reasoning: false
+    context_window: 40960
+    ollama_max: 262144
+    input: [text, image]
+    notes: |
+      Mistral3 family. No thinking channel — clean instruction follower.
+      Vision + tools native. 14B params, ~9 GB weights.
+
+  - alias: efficient
+    ollama_tag: lfm2:24b
+    role_label: Efficient large general
+    use_case: Tool-using large general model where gpt-oss is overkill or
+      its reasoning overhead is unwelcome
+    weight_size_gb: 14
+    reasoning: false
+    context_window: 32768
+    ollama_max: 32768
+    input: [text]
+    notes: |
+      Liquid Foundation Model 2 — MoE 24B (active params << total).
+      No thinking channel, tools support. 32K hard context ceiling.
+      Head-to-head competitor with `capable-large` for the "fast 20B"
+      role; benchmark will decide which stays default.
+
+  - alias: tiny-reason
+    ollama_tag: lfm2.5-thinking:1.2b
+    role_label: Ultra-fast reasoning
+    use_case: Low-stakes reasoning where phi4's 5-15 min latency is
+      unacceptable — e.g. trivial logic checks, fast quality filters,
+      pre-flight validation steps
+    weight_size_gb: 0.73
+    reasoning: true
+    context_window: 32768
+    ollama_max: 128000
+    input: [text]
+    notes: |
+      1.2B params, 731 MB weights. Thinking-capable. So small it can
+      genuinely run alongside any other model without eviction.
+      Quality ceiling is modest — don't use for production answers,
+      use for fast yes/no logic decisions.
 
 # MLX vs GGUF context handling
 mlx_notes: |
