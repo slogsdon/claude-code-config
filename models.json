@@ -105,21 +105,6 @@
           }
         },
         {
-          "id": "flash",
-          "name": "Multilingual / flash (glm-4.7-flash q4_K_M)",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 131072,
-          "maxTokens": 32768,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
           "id": "vision",
           "name": "Vision (qwen3.6 35B mlx — same as general)",
           "reasoning": true,

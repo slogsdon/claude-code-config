@@ -52,21 +52,23 @@ reasoning_concepts:
          reasoning-capable model in the roster.
 
     Models WITH thinking channel:    general, reasoning, capable,
-                                     capable-large, flash, vision,
-                                     tiny-reason
+                                     capable-large, vision, tiny-reason
     Models WITHOUT thinking channel: code-autocomplete, fast-general,
                                      code-review, writing, instruct,
                                      efficient
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 #
-# Roster shuffle 2026-05-23 (post second benchmark):
-#   - qwen3.6:35b-mlx replaces both `general` (was qwen3.5:9b-mlx) and `vision`
-#     (was qwen3-vl:30b) — single MLX MoE that covers both roles.
-#   - New aliases: `instruct` (ministral-3:14b), `efficient` (lfm2:24b),
-#     `tiny-reason` (lfm2.5-thinking:1.2b).
-#   - qwen3.5:9b-mlx and qwen3-vl:30b remain pulled but un-aliased (callable
-#     by raw ollama tag for fallback / benchmarking).
+# Roster shuffle 2026-05-23 (post benchmarks):
+#   - qwen3.6:35b-mlx serves both `general` and `vision` (was qwen3.5:9b-mlx
+#     and qwen3-vl:30b respectively — both removed).
+#   - `efficient` (lfm2:24b) is now the primary 20B-class default; was
+#     `capable-large` (gpt-oss:20b). lfm2 is 6.8× faster on the same prompts
+#     with comparable output quality. `capable-large` stays as a secondary
+#     when you specifically need gpt-oss's reasoning-channel style.
+#   - `flash` removed (glm-4.7-flash retired — slower than `efficient` and
+#     `general` despite a larger footprint).
+#   - New aliases: `instruct`, `efficient`, `tiny-reason`.
 aliases:
   code-autocomplete:  qwen2.5-coder:3b-base
   fast-general:       gemma4:e4b-mlx
@@ -75,11 +77,10 @@ aliases:
   writing:            mistral-nemo:12b
   reasoning:          phi4-reasoning:plus
   capable:            qwen3:14b
+  efficient:          lfm2:24b
   capable-large:      gpt-oss:20b
-  flash:              glm-4.7-flash:q4_K_M
   vision:             qwen3.6:35b-mlx
   instruct:           ministral-3:14b
-  efficient:          lfm2:24b
   tiny-reason:        lfm2.5-thinking:1.2b
 
 models:
@@ -165,25 +166,17 @@ models:
 
   - alias: capable-large
     ollama_tag: gpt-oss:20b
-    role_label: Capable general
-    use_case: When 14B isn't enough but VL not needed
+    role_label: Capable general (secondary 20B-class)
+    use_case: |
+      Secondary 20B option — use when you specifically want gpt-oss's
+      reasoning-channel chain-of-thought. For general fast-20B tasks, prefer
+      `efficient` (lfm2:24b) which is 6.8× faster on the same prompts.
     weight_size_gb: 13
     reasoning: true
     context_window: 65536
     ollama_max: 131072
     input: [text]
     notes: gpt-oss style chain-of-thought. Emits reasoning channel.
-
-  - alias: flash
-    ollama_tag: glm-4.7-flash:q4_K_M
-    role_label: Multilingual / flash
-    use_case: Chinese content, fast large-context tasks
-    weight_size_gb: 19
-    reasoning: true
-    context_window: 131072
-    ollama_max: 202752
-    input: [text]
-    notes: 19 GB on disk. Practically isolated-only on a 32 GB host. Emits <think> channel.
 
   - alias: vision
     ollama_tag: qwen3.6:35b-mlx
@@ -216,9 +209,12 @@ models:
 
   - alias: efficient
     ollama_tag: lfm2:24b
-    role_label: Efficient large general
-    use_case: Tool-using large general model where gpt-oss is overkill or
-      its reasoning overhead is unwelcome
+    role_label: Efficient large general (primary 20B-class)
+    use_case: |
+      Primary "fast 20B" default. Use for any task where you'd reach for a
+      large general model and want speed over chain-of-thought. Beat
+      capable-large 6.8× on the 8-prompt speed benchmark (2026-05-23) at
+      the same weight class.
     weight_size_gb: 14
     reasoning: false
     context_window: 32768
@@ -227,8 +223,7 @@ models:
     notes: |
       Liquid Foundation Model 2 — MoE 24B (active params << total).
       No thinking channel, tools support. 32K hard context ceiling.
-      Head-to-head competitor with `capable-large` for the "fast 20B"
-      role; benchmark will decide which stays default.
+      Median 56 tps, 107 tps on trivial prompts.
 
   - alias: tiny-reason
     ollama_tag: lfm2.5-thinking:1.2b
@@ -249,9 +244,9 @@ models:
 
 # MLX vs GGUF context handling
 mlx_notes: |
-  The MLX-optimized models (gemma4:e4b-mlx, qwen3.5:9b-mlx) report context
-  lengths through Ollama's /api/show modelinfo the same way GGUF models do
-  (gemma4 -> 131072, qwen3.5 -> 262144). Ollama treats num_ctx the same
-  regardless of backend, so the LiteLLM num_ctx override behaves identically.
-  KV cache memory pressure is still real on MLX — large contexts on these
-  models will consume host unified memory just like GGUF.
+  The MLX-optimized models (gemma4:e4b-mlx, qwen3.6:35b-mlx) report context
+  lengths through Ollama's /api/show modelinfo the same way GGUF models do.
+  Ollama treats num_ctx the same regardless of backend, so the LiteLLM
+  num_ctx override behaves identically. KV cache memory pressure is real
+  on MLX too — large contexts on these models will consume host unified
+  memory just like GGUF.
