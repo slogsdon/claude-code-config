@@ -1,5 +1,5 @@
 {
-  "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/reasoning notes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. Context windows default to isolated-mode values so Pi has headroom for long conversations; concurrent multi-model workloads should override num_ctx per request.",
+  "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/reasoning notes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. Aliases renamed to use-case-oriented names 2026-05-26. Context windows default to isolated-mode values so Pi has headroom for long conversations; concurrent multi-model workloads should override num_ctx per request.",
   "providers": {
     "litellm": {
       "baseUrl": "http://localhost:4000/v1",
@@ -12,36 +12,12 @@
       },
       "models": [
         {
-          "id": "code-autocomplete",
-          "name": "Code autocomplete (qwen2.5-coder 3B base)",
-          "reasoning": false,
-          "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 8192
-        },
-        {
-          "id": "fast-general",
-          "name": "Fast general / vault (gemma4 e4b mlx)",
-          "reasoning": false,
-          "input": ["text"],
-          "contextWindow": 131072,
-          "maxTokens": 16384
-        },
-        {
-          "id": "code-review",
-          "name": "Code review / enterprise (granite4.1 8B)",
-          "reasoning": false,
-          "input": ["text"],
-          "contextWindow": 65536,
-          "maxTokens": 16384
-        },
-        {
-          "id": "general",
-          "name": "General purpose (qwen3.6 35B mlx MoE — vision-capable)",
+          "id": "classify",
+          "name": "Cheap structured-output / triage (lfm2.5-thinking 1.2B)",
           "reasoning": true,
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 16384,
+          "input": ["text"],
+          "contextWindow": 128000,
+          "maxTokens": 8192,
           "thinkingLevelMap": {
             "minimal": null,
             "low": "low",
@@ -51,19 +27,35 @@
           }
         },
         {
-          "id": "writing",
-          "name": "Writing / instruction (mistral-nemo 12B)",
+          "id": "chat",
+          "name": "Fast conversational (gemma4 e4b mlx)",
           "reasoning": false,
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 32768
+          "maxTokens": 16384
         },
         {
-          "id": "reasoning",
-          "name": "Reasoning (phi4-reasoning:plus)",
+          "id": "review",
+          "name": "Code review / rubric grading (granite4.1 8B)",
+          "reasoning": false,
+          "input": ["text"],
+          "contextWindow": 65536,
+          "maxTokens": 16384
+        },
+        {
+          "id": "code",
+          "name": "Primary code generation (qwen2.5-coder 14B)",
+          "reasoning": false,
+          "input": ["text"],
+          "contextWindow": 65536,
+          "maxTokens": 16384
+        },
+        {
+          "id": "analyze",
+          "name": "Analysis + debugging + judge (deepseek-r1 14B)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 32768,
+          "contextWindow": 40960,
           "maxTokens": 16384,
           "thinkingLevelMap": {
             "off": null,
@@ -75,73 +67,35 @@
           }
         },
         {
-          "id": "capable",
-          "name": "Reasoning + coding (qwen3 14B)",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 40960,
-          "maxTokens": 16384,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "capable-large",
-          "name": "Capable general (gpt-oss 20B)",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 131072,
-          "maxTokens": 16384,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "vision",
-          "name": "Vision (qwen3.6 35B mlx — same as general)",
-          "reasoning": true,
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 16384,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
-        },
-        {
-          "id": "instruct",
-          "name": "Instruction + vision + tools (ministral-3 14B)",
-          "reasoning": false,
-          "input": ["text", "image"],
-          "contextWindow": 40960,
-          "maxTokens": 16384
-        },
-        {
-          "id": "efficient",
-          "name": "Efficient large general (lfm2 24B MoE)",
+          "id": "pipeline",
+          "name": "Automation flows + summarization (lfm2 24B MoE)",
           "reasoning": false,
           "input": ["text"],
           "contextWindow": 32768,
           "maxTokens": 16384
         },
         {
-          "id": "tiny-reason",
-          "name": "Ultra-fast reasoning (lfm2.5-thinking 1.2B)",
+          "id": "write",
+          "name": "Long-form writing (gpt-oss 20B)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 128000,
-          "maxTokens": 8192,
+          "contextWindow": 131072,
+          "maxTokens": 16384,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "high"
+          }
+        },
+        {
+          "id": "quality",
+          "name": "Best local quality / long context (qwen3.6 35B mlx MoE — vision-capable)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 131072,
+          "maxTokens": 16384,
           "thinkingLevelMap": {
             "minimal": null,
             "low": "low",
