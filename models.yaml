@@ -1,7 +1,7 @@
 # Single source of truth for Shane's local model roster.
 #
 # ALL CALLS ROUTE THROUGH LITELLM — never direct to Ollama.
-# Clients send the role alias (e.g. "writing", "vision") to the LiteLLM proxy,
+# Clients send the role alias (e.g. "write", "quality") to the LiteLLM proxy,
 # which then dispatches to the Ollama runtime. Ollama itself is internal-only.
 #
 # This YAML is the human-readable source of truth. Two consumer configs are
@@ -34,188 +34,118 @@ context_strategy:
     Ollama will swap models when memory is tight.
 
     Values calibrated against weight + estimated KV cache to stay under
-    ~28 GB combined on the 32 GB host. The `-iso` variants were removed
-    on 2026-05-23 because they had become identical to the base routes.
+    ~28 GB combined on the 32 GB host.
 
 reasoning_concepts:
   description: |
-    Two distinct concepts. Don't conflate.
+    The `reasoning` boolean on each model entry tracks whether that model
+    emits a <think> channel before its visible answer. Set in models.json so
+    Pi knows whether to enable thinking mode in the request. Models with
+    reasoning=true will burn tokens on internal reasoning before producing
+    visible output — set max_tokens generously when calling them.
 
-      1. `reasoning` (boolean per model): does this model emit a <think>
-         channel before its answer? Set in models.json so Pi knows whether
-         to enable thinking mode in the request. Models with reasoning=true
-         will use tokens on internal reasoning before producing visible
-         output — set max_tokens generously when calling them.
-
-      2. The `reasoning` ROLE ALIAS: points to phi4-reasoning:plus,
-         specifically tuned for multi-step problems. Distinct from any other
-         reasoning-capable model in the roster.
-
-    Models WITH thinking channel:    general, reasoning, capable,
-                                     capable-large, vision, tiny-reason
-    Models WITHOUT thinking channel: code-autocomplete, fast-general,
-                                     code-review, writing, instruct,
-                                     efficient
+    Models WITH thinking channel:    classify, analyze, write, quality
+    Models WITHOUT thinking channel: chat, review, code, pipeline
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 #
-# Roster shuffle 2026-05-23 (post benchmarks):
-#   - qwen3.6:35b-mlx serves both `general` and `vision` (was qwen3.5:9b-mlx
-#     and qwen3-vl:30b respectively — both removed).
-#   - `efficient` (lfm2:24b) is now the primary 20B-class default; was
-#     `capable-large` (gpt-oss:20b). lfm2 is 6.8× faster on the same prompts
-#     with comparable output quality. `capable-large` stays as a secondary
-#     when you specifically need gpt-oss's reasoning-channel style.
-#   - `flash` removed (glm-4.7-flash retired — slower than `efficient` and
-#     `general` despite a larger footprint).
-#   - New aliases: `instruct`, `efficient`, `tiny-reason`.
+# 2026-05-26 rename: aliases are now use-case-oriented. Old job-coded names
+# (capable, efficient, capable-large, general, writing, reasoning, vision,
+# code-review, code-mid, code-autocomplete, fast-general, tiny-reason,
+# reasoning-deep, instruct) are gone. The current 8 are organized by what
+# the caller is trying to do, not by the model's size or family.
 aliases:
-  code-autocomplete:  qwen2.5-coder:3b-base
-  fast-general:       gemma4:e4b-mlx
-  code-review:        granite4.1:8b
-  general:            qwen3.6:35b-mlx
-  writing:            mistral-nemo:12b
-  reasoning:          phi4-reasoning:plus
-  capable:            qwen3:14b
-  efficient:          lfm2:24b
-  capable-large:      gpt-oss:20b
-  vision:             qwen3.6:35b-mlx
-  instruct:           ministral-3:14b
-  tiny-reason:        lfm2.5-thinking:1.2b
+  classify: lfm2.5-thinking:1.2b
+  chat:     gemma4:e4b-mlx
+  review:   granite4.1:8b
+  code:     qwen2.5-coder:14b
+  analyze:  deepseek-r1:14b
+  pipeline: lfm2:24b
+  write:    gpt-oss:20b
+  quality:  qwen3.6:35b-mlx
 
 models:
-  - alias: code-autocomplete
-    ollama_tag: qwen2.5-coder:3b-base
-    role_label: Code autocomplete
-    use_case: Fast inline completion, Cursor/Copilot slot
-    weight_size_gb: 1.9
-    reasoning: false
-    context_window: 32768
-    ollama_max: 32768
+  - alias: classify
+    ollama_tag: lfm2.5-thinking:1.2b
+    role_label: Cheap structured-output / triage
+    use_case: |
+      Triage, classification, fast yes/no logic decisions, pre-flight
+      validation. Cheapest reasoning-capable model in the roster — use when
+      `analyze`'s latency is overkill.
+    weight_size_gb: 0.73
+    reasoning: true
+    context_window: 128000  # bumped 32K -> 128K 2026-05-24 — 1.2B holds 117 tps at the cap, KV is free at this scale
+    ollama_max: 128000
     input: [text]
-    notes: Base model — no chat template; use completion endpoint for fill-in-the-middle.
+    notes: |
+      1.2B params, 731 MB weights. Thinking-capable. So small it can
+      genuinely run alongside any other model without eviction.
+      Quality ceiling is modest — use for fast yes/no decisions, not
+      production answers.
 
-  - alias: fast-general
+  - alias: chat
     ollama_tag: gemma4:e4b-mlx
-    role_label: Fast general / vault
-    use_case: Skill delegation, quick Q&A, Obsidian ops
+    role_label: Fast conversational
+    use_case: Short-context Q&A, quick chat, Obsidian ops, skill delegation
     weight_size_gb: 9.6
     reasoning: false
     context_window: 131072  # bumped 64K -> 128K 2026-05-24 — max-ctx run showed no throughput penalty
     ollama_max: 131072
     input: [text]
-    notes: MLX-optimized — Apple Silicon only. Default for the ollama-agent MCP.
+    notes: |
+      MLX-optimized — Apple Silicon only. Default for the ollama-agent MCP.
+      Gemma4's chat template has thinking baked in; the proxy forces
+      think:false so this alias is actually fast.
 
-  - alias: code-review
+  - alias: review
     ollama_tag: granite4.1:8b
-    role_label: Code review / enterprise
-    use_case: Structured output, API doc work, IBM-style tasks
+    role_label: Code review / rubric grading
+    use_case: Code review, rubric grading, structured eval, API doc work
     weight_size_gb: 5.3
     reasoning: false
     context_window: 65536  # HELD at 64K 2026-05-24 — 128K dropped tps 22% in the max-ctx run
     ollama_max: 131072
     input: [text]
 
-  - alias: general
-    ollama_tag: qwen3.6:35b-mlx
-    role_label: General purpose
-    use_case: Default chat, vision-capable, most automation
-    weight_size_gb: 21
-    reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
-    ollama_max: 262144
-    input: [text, image]
-    notes: |
-      MLX-optimized MoE — Apple Silicon only. Replaced qwen3.5:9b-mlx 2026-05-23
-      after the second benchmark; doubles as the `vision` alias. Emits <think>
-      channel — clients should set think:false or low effort for trivial
-      prompts to avoid runaway reasoning. 128K default context (bumped from
-      64K) after the max-ctx benchmark proved the MoE held 35 tps from 64K
-      all the way to 256K with only a small cold-load tax.
-
-  - alias: writing
-    ollama_tag: mistral-nemo:12b
-    role_label: Writing / instruction
-    use_case: Long-form drafts, blog, ghostwriting
-    weight_size_gb: 7.1
+  - alias: code
+    ollama_tag: qwen2.5-coder:14b
+    role_label: Primary code generation
+    use_case: Code generation, refactoring, code explanation
+    weight_size_gb: 8.4
     reasoning: false
-    context_window: 131072
-    ollama_max: 1024000   # 1M ceiling per model card — capped at 128K for memory
-    input: [text]
-
-  - alias: reasoning
-    ollama_tag: phi4-reasoning:plus
-    role_label: Reasoning
-    use_case: Multi-step problems, planning, math
-    weight_size_gb: 11
-    reasoning: true
-    context_window: 32768
+    context_window: 65536  # 14B dense — held at 64K, code prompts are usually short
     ollama_max: 32768
     input: [text]
-    notes: Always thinks — `thinking_level=off` is unsupported.
+    notes: |
+      Qwen2.5-coder 14B — the no-thinking-tax code slot. Faster total wall
+      than the reasoning-channel options on code tasks because it doesn't
+      spend tokens on internal monologue.
 
-  - alias: capable
-    ollama_tag: qwen3:14b
-    role_label: Reasoning + coding
-    use_case: Heavier tasks where quality > speed
-    weight_size_gb: 9.3
-    reasoning: true
-    context_window: 40960
-    ollama_max: 40960
-    input: [text]
-    notes: Emits <think> channel.
-
-  - alias: capable-large
-    ollama_tag: gpt-oss:20b
-    role_label: Capable general (secondary 20B-class)
+  - alias: analyze
+    ollama_tag: deepseek-r1:14b
+    role_label: Analysis + debugging + judge
     use_case: |
-      Secondary 20B option — use when you specifically want gpt-oss's
-      reasoning-channel chain-of-thought. For general fast-20B tasks, prefer
-      `efficient` (lfm2:24b) which is 6.8× faster on the same prompts.
-    weight_size_gb: 13
+      Analysis, debugging, judge-pipeline reasoning. The default judge for
+      the publish-gate / iteration loop in ~/Code/otel-local-ai. 4.4×
+      faster total wall than phi4-reasoning on the same prompts.
+    weight_size_gb: 8.4
     reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — held 26 tps at 128K, no penalty
+    context_window: 40960  # 14B dense — capped at 40K, big KV caches kill throughput
     ollama_max: 131072
     input: [text]
-    notes: gpt-oss style chain-of-thought. Emits reasoning channel.
-
-  - alias: vision
-    ollama_tag: qwen3.6:35b-mlx
-    role_label: Vision (same backing model as `general`)
-    use_case: Any task with images, screenshots, video frames
-    weight_size_gb: 21
-    reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — same MoE as general, same flat-tps story
-    ollama_max: 262144
-    input: [text, image]
     notes: |
-      Same backing model as `general` (qwen3.6:35b-mlx) — alias kept distinct
-      so vision-tagged traffic stays separable in Langfuse/observability. Was
-      qwen3-vl:30b prior to 2026-05-23; qwen3-vl remains pulled and callable
-      via raw ollama tag for comparison.
+      deepseek-r1 emits <think>...</think> inline in the visible content
+      channel rather than via a separate thinking field — the proxy does
+      NOT set think:true here, since it would not route them to
+      reasoning_content anyway.
 
-  - alias: instruct
-    ollama_tag: ministral-3:14b
-    role_label: Instruction following + vision + tools
-    use_case: Structured output and tool-calling with optional image input;
-      cheaper-than-`general` alternative when reasoning isn't needed
-    weight_size_gb: 9.1
-    reasoning: false
-    context_window: 40960  # HELD at 40K 2026-05-24 — 256K cratered tps 54% in the max-ctx run; small dense models hate big KV
-    ollama_max: 262144
-    input: [text, image]
-    notes: |
-      Mistral3 family. No thinking channel — clean instruction follower.
-      Vision + tools native. 14B params, ~9 GB weights.
-
-  - alias: efficient
+  - alias: pipeline
     ollama_tag: lfm2:24b
-    role_label: Efficient large general (primary 20B-class)
+    role_label: Automation flows + summarization
     use_case: |
-      Primary "fast 20B" default. Use for any task where you'd reach for a
-      large general model and want speed over chain-of-thought. Beat
-      capable-large 6.8× on the 8-prompt speed benchmark (2026-05-23) at
-      the same weight class.
+      Automation workflows, fast structured tasks, summarization, publish
+      gate verdicts. Primary "fast 20B" route — beat gpt-oss:20b 6.8× on
+      the 8-prompt speed benchmark (2026-05-23) at the same weight class.
     weight_size_gb: 14
     reasoning: false
     context_window: 32768
@@ -226,22 +156,37 @@ models:
       No thinking channel, tools support. 32K hard context ceiling.
       Median 56 tps, 107 tps on trivial prompts.
 
-  - alias: tiny-reason
-    ollama_tag: lfm2.5-thinking:1.2b
-    role_label: Ultra-fast reasoning
-    use_case: Low-stakes reasoning where phi4's 5-15 min latency is
-      unacceptable — e.g. trivial logic checks, fast quality filters,
-      pre-flight validation steps
-    weight_size_gb: 0.73
+  - alias: write
+    ollama_tag: gpt-oss:20b
+    role_label: Long-form writing
+    use_case: |
+      Long-form writing pipeline — blog drafts, ghostwriting, multi-section
+      composition. Slower than `pipeline` but uses gpt-oss's reasoning
+      channel for more deliberate prose construction.
+    weight_size_gb: 13
     reasoning: true
-    context_window: 128000  # bumped 32K -> 128K 2026-05-24 — 1.2B model holds 117 tps at the cap, KV is free here
-    ollama_max: 128000
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — held 26 tps at 128K, no penalty
+    ollama_max: 131072
     input: [text]
+    notes: gpt-oss style chain-of-thought. Emits reasoning channel.
+
+  - alias: quality
+    ollama_tag: qwen3.6:35b-mlx
+    role_label: Best local quality / long context
+    use_case: |
+      Best local quality, long context, complex multi-step tasks. Use when
+      you'd otherwise reach for a frontier API and want to stay local.
+    weight_size_gb: 21
+    reasoning: true
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
+    ollama_max: 262144
+    input: [text, image]
     notes: |
-      1.2B params, 731 MB weights. Thinking-capable. So small it can
-      genuinely run alongside any other model without eviction.
-      Quality ceiling is modest — don't use for production answers,
-      use for fast yes/no logic decisions.
+      MLX-optimized MoE — Apple Silicon only. Vision-capable. Emits <think>
+      channel — clients should set think:false or low effort for trivial
+      prompts to avoid runaway reasoning. 128K default context after the
+      max-ctx benchmark proved the MoE held 35 tps from 64K all the way to
+      256K with only a small cold-load tax.
 
 # MLX vs GGUF context handling
 mlx_notes: |
