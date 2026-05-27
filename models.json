@@ -1,5 +1,13 @@
 {
   "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/reasoning notes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. Aliases renamed to use-case-oriented names 2026-05-26. Context windows default to isolated-mode values so Pi has headroom for long conversations; concurrent multi-model workloads should override num_ctx per request.",
+  "workflows": {
+    "default": {
+      "plan": "analyze",
+      "code": "code",
+      "review": "review",
+      "write": "write"
+    }
+  },
   "providers": {
     "litellm": {
       "baseUrl": "http://localhost:4000/v1",
