@@ -63,3 +63,6 @@ plugins/*-cache.json
 
 # Private OTel telemetry bridge (config lives in settings.local.json)
 otel-bridge.sh
+
+# Self-update result blob (regenerated each update)
+.last-update-result.json
