@@ -10,7 +10,6 @@
       "MultiEdit(*)"
     ]
   },
-  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
@@ -58,9 +57,9 @@
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "defaultModel": "general",
+  "defaultModel": "analyze",
   "defaultProvider": "litellm",
-  "lastChangelogVersion": "0.75.4",
+  "lastChangelogVersion": "0.75.5",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
@@ -92,7 +91,8 @@
     }
   },
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "off",
+  "defaultThinkingLevel": "xhigh",
   "quietStartup": true,
-  "enableSkillCommands": true
+  "enableSkillCommands": true,
+  "skipWorkflowUsageWarning": true
 }
