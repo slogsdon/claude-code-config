@@ -52,7 +52,7 @@
         },
         {
           "id": "code",
-          "name": "Primary code generation (qwen2.5-coder 14B)",
+          "name": "Primary code generation (qwen3-coder 30B MoE)",
           "reasoning": false,
           "input": ["text"],
           "contextWindow": 65536,
@@ -84,18 +84,11 @@
         },
         {
           "id": "write",
-          "name": "Long-form writing (gpt-oss 20B)",
-          "reasoning": true,
+          "name": "Long-form writing (gemma4 26B MoE)",
+          "reasoning": false,
           "input": ["text"],
-          "contextWindow": 131072,
-          "maxTokens": 16384,
-          "thinkingLevelMap": {
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
+          "contextWindow": 65536,
+          "maxTokens": 16384
         },
         {
           "id": "quality",

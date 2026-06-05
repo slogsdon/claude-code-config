@@ -44,8 +44,8 @@ reasoning_concepts:
     reasoning=true will burn tokens on internal reasoning before producing
     visible output — set max_tokens generously when calling them.
 
-    Models WITH thinking channel:    classify, analyze, write, quality
-    Models WITHOUT thinking channel: chat, review, code, pipeline
+    Models WITH thinking channel:    classify, analyze, quality
+    Models WITHOUT thinking channel: chat, review, code, pipeline, write
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 #
@@ -58,10 +58,10 @@ aliases:
   classify: lfm2.5-thinking:1.2b
   chat:     gemma4:e4b-mlx
   review:   granite4.1:8b
-  code:     qwen2.5-coder:14b
+  code:     qwen3-coder:30b
   analyze:  deepseek-r1:14b
   pipeline: lfm2:24b
-  write:    gpt-oss:20b
+  write:    gemma4:26b-mlx
   quality:  qwen3.6:35b-mlx
 
 models:
@@ -108,18 +108,20 @@ models:
     input: [text]
 
   - alias: code
-    ollama_tag: qwen2.5-coder:14b
+    ollama_tag: qwen3-coder:30b
     role_label: Primary code generation
     use_case: Code generation, refactoring, code explanation
-    weight_size_gb: 8.4
+    weight_size_gb: 18
     reasoning: false
-    context_window: 65536  # 14B dense — held at 64K, code prompts are usually short
-    ollama_max: 32768
+    context_window: 65536  # held at 64K — code prompts are usually short
+    ollama_max: 262144
     input: [text]
     notes: |
-      Qwen2.5-coder 14B — the no-thinking-tax code slot. Faster total wall
-      than the reasoning-channel options on code tasks because it doesn't
-      spend tokens on internal monologue.
+      2026-06-04: dense qwen2.5-coder:14b -> qwen3-coder:30b (MoE, 3.3B
+      active). No-thinking-tax code slot — faster total wall than the
+      reasoning-channel options on code tasks because it doesn't spend
+      tokens on internal monologue. 18 GB on disk; cannot co-load with
+      `quality` or `write` on the 32 GB host.
 
   - alias: analyze
     ollama_tag: deepseek-r1:14b
@@ -157,18 +159,22 @@ models:
       Median 56 tps, 107 tps on trivial prompts.
 
   - alias: write
-    ollama_tag: gpt-oss:20b
+    ollama_tag: gemma4:26b-mlx
     role_label: Long-form writing
     use_case: |
       Long-form writing pipeline — blog drafts, ghostwriting, multi-section
-      composition. Slower than `pipeline` but uses gpt-oss's reasoning
-      channel for more deliberate prose construction.
-    weight_size_gb: 13
-    reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — held 26 tps at 128K, no penalty
-    ollama_max: 131072
+      composition.
+    weight_size_gb: 16
+    reasoning: false
+    context_window: 65536  # dropped 128K -> 64K 2026-06-04 with the gemma4:26b swap
+    ollama_max: 262144
     input: [text]
-    notes: gpt-oss style chain-of-thought. Emits reasoning channel.
+    notes: |
+      2026-06-04: gpt-oss:20b -> gemma4:26b-mlx (MLX MoE, 6.3B active).
+      Write eval ~28.5 tps, 0 empty drafts — structurally immune to the
+      empty-draft failure gpt-oss had. think:false is MANDATORY (gemma4's
+      template bakes in a thinking channel); the proxy forces it. 16 GB on
+      disk; cannot co-load with `quality` or `code` on the 32 GB host.
 
   - alias: quality
     ollama_tag: qwen3.6:35b-mlx
