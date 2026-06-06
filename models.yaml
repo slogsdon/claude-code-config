@@ -1,11 +1,12 @@
 # Single source of truth for Shane's local model roster.
 #
 # ALL CALLS ROUTE THROUGH LITELLM — never direct to Ollama.
-# Clients send the role alias (e.g. "write", "quality") to the LiteLLM proxy,
+# Clients send the alias (e.g. "writing", "max") to the LiteLLM proxy,
 # which then dispatches to the Ollama runtime. Ollama itself is internal-only.
 #
-# This YAML is the human-readable source of truth. Two consumer configs are
-# kept in sync manually:
+# This YAML is the human-readable mirror of the canonical roster, which lives in
+#   ~/Code/hermes-dispatch/config.example.yaml  (the tier+role definitions)
+# Two consumer configs are kept in sync with it manually:
 #   - ~/Code/claude-code-config/models.json       (Pi-compatible providers config)
 #   - ~/Code/otel-local-ai/litellm/config.yaml    (the actual LiteLLM model_list)
 
@@ -44,49 +45,42 @@ reasoning_concepts:
     reasoning=true will burn tokens on internal reasoning before producing
     visible output — set max_tokens generously when calling them.
 
-    Models WITH thinking channel:    classify, analyze, quality
-    Models WITHOUT thinking channel: chat, review, code, pipeline, write
+    Models WITH thinking channel:    classify, max, reasoning
+    Models WITHOUT thinking channel: fast, balanced, structured, code, writing
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 #
-# 2026-05-26 rename: aliases are now use-case-oriented. Old job-coded names
-# (capable, efficient, capable-large, general, writing, reasoning, vision,
-# code-review, code-mid, code-autocomplete, fast-general, tiny-reason,
-# reasoning-deep, instruct) are gone. The current 8 are organized by what
-# the caller is trying to do, not by the model's size or family.
+# 2026-06-05 migration: aliases moved to a tier+role scheme. Two axes —
+#   TIERS (capability/cost spine, always available): fast / balanced / max
+#   TASK ROLES (specialized models that beat a tier for a job):
+#     structured / code / writing / reasoning
+# `classify` is retained outside the scheme for legacy cheap-triage callers.
+#
+# This replaced the use-case names (classify/chat/review/code/analyze/pipeline/
+# write/quality, 2026-05-26) and the older job-coded names before that.
+# Rename map from the use-case scheme:
+#   chat→fast  review→balanced  quality→max  pipeline→structured
+#   analyze→reasoning  write→writing  code→code (unchanged)  classify (kept)
 aliases:
-  classify: lfm2.5-thinking:1.2b
-  chat:     gemma4:e4b-mlx
-  review:   granite4.1:8b
-  code:     qwen3-coder:30b
-  analyze:  deepseek-r1:14b
-  pipeline: lfm2:24b
-  write:    gemma4:26b-mlx
-  quality:  qwen3.6:35b-mlx
+  # tiers (required capability spine)
+  fast:       gemma4:e4b-mlx
+  balanced:   granite4.1:8b
+  max:        qwen3.6:35b-mlx
+  # task roles (specialized)
+  structured: lfm2:24b
+  code:       qwen3-coder:30b
+  writing:    gemma4:26b-mlx
+  reasoning:  deepseek-r1:14b
+  # retained
+  classify:   lfm2.5-thinking:1.2b
 
 models:
-  - alias: classify
-    ollama_tag: lfm2.5-thinking:1.2b
-    role_label: Cheap structured-output / triage
-    use_case: |
-      Triage, classification, fast yes/no logic decisions, pre-flight
-      validation. Cheapest reasoning-capable model in the roster — use when
-      `analyze`'s latency is overkill.
-    weight_size_gb: 0.73
-    reasoning: true
-    context_window: 128000  # bumped 32K -> 128K 2026-05-24 — 1.2B holds 117 tps at the cap, KV is free at this scale
-    ollama_max: 128000
-    input: [text]
-    notes: |
-      1.2B params, 731 MB weights. Thinking-capable. So small it can
-      genuinely run alongside any other model without eviction.
-      Quality ceiling is modest — use for fast yes/no decisions, not
-      production answers.
-
-  - alias: chat
+  # ─── tiers ───────────────────────────────────────────────────────────────
+  - alias: fast
+    tier: fast
     ollama_tag: gemma4:e4b-mlx
-    role_label: Fast conversational
-    use_case: Short-context Q&A, quick chat, Obsidian ops, skill delegation
+    role_label: Fast tier — quick triage / routing / short chat
+    use_case: Short-context Q&A, quick chat, Obsidian ops, skill delegation, routing
     weight_size_gb: 9.6
     reasoning: false
     context_window: 131072  # bumped 64K -> 128K 2026-05-24 — max-ctx run showed no throughput penalty
@@ -97,19 +91,63 @@ models:
       Gemma4's chat template has thinking baked in; the proxy forces
       think:false so this alias is actually fast.
 
-  - alias: review
+  - alias: balanced
+    tier: balanced
     ollama_tag: granite4.1:8b
-    role_label: Code review / rubric grading
-    use_case: Code review, rubric grading, structured eval, API doc work
+    role_label: Balanced tier — solid default, review / rubric grading
+    use_case: Default for most work; code review, rubric grading, structured eval, API doc work
     weight_size_gb: 5.3
     reasoning: false
     context_window: 65536  # HELD at 64K 2026-05-24 — 128K dropped tps 22% in the max-ctx run
     ollama_max: 131072
     input: [text]
+    notes: |
+      Cheap but accuracy on hard rubrics is modest — that's why
+      high-consequence agents (review, legal, strategy) reach for `max`.
+
+  - alias: max
+    tier: max
+    ollama_tag: qwen3.6:35b-mlx
+    role_label: Max tier — best local quality / long context
+    use_case: |
+      Best local quality, long context, complex multi-step / high-consequence
+      tasks. Use when you'd otherwise reach for a frontier API and want to stay
+      local. RUNS ALONE on the 32 GB host (21 GB resident).
+    weight_size_gb: 21
+    reasoning: true
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
+    ollama_max: 262144
+    input: [text, image]
+    notes: |
+      MLX-optimized MoE — Apple Silicon only. Vision-capable. Emits <think>
+      channel — clients should set think:false or low effort for trivial
+      prompts to avoid runaway reasoning. 128K default context after the
+      max-ctx benchmark proved the MoE held 35 tps from 64K all the way to
+      256K with only a small cold-load tax.
+
+  # ─── task roles ──────────────────────────────────────────────────────────
+  - alias: structured
+    tier: fast  # inherits the fast tier when unspecified
+    ollama_tag: lfm2:24b
+    role_label: Structured role — fast structured / JSON output
+    use_case: |
+      Automation workflows, fast structured tasks, summarization, publish
+      gate verdicts, the dispatch router. Primary "fast 20B" route — beat
+      gpt-oss:20b 6.8× on the 8-prompt speed benchmark (2026-05-23).
+    weight_size_gb: 14
+    reasoning: false
+    context_window: 32768
+    ollama_max: 32768
+    input: [text]
+    notes: |
+      Liquid Foundation Model 2 — MoE 24B (active params << total).
+      No thinking channel, tools support. 32K hard context ceiling.
+      Median 56 tps, 107 tps on trivial prompts.
 
   - alias: code
+    tier: balanced  # inherits the balanced tier when unspecified
     ollama_tag: qwen3-coder:30b
-    role_label: Primary code generation
+    role_label: Code role — primary code generation
     use_case: Code generation, refactoring, code explanation
     weight_size_gb: 18
     reasoning: false
@@ -121,46 +159,12 @@ models:
       active). No-thinking-tax code slot — faster total wall than the
       reasoning-channel options on code tasks because it doesn't spend
       tokens on internal monologue. 18 GB on disk; cannot co-load with
-      `quality` or `write` on the 32 GB host.
+      `max` or `writing` on the 32 GB host.
 
-  - alias: analyze
-    ollama_tag: deepseek-r1:14b
-    role_label: Analysis + debugging + judge
-    use_case: |
-      Analysis, debugging, judge-pipeline reasoning. The default judge for
-      the publish-gate / iteration loop in ~/Code/otel-local-ai. 4.4×
-      faster total wall than phi4-reasoning on the same prompts.
-    weight_size_gb: 8.4
-    reasoning: true
-    context_window: 40960  # 14B dense — capped at 40K, big KV caches kill throughput
-    ollama_max: 131072
-    input: [text]
-    notes: |
-      deepseek-r1 emits <think>...</think> inline in the visible content
-      channel rather than via a separate thinking field — the proxy does
-      NOT set think:true here, since it would not route them to
-      reasoning_content anyway.
-
-  - alias: pipeline
-    ollama_tag: lfm2:24b
-    role_label: Automation flows + summarization
-    use_case: |
-      Automation workflows, fast structured tasks, summarization, publish
-      gate verdicts. Primary "fast 20B" route — beat gpt-oss:20b 6.8× on
-      the 8-prompt speed benchmark (2026-05-23) at the same weight class.
-    weight_size_gb: 14
-    reasoning: false
-    context_window: 32768
-    ollama_max: 32768
-    input: [text]
-    notes: |
-      Liquid Foundation Model 2 — MoE 24B (active params << total).
-      No thinking channel, tools support. 32K hard context ceiling.
-      Median 56 tps, 107 tps on trivial prompts.
-
-  - alias: write
+  - alias: writing
+    tier: balanced  # inherits the balanced tier when unspecified
     ollama_tag: gemma4:26b-mlx
-    role_label: Long-form writing
+    role_label: Writing role — long-form prose
     use_case: |
       Long-form writing pipeline — blog drafts, ghostwriting, multi-section
       composition.
@@ -174,31 +178,54 @@ models:
       Write eval ~28.5 tps, 0 empty drafts — structurally immune to the
       empty-draft failure gpt-oss had. think:false is MANDATORY (gemma4's
       template bakes in a thinking channel); the proxy forces it. 16 GB on
-      disk; cannot co-load with `quality` or `code` on the 32 GB host.
+      disk; cannot co-load with `max` or `code` on the 32 GB host.
 
-  - alias: quality
-    ollama_tag: qwen3.6:35b-mlx
-    role_label: Best local quality / long context
+  - alias: reasoning
+    tier: max  # inherits the max tier when unspecified
+    ollama_tag: deepseek-r1:14b
+    role_label: Reasoning role — analysis + debugging + judge
     use_case: |
-      Best local quality, long context, complex multi-step tasks. Use when
-      you'd otherwise reach for a frontier API and want to stay local.
-    weight_size_gb: 21
+      Analysis, debugging, chain-of-thought, judge-pipeline reasoning, the
+      dispatch enhancer. The default judge for the publish-gate / iteration
+      loop in ~/Code/otel-local-ai. 4.4× faster total wall than
+      phi4-reasoning on the same prompts.
+    weight_size_gb: 8.4
     reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
-    ollama_max: 262144
-    input: [text, image]
+    context_window: 40960  # 14B dense — capped at 40K, big KV caches kill throughput
+    ollama_max: 131072
+    input: [text]
     notes: |
-      MLX-optimized MoE — Apple Silicon only. Vision-capable. Emits <think>
-      channel — clients should set think:false or low effort for trivial
-      prompts to avoid runaway reasoning. 128K default context after the
-      max-ctx benchmark proved the MoE held 35 tps from 64K all the way to
-      256K with only a small cold-load tax.
+      deepseek-r1 emits <think>...</think> inline in the visible content
+      channel rather than via a separate thinking field — the proxy does
+      NOT set think:true here, since it would not route them to
+      reasoning_content anyway. Its Ollama template hard-rejects tool
+      definitions, so callers must send zero tools.
+
+  # ─── retained (outside the tier/role scheme) ──────────────────────────────
+  - alias: classify
+    ollama_tag: lfm2.5-thinking:1.2b
+    role_label: Retained — cheap structured-output / triage
+    use_case: |
+      Triage, classification, fast yes/no logic decisions, pre-flight
+      validation. Cheapest reasoning-capable model in the roster — use when
+      `reasoning`'s latency is overkill. Kept for legacy callers; not part of
+      the tier/role scheme.
+    weight_size_gb: 0.73
+    reasoning: true
+    context_window: 128000  # bumped 32K -> 128K 2026-05-24 — 1.2B holds 117 tps at the cap, KV is free at this scale
+    ollama_max: 128000
+    input: [text]
+    notes: |
+      1.2B params, 731 MB weights. Thinking-capable. So small it can
+      genuinely run alongside any other model without eviction.
+      Quality ceiling is modest — use for fast yes/no decisions, not
+      production answers.
 
 # MLX vs GGUF context handling
 mlx_notes: |
-  The MLX-optimized models (gemma4:e4b-mlx, qwen3.6:35b-mlx) report context
-  lengths through Ollama's /api/show modelinfo the same way GGUF models do.
-  Ollama treats num_ctx the same regardless of backend, so the LiteLLM
-  num_ctx override behaves identically. KV cache memory pressure is real
+  The MLX-optimized models (gemma4:e4b-mlx, gemma4:26b-mlx, qwen3.6:35b-mlx)
+  report context lengths through Ollama's /api/show modelinfo the same way GGUF
+  models do. Ollama treats num_ctx the same regardless of backend, so the
+  LiteLLM num_ctx override behaves identically. KV cache memory pressure is real
   on MLX too — large contexts on these models will consume host unified
   memory just like GGUF.
