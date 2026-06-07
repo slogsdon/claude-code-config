@@ -76,19 +76,11 @@
         },
         {
           "id": "reasoning",
-          "name": "Reasoning role — analysis + debugging + judge (deepseek-r1 14B)",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 40960,
-          "maxTokens": 16384,
-          "thinkingLevelMap": {
-            "off": null,
-            "minimal": null,
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high"
-          }
+          "name": "Reasoning role — analysis + debugging + judge (qwen3.6 35B MoE, served think:false)",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "contextWindow": 131072,
+          "maxTokens": 16384
         },
         {
           "id": "classify",

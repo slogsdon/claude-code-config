@@ -45,8 +45,8 @@ reasoning_concepts:
     reasoning=true will burn tokens on internal reasoning before producing
     visible output — set max_tokens generously when calling them.
 
-    Models WITH thinking channel:    classify, max, reasoning
-    Models WITHOUT thinking channel: fast, balanced, structured, code, writing
+    Models WITH thinking channel:    classify, max
+    Models WITHOUT thinking channel: fast, balanced, structured, code, writing, reasoning
 
 # Stable aliases callers should use. Send the alias as `model` to LiteLLM.
 #
@@ -70,7 +70,7 @@ aliases:
   structured: lfm2:24b
   code:       qwen3-coder:30b
   writing:    gemma4:26b-mlx
-  reasoning:  deepseek-r1:14b
+  reasoning:  qwen3.6:35b-mlx  # 2026-06-07: was deepseek-r1:14b — see eval_reasoning gate
   # retained
   classify:   lfm2.5-thinking:1.2b
 
@@ -182,24 +182,30 @@ models:
 
   - alias: reasoning
     tier: max  # inherits the max tier when unspecified
-    ollama_tag: deepseek-r1:14b
+    ollama_tag: qwen3.6:35b-mlx
     role_label: Reasoning role — analysis + debugging + judge
     use_case: |
-      Analysis, debugging, chain-of-thought, judge-pipeline reasoning, the
-      dispatch enhancer. The default judge for the publish-gate / iteration
-      loop in ~/Code/otel-local-ai. 4.4× faster total wall than
-      phi4-reasoning on the same prompts.
-    weight_size_gb: 8.4
-    reasoning: true
-    context_window: 40960  # 14B dense — capped at 40K, big KV caches kill throughput
-    ollama_max: 131072
-    input: [text]
+      Analysis, debugging, judge-pipeline reasoning, the dispatch enhancer.
+      The default judge for the publish-gate / iteration loop in
+      ~/Code/otel-local-ai. RUNS ALONE on the 32 GB host (21 GB resident) —
+      same model as `max`, so the two consolidate onto one resident load.
+    weight_size_gb: 21
+    reasoning: false  # served think:false — see notes
+    context_window: 131072
+    ollama_max: 262144
+    input: [text, image]
     notes: |
-      deepseek-r1 emits <think>...</think> inline in the visible content
-      channel rather than via a separate thinking field — the proxy does
-      NOT set think:true here, since it would not route them to
-      reasoning_content anyway. Its Ollama template hard-rejects tool
-      definitions, so callers must send zero tools.
+      2026-06-07: deepseek-r1:14b -> qwen3.6:35b-mlx. The reasoning gate
+      (`scripts/eval_reasoning.py` in otel-local-ai) disqualified deepseek-r1:
+      40% EMPTY answers (its inline <think> ate the token budget even at
+      think:false), slowest in the roster (~11 tps), lowest correctness.
+      qwen3.6:35b scored 95% anchors / 0 empty at think:false (vs deepseek 43%).
+      think:false is MANDATORY: with thinking ON, qwen3.6 burns the budget
+      reasoning and returns an EMPTY answer — so the proxy forces think:false
+      and this alias is marked reasoning:false. MLX MoE, vision-capable. The
+      alternative pick was qwen3-coder:30b (82% anchors, 3× faster, co-loads
+      with `code`) — switch the tag if speed/co-load matters more than the
+      ~13% correctness edge.
 
   # ─── retained (outside the tier/role scheme) ──────────────────────────────
   - alias: classify
