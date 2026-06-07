@@ -4,9 +4,10 @@
 # Clients send the alias (e.g. "writing", "max") to the LiteLLM proxy,
 # which then dispatches to the Ollama runtime. Ollama itself is internal-only.
 #
-# This YAML is the human-readable mirror of the canonical roster, which lives in
-#   ~/Code/hermes-dispatch/config.example.yaml  (the tier+role definitions)
-# Two consumer configs are kept in sync with it manually:
+# This YAML is the on-disk source of truth for the roster. The tier+role scheme
+# originates from the `hermes-dispatch` open-source project (upstream, NOT checked
+# out locally — do not expect a config file on disk for it).
+# Two consumer configs are kept in sync with this file manually:
 #   - ~/Code/claude-code-config/models.json       (Pi-compatible providers config)
 #   - ~/Code/otel-local-ai/litellm/config.yaml    (the actual LiteLLM model_list)
 
