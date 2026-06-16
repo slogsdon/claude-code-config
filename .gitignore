@@ -2,7 +2,9 @@ ide/
 local/
 projects/
 auth.json
-bin/
+bin/*
+!bin/gen-roster.sh
+!bin/gen-roster.py
 pi-crash.log
 shell-snapshots/
 statsig/

@@ -1,5 +1,5 @@
 {
-  "_comment": "Pi-compatible custom provider config. Source of truth (human-readable, with weights/reasoning notes): ~/Code/claude-code-config/models.yaml. All Pi traffic routes through LiteLLM proxy on :4000 — never direct to Ollama. Aliases use the tier+role scheme (fast/balanced/max tiers; structured/code/writing/reasoning roles; classify retained) migrated 2026-06-05. Context windows default to isolated-mode values so Pi has headroom for long conversations; concurrent multi-model workloads should override num_ctx per request.",
+  "_comment": "Pi-compatible custom provider config. GENERATED from ~/Code/claude-code-config/models.yaml by bin/gen-roster.py — do not hand-edit; edit models.yaml and regenerate. All Pi traffic routes through the LiteLLM proxy on :4000 — never direct to Ollama. Aliases use the tier+role scheme (fast/balanced/max tiers; structured/code/writing/reasoning roles; classify retained). Context windows are advertised isolated-mode values; concurrent multi-model workloads should override num_ctx per request.",
   "workflows": {
     "default": {
       "plan": "reasoning",
@@ -23,7 +23,9 @@
           "id": "fast",
           "name": "Fast tier — triage / routing / short chat (gemma4 e4b mlx)",
           "reasoning": false,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 131072,
           "maxTokens": 16384
         },
@@ -31,7 +33,9 @@
           "id": "balanced",
           "name": "Balanced tier — solid default, review / rubric grading (granite4.1 8B)",
           "reasoning": false,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 65536,
           "maxTokens": 16384
         },
@@ -39,7 +43,10 @@
           "id": "max",
           "name": "Max tier — best local quality / long context (qwen3.6 35B mlx MoE — vision-capable)",
           "reasoning": true,
-          "input": ["text", "image"],
+          "input": [
+            "text",
+            "image"
+          ],
           "contextWindow": 131072,
           "maxTokens": 16384,
           "thinkingLevelMap": {
@@ -54,7 +61,9 @@
           "id": "structured",
           "name": "Structured role — fast reliable structured/JSON output (lfm2 24B MoE)",
           "reasoning": false,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 32768,
           "maxTokens": 16384
         },
@@ -62,7 +71,9 @@
           "id": "code",
           "name": "Code role — primary code generation (qwen3-coder 30B MoE)",
           "reasoning": false,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 65536,
           "maxTokens": 16384
         },
@@ -70,7 +81,9 @@
           "id": "writing",
           "name": "Writing role — long-form prose (gemma4 26B MoE)",
           "reasoning": false,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 65536,
           "maxTokens": 16384
         },
@@ -78,7 +91,10 @@
           "id": "reasoning",
           "name": "Reasoning role — analysis + debugging + judge (qwen3.6 35B MoE, served think:false)",
           "reasoning": false,
-          "input": ["text", "image"],
+          "input": [
+            "text",
+            "image"
+          ],
           "contextWindow": 131072,
           "maxTokens": 16384
         },
@@ -86,7 +102,9 @@
           "id": "classify",
           "name": "Retained — cheap structured-output / triage (lfm2.5-thinking 1.2B)",
           "reasoning": true,
-          "input": ["text"],
+          "input": [
+            "text"
+          ],
           "contextWindow": 128000,
           "maxTokens": 8192,
           "thinkingLevelMap": {
