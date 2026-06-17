@@ -86,12 +86,12 @@ aliases:
   # tiers (required capability spine)
   fast:       gemma4:e4b-mlx
   balanced:   granite4.1:8b
-  max:        qwen3.6:35b-mlx
+  max:        qwen3.6:35b
   # task roles (specialized)
   structured: lfm2:24b
   code:       qwen3-coder:30b
   writing:    gemma4:26b-mlx
-  reasoning:  qwen3.6:35b-mlx  # 2026-06-07: was deepseek-r1:14b — see eval_reasoning gate
+  reasoning:  qwen3.6:35b  # 2026-06-07: was deepseek-r1:14b — see eval_reasoning gate
   # retained
   classify:   lfm2.5-thinking:1.2b
 
@@ -133,7 +133,7 @@ models:
 
   - alias: max
     tier: max
-    ollama_tag: qwen3.6:35b-mlx
+    ollama_tag: qwen3.6:35b
     role_label: Max tier — best local quality / long context
     use_case: |
       Best local quality, long context, complex multi-step / high-consequence
@@ -141,10 +141,10 @@ models:
       local. RUNS ALONE on the 32 GB host (21 GB resident).
     weight_size_gb: 21
     reasoning: true
-    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MLX MoE absorbs KV growth without losing tps
+    context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MoE absorbs KV growth without losing tps
     ollama_max: 262144
     input: [text, image]
-    pi_name: Max tier — best local quality / long context (qwen3.6 35B mlx MoE — vision-capable)
+    pi_name: Max tier — best local quality / long context (qwen3.6 35B MoE — vision-capable)
     pi_thinking_map: true
     hermes_context_length: 131072
     notes: |
@@ -222,7 +222,7 @@ models:
 
   - alias: reasoning
     tier: max  # inherits the max tier when unspecified
-    ollama_tag: qwen3.6:35b-mlx
+    ollama_tag: qwen3.6:35b
     role_label: Reasoning role — analysis + debugging + judge
     use_case: |
       Analysis, debugging, judge-pipeline reasoning, the dispatch enhancer.
@@ -245,7 +245,7 @@ models:
       qwen3.6:35b scored 95% anchors / 0 empty at think:false (vs deepseek 43%).
       think:false is MANDATORY: with thinking ON, qwen3.6 burns the budget
       reasoning and returns an EMPTY answer — so the proxy forces think:false
-      and this alias is marked reasoning:false. MLX MoE, vision-capable. The
+      and this alias is marked reasoning:false. MoE, vision-capable. The
       alternative pick was qwen3-coder:30b (82% anchors, 3× faster, co-loads
       with `code`) — switch the tag if speed/co-load matters more than the
       ~13% correctness edge.
@@ -281,14 +281,14 @@ models:
 # Not exposed to Pi or Hermes; emitted only into the LiteLLM model_list.
 judge_aliases:
   - alias: reasoning-judge   # judge_pipeline's VOICE judge — same model as max-judge
-    ollama_tag: qwen3.6:35b-mlx
+    ollama_tag: qwen3.6:35b
     litellm_num_ctx: 16384
     litellm_think: false
   - alias: balanced-judge
     ollama_tag: granite4.1:8b
     litellm_num_ctx: 16384
   - alias: max-judge
-    ollama_tag: qwen3.6:35b-mlx
+    ollama_tag: qwen3.6:35b
     litellm_num_ctx: 16384
 
 # Pi (models.json) scaffolding — provider settings and workflow routing that are

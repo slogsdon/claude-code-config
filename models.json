@@ -41,7 +41,7 @@
         },
         {
           "id": "max",
-          "name": "Max tier — best local quality / long context (qwen3.6 35B mlx MoE — vision-capable)",
+          "name": "Max tier — best local quality / long context (qwen3.6 35B MoE — vision-capable)",
           "reasoning": true,
           "input": [
             "text",
