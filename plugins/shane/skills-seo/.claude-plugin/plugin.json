@@ -1,0 +1,7 @@
+{
+  "name": "skills-seo",
+  "version": "0.1.0",
+  "description": "10 Claude SEO skills using Google Search Console data — cannibalization, decay, intent mismatch, striking distance, query clustering, and more.",
+  "author": { "name": "Shane Logsdon" },
+  "license": "MIT"
+}
