@@ -141,7 +141,7 @@ def build_llamaswap_groups(roster: dict):
 
     def touch(tag):
         if tag not in groups:
-            groups[tag] = {"path": None, "ctx": 0, "aliases": []}
+            groups[tag] = {"path": None, "ctx": 0, "parallel": 0, "n_predict": 0, "aliases": []}
             order.append(tag)
         return groups[tag]
 
@@ -150,6 +150,8 @@ def build_llamaswap_groups(roster: dict):
         if m.get("gguf_path"):
             g["path"] = m["gguf_path"]
         g["ctx"] = max(g["ctx"], real_ctx(m))
+        g["parallel"] = max(g["parallel"], m.get("parallel", 0))
+        g["n_predict"] = max(g["n_predict"], m.get("n_predict", 0))
         g["aliases"].append(m["alias"])
     for j in roster.get("judge_aliases", []):
         g = touch(j["ollama_tag"])
@@ -183,10 +185,18 @@ def build_llamaswap_config(roster: dict) -> str:
     for tag in order:
         g = groups[tag]
         path = os.path.expanduser(g["path"])
+        # When `parallel` is set, -c is the TOTAL KV split across N slots, so the
+        # advertised per-slot context_window is multiplied up at launch.
+        n_slots = g.get("parallel") or 0
+        total_ctx = g["ctx"] * n_slots if n_slots else g["ctx"]
         cmd = (
             f"{bin_path} --port ${{PORT}} --host 127.0.0.1 "
-            f"--model {path} -ngl 99 -fa on -c {g['ctx']} --jinja"
+            f"--model {path} -ngl 99 -fa on -c {total_ctx} --jinja"
         )
+        if n_slots:
+            cmd += f" --parallel {n_slots}"
+        if g.get("n_predict"):
+            cmd += f" -n {g['n_predict']}"
         out += [
             f'  "{tag}":',
             f'    cmd: "{cmd}"',

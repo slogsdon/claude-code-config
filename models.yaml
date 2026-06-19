@@ -294,6 +294,53 @@ models:
       with `code`) — switch the tag if speed/co-load matters more than the
       ~13% correctness edge.
 
+  - alias: swarm
+    tier: fast  # inherits the fast tier when unspecified
+    ollama_tag: qwen2.5-coder:1.5b   # llama-swap model id
+    # Reused Ollama GGUF blob, read directly by llama-server (Ollama daemon not needed).
+    gguf_path: ~/.ollama/models/blobs/sha256-29d8c98fa6b098e200069bfb88b9508dc3e85586d20cba59f8dda9a808165104
+    role_label: Swarm role — parallel small-scope code grunt-work
+    use_case: |
+      Fan out many small, scoped coding tasks in parallel — single function,
+      docstring, type annotations, unit tests, trivial refactors. The no-think
+      cheap-completion slot for swarm/batch code generation where per-task
+      latency matters more than peak quality. Served with --parallel 5 so a
+      fan-out of small requests batches on ONE resident process.
+    weight_size_gb: 0.94
+    reasoning: false
+    context_window: 2048   # per-slot budget; -c is multiplied by `parallel` at launch
+    ollama_max: 32768
+    parallel: 5            # llama-server --parallel: 5 concurrent slots (KV split 5x -> -c 10240)
+    n_predict: 300         # -n cap; grunt-work answers are short, no CoT to budget for
+    input: [text]
+    litellm_think: false
+    pi_name: Swarm role — parallel small-scope code grunt-work (qwen2.5-coder 1.5B)
+    # no hermes_context_length: swarm is a programmatic fan-out slot, not exposed to Hermes
+    notes: |
+      2026-06-19: added qwen2.5-coder:1.5b (Ollama GGUF Q4_K_M blob, 0.94 GB,
+      read directly by llama-server) as the no-think swarm-coding slot — the
+      "no-think small coder" hypothesized in the VibeThinker-3B rejection note
+      under `classify`. Benchmarked vs classify (lfm2.5-thinking:1.2b) and
+      balanced (granite4.1:8b) on 7 prompts (5 coding + 1 classify + 1 trivia)
+      at max_tokens=300:
+        - swarm (qwen2.5-coder:1.5b): 5/5 coding prompts complete + correct,
+          42-82 tps, NO thinking tax (slugify/jest/docstring/types/reduce all
+          land). Weak only on non-coding trivia year-ordering (P7) — not its job.
+          No <think> channel: emits the function and stops.
+        - classify: 0/7 — every prompt hit the 300-tok cap INSIDE <think> and
+          never emitted an answer (the deepseek-r1 / north-mini / VibeThinker
+          failure mode; lfm2.5-thinking needs ~600-1000+ tok to finish). Unusable
+          for swarm grunt-work at this budget.
+        - balanced: highest quality but 6-14 tps (8B) — overkill / too slow to
+          fan out.
+      Parallel: dedicated --parallel 5 server, 5 concurrent 100-tok requests all
+      completed in 4.98s vs 1.48s single-stream (~1.5x aggregate throughput; the
+      M4 GPU is bandwidth/compute-bound so the batching gain is modest but real,
+      0 errors). ~0.94 GB weights + 5×2K KV is trivial on the 32 GB host —
+      co-loads beside anything. ADDITIVE slot; does NOT replace classify
+      (different role: triage/structured vs code-gen). A TTL longer than the
+      global 300s would cut reload churn on bursty fan-outs.
+
   # ─── retained (outside the tier/role scheme) ──────────────────────────────
   - alias: classify
     ollama_tag: lfm2.5-thinking:1.2b

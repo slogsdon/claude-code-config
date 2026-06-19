@@ -99,6 +99,16 @@
           "maxTokens": 16384
         },
         {
+          "id": "swarm",
+          "name": "Swarm role — parallel small-scope code grunt-work (qwen2.5-coder 1.5B)",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 2048,
+          "maxTokens": 16384
+        },
+        {
           "id": "classify",
           "name": "Retained — cheap structured-output / triage (lfm2.5-thinking 1.2B)",
           "reasoning": true,
