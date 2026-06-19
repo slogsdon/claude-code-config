@@ -197,6 +197,16 @@ models:
       LiteLLM num_ctx pinned to 32768: 65536 exceeds available KV memory and
       Ollama silently yields 0 tokens. Advertised window stays 64K (Pi) /
       Hermes budgets 65536 — separate from the real Ollama num_ctx.
+      2026-06-18: evaluated north-mini-code-1.0:q4_K_M (30.5B Cohere MoE,
+      cohere2moe, Q4_K_M, 18 GB — same slot class) and REJECTED. It's a
+      reasoning model in a code skin: emits Cohere thinking tokens
+      (255011/255014) and at think:false dumps the whole generation into the
+      stripped thinking channel, yielding EMPTY completions on non-trivial
+      prompts (same failure that disqualified deepseek-r1). 33.8 tps vs
+      qwen3-coder's 38.6, and ~2x worse TTFT. At think:true output is correct
+      and on par with qwen quality, but costs ~200s/prompt of thinking tax —
+      antithetical to this no-thinking-tax slot. Not worth a slot on the 32 GB
+      host; no fast-completion niche either (it's slower). Kept qwen3-coder:30b.
 
   - alias: writing
     tier: balanced  # inherits the balanced tier when unspecified
