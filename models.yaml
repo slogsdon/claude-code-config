@@ -65,22 +65,6 @@
 #   hermes_context_length : (optional) presence == included in Hermes; value is what
 #                           Hermes BUDGETS (floor 64000, may exceed real num_ctx).
 
-# ── Performance (llama-swap stack, M4 Mac Mini 32GB, 2026-06-19) ──────────────
-# Measured through LiteLLM :4000. Cold = 1st req incl. model load; warm tok/s +
-# wall from the 400-tok medium request, model resident. All models GGUF.
-# alias       | model                 | fmt  | max_ctx       | cold s | tok/s | wall/400tok
-# classify    | lfm2.5-thinking:1.2b  | GGUF | 128000        |  4.4   | 69.6  | 5.7 (CoT)
-# swarm       | qwen2.5-coder:1.5b    | GGUF | 2048/slot x5  |  3.4   | 81.3  | 4.9
-# fast        | gemma-4-e4b           | GGUF | 131072        | 12.0   | 28.1  | 14.2
-# balanced    | granite4.1:8b         | GGUF | 65536         | 12.2   | 18.1  | 22.1
-# structured  | lfm2:24b              | GGUF | 32768         | 14.2   | 54.4  | 7.4
-# writing     | gemma-4-26b           | GGUF | 65536         | 20.7   | 24.6  | 16.2
-# code        | qwen3-coder:30b       | GGUF | 32768 (real)  | 20.5   | 38.3  | 10.5
-# max         | qwen3.6:35b           | GGUF | 131072        | 36.1   | 24.0  | 16.7 (think-only visible)
-# Notes: classify/max emit a <think> channel, so the 400-tok run is largely
-# reasoning tokens, not visible answer. code advertises 64K but real num_ctx is
-# 32768 (64K -> empty completions, KV OOM). swarm runs --parallel 5 (-c 10240).
-
 proxy:
   name: litellm
   base_url: http://localhost:4000/v1
