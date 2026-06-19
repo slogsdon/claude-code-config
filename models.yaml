@@ -320,6 +320,43 @@ models:
       official LiquidAI/LFM2.5-1.2B-Thinking GGUF Q8_0 (1.25 GB). Thinking-
       capable (litellm_think:true). So small it runs alongside anything without
       eviction. Quality ceiling is modest — fast yes/no, not production answers.
+      2026-06-19: evaluated WeiboAI/VibeThinker-3B (prithivMLmods GGUF Q8_0,
+      3.1 GB; fine-tune of Qwen2.5-Coder-3B, MIT — a math/code COMPETITION-
+      reasoning specialist) for the gap between this slot and `balanced`, and
+      REJECTED. It is a long chain-of-thought model: spends its whole budget in
+      <think> before answering. At the roster's max_tokens=300 it returned 0/5
+      complete answers (every prompt truncated mid-think — the SAME failure that
+      disqualified deepseek-r1 and north-mini-code); unconstrained it burns
+      800-1300 tok/answer and spent 1255 tokens to emit a single sentiment
+      label. Speed ~28 tps (sits between classify ~72 and balanced ~17). Math/
+      reasoning QUALITY is genuinely high unconstrained (bat-ball $0.05;
+      stars-and-bars 15, even flagging the distinct-balls 1806 alternative),
+      but (1) it is the antithesis of this cheap/fast-triage slot — slow CoT by
+      design that over-thinks even a yes/no label; (2) it does not beat
+      `reasoning`/`max` (qwen3.6:35b — 95% anchors, vision, 131K) on general
+      reasoning, being only a narrow competition-math specialist; (3) no
+      compensating niche on the 32 GB host. ALSO tested for light parallel
+      SWARM-CODING (fan out many small scoped tasks — single fn / docstring /
+      tests): the same thinking tax kills it. 79-90% of every response is
+      <think>; test-gen and docstring were correct, but the simplest task (a
+      slugify fn) cost 88s / 2394 tok AND came out buggy (.replace(' ','-')
+      hits only the first space; .trim('-') is invalid JS), and a 2048-tok run
+      produced no answer at all. Swarm capacity is COMPUTE-bound, not memory-
+      bound: ~3.5 GB/instance (3.1 weights + ~72 MB KV@2K, 36L×2KV×128) means
+      ~6-8 separate llama-server instances fit the 28 GB GPU wired budget, or
+      one --parallel server holds 300+ 2K KV slots — but the single M4 10-core
+      GPU (~28 tps/stream) caps useful concurrency at ~4-8 streams. Either way
+      each "small" task costs 800-2400 tok / 30-88s — antithetical to fast
+      swarm grunt-work; a no-think 3B coder would emit the same in <5s.
+      Can thinking be disabled? No official toggle (Qwen2.5 base, no
+      enable_thinking; card has none — it's RL-trained to always reason). The
+      <think></think> assistant-prefill hack PARTIALLY works: cuts tokens 3-7x
+      (bat-ball 848->284, slugify 2394->347) and math stays correct ($0.05),
+      BUT the model just relocates reasoning into the visible answer (narrates
+      steps inline, sometimes re-opens <think>), and code reliability DROPS —
+      a no-think slugify returned prose + a wrong example and no function at
+      all. Suppressing CoT discards the one thing it's good at. No roster slot.
+      GGUF deleted; temp llama-swap entry reverted.
 
 # LiteLLM-only judge/gate aliases for the blog quality pipeline (Sub-project B
 # in otel-local-ai). Low context so they co-load beside the 21 GB `max`
