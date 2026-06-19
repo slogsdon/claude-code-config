@@ -38,7 +38,9 @@
     "skills-vault-knowledge@slogsdon-claude-code-config": true,
     "skills-vault-rituals@slogsdon-claude-code-config": true,
     "skills-workflows@slogsdon-claude-code-config": true,
-    "skills-writing@slogsdon-claude-code-config": true
+    "skills-writing@slogsdon-claude-code-config": true,
+    "worktrunk@worktrunk": true,
+    "web-quality-skills@addy-web-quality-skills": true
   },
   "extraKnownMarketplaces": {
     "addy-agent-skills": {
@@ -52,8 +54,21 @@
         "source": "github",
         "repo": "slogsdon/claude-code-config"
       }
+    },
+    "worktrunk": {
+      "source": {
+        "source": "github",
+        "repo": "max-sixty/worktrunk"
+      }
+    },
+    "addy-web-quality-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/web-quality-skills"
+      }
     }
   },
+  "skipWorkflowUsageWarning": true,
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
@@ -93,6 +108,5 @@
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "xhigh",
   "quietStartup": true,
-  "enableSkillCommands": true,
-  "skipWorkflowUsageWarning": true
+  "enableSkillCommands": true
 }
