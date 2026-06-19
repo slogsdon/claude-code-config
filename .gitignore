@@ -54,6 +54,7 @@ plugins/superpowers-developing-for-claude-code/
 
 # Runtime state and caches
 .last-cleanup
+plugins/.last_inuse_sweep
 daemon.lock
 daemon.log
 daemon.status.json
