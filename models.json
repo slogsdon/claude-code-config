@@ -21,7 +21,7 @@
       "models": [
         {
           "id": "fast",
-          "name": "Fast tier — triage / routing / short chat (gemma4 e4b mlx)",
+          "name": "Fast tier — triage / routing / short chat (gemma 4 E4B)",
           "reasoning": false,
           "input": [
             "text"
@@ -79,7 +79,7 @@
         },
         {
           "id": "writing",
-          "name": "Writing role — long-form prose (gemma4 26B MoE)",
+          "name": "Writing role — long-form prose (gemma 4 26B A4B MoE)",
           "reasoning": false,
           "input": [
             "text"
