@@ -2,6 +2,7 @@ ide/
 local/
 projects/
 auth.json
+.credentials.json
 bin/*
 !bin/gen-roster.sh
 !bin/gen-roster.py
