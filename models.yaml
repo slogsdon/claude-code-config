@@ -1,3 +1,28 @@
+# ── Performance (llama-swap stack, M-series Mac Mini 32 GB, 2026-06-19) ──────
+# Path: client -> LiteLLM :4000 -> llama-swap :8081 -> llama-server (llama.cpp, Metal).
+# Method: per model, kept resident, 3 sequential non-streamed calls — short cold
+# (incl. model load), short warm, medium warm. short=150 tok factorial prompt;
+# medium=400 tok hash-table prompt. tok/s = completion_tokens / wall.
+# "Cold" = full first-request wall incl. llama-server load (not pure TTFT — non-streamed).
+# A clean all-warm 2nd pass is impossible on 32 GB (large models evict small ones),
+# so warm numbers are measured in-place during each model's single residency.
+#
+#   alias       model                  fmt        maxctx  cold(ms)  warm t/s(s)  warm t/s(m)  medium wall(ms)
+#   classify    lfm2.5-thinking:1.2b   Q8_0       128000      4420        69.6        69.6           5743
+#   swarm       qwen2.5-coder:1.5b     Q4_K_M     10240*      3385        77.3        81.3           4922
+#   fast        gemma-4-e4b            Q4_K_M     131072     11957        27.5        28.1          14212
+#   balanced    granite4.1:8b          Q4_K_M      65536     12202        17.8        18.1          22068
+#   structured  lfm2:24b               GGUF        32768     14246        54.9        54.4           7357
+#   writing     gemma-4-26b            UD-Q4_K_M   65536     20650        24.4        24.6          16235
+#   code        qwen3-coder:30b        GGUF        32768**    20524        36.9        38.3          10451
+#   max         qwen3.6:35b            UD-Q4_K_M  131072     36148        21.6        24.0          16684***
+#   * swarm -c 10240 = 5 KV slots x 2048 (--parallel 5); per-slot ctx is 2048.
+#   ** code real num_ctx 32768 (advertised 64K; 64K KV OOMs to empty output).
+#   *** max keeps thinking ON: 150/400-tok caps are fully consumed by <think>, so
+#       visible output is empty at these caps — t/s is real throughput incl. think tokens.
+#   Notes: cold = single 21 GB+ load dominates (max 36s); warm short is best-case t/s.
+#   lfm2 family (classify/structured) leads warm throughput; max/balanced are slowest.
+#
 # Single source of truth for Shane's local model roster.
 #
 # ALL CALLS ROUTE THROUGH LITELLM — never direct to the runtime.
