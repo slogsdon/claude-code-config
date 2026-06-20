@@ -280,7 +280,7 @@ models:
     input: [text]
     litellm_think: false
     pi_name: Writing role — long-form prose (gemma 4 26B A4B MoE)
-    hermes_context_length: 131072  # NOTE: stale vs 64K real — left as-is under lossless adoption
+    hermes_context_length: 65536  # matches real 64K num_ctx (was stale 131072; Hermes was over-budgeting)
     notes: |
       2026-06-04: gpt-oss:20b -> gemma4:26b-mlx (MLX MoE, 6.3B active).
       2026-06-18: gemma4:26b-mlx (nvfp4) -> unsloth/gemma-4-26B-A4B-it GGUF
