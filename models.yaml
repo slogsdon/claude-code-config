@@ -448,7 +448,7 @@ models:
     litellm_think: false
     extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --cache-type-k q8_0 --cache-type-v q8_0 --ctx-checkpoints 8"
     pi_name: Dense 27B — MTP speculative (qwen3.6 27B, ~6.5 tok/s)
-    # no hermes_context_length: 16K real ctx < Hermes 64K floor; not exposed to Hermes
+    hermes_context_length: 65536  # exposed to Hermes 2026-06-20 (real 64K meets the floor) for devrel-sample + dev-workflow escalation
     notes: |
       2026-06-20: added as the `dense` alias. unsloth/Qwen3.6-27B-MTP-GGUF
       Q4_K_M (17.1 GB) — a DENSE qwen3_5 model (vs the 35B-A3B MoE `max`), with
