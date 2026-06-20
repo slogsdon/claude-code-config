@@ -139,6 +139,7 @@ aliases:
   reasoning:  qwen3.6:35b  # 2026-06-07: was deepseek-r1:14b — see eval_reasoning gate
   # retained
   classify:   lfm2.5-thinking:1.2b
+  dense:      qwen3.6-27b  # dense 27B w/ MTP self-speculation — see entry notes
 
 models:
   # ─── tiers ───────────────────────────────────────────────────────────────
@@ -429,6 +430,47 @@ models:
       a no-think slugify returned prose + a wrong example and no function at
       all. Suppressing CoT discards the one thing it's good at. No roster slot.
       GGUF deleted; temp llama-swap entry reverted.
+
+  - alias: dense
+    ollama_tag: qwen3.6-27b
+    gguf_path: ~/models/gguf/Qwen3.6-27B-Q4_K_M.gguf   # unsloth/Qwen3.6-27B-MTP-GGUF (NextN/MTP heads baked in)
+    role_label: Retained — dense 27B with MTP speculative decoding
+    use_case: |
+      Dense Qwen3.6-27B for when dense-model behavior is wanted over the
+      35B-A3B MoE (`max`). Slow (~6.5 tok/s): reads all 27B params/token on the
+      ~120 GB/s M4, so it is heavily bandwidth-bound. NOT a throughput slot —
+      use `max` for speed. Runs with MTP self-speculation (see notes).
+    weight_size_gb: 17.1
+    reasoning: false
+    context_window: 65536  # 64K w/ q8_0 KV stays in the 28 GB wired budget (~25.8 GB); see notes
+    ollama_max: 65536
+    input: [text]
+    litellm_think: false
+    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --cache-type-k q8_0 --cache-type-v q8_0 --ctx-checkpoints 8"
+    pi_name: Dense 27B — MTP speculative (qwen3.6 27B, ~6.5 tok/s)
+    # no hermes_context_length: 16K real ctx < Hermes 64K floor; not exposed to Hermes
+    notes: |
+      2026-06-20: added as the `dense` alias. unsloth/Qwen3.6-27B-MTP-GGUF
+      Q4_K_M (17.1 GB) — a DENSE qwen3_5 model (vs the 35B-A3B MoE `max`), with
+      NextN/MTP draft heads baked in. Benchmarked MTP self-speculation on this
+      M4 (base, ~120 GB/s), /no_think, temp 0, 512-tok generations:
+        baseline (--spec-type none)      5.4 tok/s
+        --spec-draft-n-max 0   +16-23%   6.3-6.6 tok/s  (100% accept, len 2.0)
+        --spec-draft-n-max 2   +10-17%   6.0-6.3 tok/s  (72-79% accept)
+        --spec-draft-n-max 4   -27-32%   3.7-4.0 tok/s  (53-60% accept; overhead wins)
+      MTP HELPS here because the dense 27B is savagely bandwidth-bound — the
+      OPPOSITE of llama.cpp issue #23752 (a compute-bound 9B at ~25 tok/s, where
+      MTP lost on Metal). Sharp optimum at low n-max; shipped at n-max 1.
+      CAVEAT: temp-0 forced-512 likely overstates acceptance — expect smaller
+      gains at real sampling temps. MTP on the 35B-A3B MoE (`max`) is a NET LOSS
+      (3B-active, near-zero bandwidth to reclaim; #23752 author saw 5-14x
+      regression) — do NOT enable it there.
+      Context: KV is heavy (65 layers, head_dim 256 = 0.25 MiB/tok f16). On the
+      28 GB wired budget (17.1 GB weights leave ~11 GB for KV), the all-GPU
+      ceiling is ~64K with q8_0 KV (~25.8 GB resident) — chosen here. q8_0 KV is
+      free given `-fa on` (Metal needs FA for quantized V, #21450). 48K f16 and
+      96K q8_0 also load but exceed the wired budget and spill to pageable RAM —
+      avoid. `--ctx-checkpoints 8` bounds MTP checkpoint VRAM growth (#23371).
 
 # LiteLLM-only judge/gate aliases for the blog quality pipeline (Sub-project B
 # in otel-local-ai). Low context so they co-load beside the 21 GB `max`

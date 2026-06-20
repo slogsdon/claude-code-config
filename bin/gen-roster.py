@@ -141,7 +141,7 @@ def build_llamaswap_groups(roster: dict):
 
     def touch(tag):
         if tag not in groups:
-            groups[tag] = {"path": None, "ctx": 0, "parallel": 0, "n_predict": 0, "aliases": []}
+            groups[tag] = {"path": None, "ctx": 0, "parallel": 0, "n_predict": 0, "extra_flags": "", "aliases": []}
             order.append(tag)
         return groups[tag]
 
@@ -152,6 +152,8 @@ def build_llamaswap_groups(roster: dict):
         g["ctx"] = max(g["ctx"], real_ctx(m))
         g["parallel"] = max(g["parallel"], m.get("parallel", 0))
         g["n_predict"] = max(g["n_predict"], m.get("n_predict", 0))
+        if m.get("extra_flags"):
+            g["extra_flags"] = m["extra_flags"]
         g["aliases"].append(m["alias"])
     for j in roster.get("judge_aliases", []):
         g = touch(j["ollama_tag"])
@@ -197,6 +199,8 @@ def build_llamaswap_config(roster: dict) -> str:
             cmd += f" --parallel {n_slots}"
         if g.get("n_predict"):
             cmd += f" -n {g['n_predict']}"
+        if g.get("extra_flags"):
+            cmd += f" {g['extra_flags']}"
         out += [
             f'  "{tag}":',
             f'    cmd: "{cmd}"',

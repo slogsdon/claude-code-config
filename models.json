@@ -124,6 +124,16 @@
             "high": "high",
             "xhigh": "high"
           }
+        },
+        {
+          "id": "dense",
+          "name": "Dense 27B — MTP speculative (qwen3.6 27B, ~6.5 tok/s)",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 16384
         }
       ]
     }
