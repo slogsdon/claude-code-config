@@ -489,7 +489,7 @@ models:
     input: [text]
     extra_flags: "--no-mmap --temp 1.0 --top-p 0.95 --top-k 64"
     pi_name: Eval — agentic tool-use fine-tune (gemma 4 12B Q8_0)
-    # no hermes_context_length: not exposed to Hermes (eval only)
+    hermes_context_length: 65536   # exposed to Hermes; matches real 64K num_ctx
     # litellm_think omitted: don't force enable_thinking on this fine-tune's template
     notes: |
       2026-06-20: added for eval. yuxinlu1/gemma-4-12B-agentic-fable5-
