@@ -72,9 +72,9 @@
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "defaultModel": "analyze",
+  "defaultModel": "agentic",
   "defaultProvider": "litellm",
-  "lastChangelogVersion": "0.75.5",
+  "lastChangelogVersion": "0.79.9",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
@@ -108,5 +108,6 @@
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "xhigh",
   "quietStartup": true,
-  "enableSkillCommands": true
+  "enableSkillCommands": true,
+  "theme": "dark"
 }

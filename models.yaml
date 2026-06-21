@@ -530,11 +530,13 @@ pi:
     retained). Context windows are advertised isolated-mode values; concurrent
     multi-model workloads should override num_ctx per request.
   workflows:
+    # 2026-06-20: all roles repointed to the agentic eval model "across the board".
+    # Prior tier/role mapping (revert here to restore): plan=reasoning code=code review=balanced write=writing
     default:
-      plan: reasoning
-      code: code
-      review: balanced
-      write: writing
+      plan: agentic
+      code: agentic
+      review: agentic
+      write: agentic
   provider:
     name: litellm
     api: openai-completions

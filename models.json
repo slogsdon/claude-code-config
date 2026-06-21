@@ -2,10 +2,10 @@
   "_comment": "Pi-compatible custom provider config. GENERATED from ~/Code/claude-code-config/models.yaml by bin/gen-roster.py — do not hand-edit; edit models.yaml and regenerate. All Pi traffic routes through the LiteLLM proxy on :4000 — never direct to Ollama. Aliases use the tier+role scheme (fast/balanced/max tiers; structured/code/writing/reasoning roles; classify retained). Context windows are advertised isolated-mode values; concurrent multi-model workloads should override num_ctx per request.",
   "workflows": {
     "default": {
-      "plan": "reasoning",
-      "code": "code",
-      "review": "balanced",
-      "write": "writing"
+      "plan": "agentic",
+      "code": "agentic",
+      "review": "agentic",
+      "write": "agentic"
     }
   },
   "providers": {
