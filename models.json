@@ -137,7 +137,7 @@
         },
         {
           "id": "agentic",
-          "name": "Eval — agentic tool-use fine-tune (gemma 4 12B Q8_0)",
+          "name": "Eval — agentic tool-use fine-tune (gemma 4 12B Q4_K_M)",
           "reasoning": true,
           "input": [
             "text"
