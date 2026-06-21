@@ -140,6 +140,7 @@ aliases:
   # retained
   classify:   lfm2.5-thinking:1.2b
   dense:      qwen3.6-27b  # dense 27B w/ MTP self-speculation — see entry notes
+  agentic:    gemma4-agentic:12b  # EVAL: gemma-4-12B agentic/tool-use fine-tune — see entry notes
 
 models:
   # ─── tiers ───────────────────────────────────────────────────────────────
@@ -472,7 +473,33 @@ models:
       96K q8_0 also load but exceed the wired budget and spill to pageable RAM —
       avoid. `--ctx-checkpoints 8` bounds MTP checkpoint VRAM growth (#23371).
 
-# LiteLLM-only judge/gate aliases for the blog quality pipeline (Sub-project B
+  - alias: agentic
+    ollama_tag: gemma4-agentic:12b
+    gguf_path: ~/models/gemma4-agentic-v2/gemma4-v2-Q8_0.gguf   # yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF
+    role_label: Eval — agentic tool-use / terminal fine-tune (gemma 4 12B)
+    use_case: |
+      Experimental: dense Gemma-4-12B fine-tuned for coding, terminal work,
+      and agentic tool-use (diagnose -> fix -> verify). ~3.5x base on
+      tau2-bench telecom (~55% vs ~15%). Trades general-knowledge breadth
+      for tool-use. Eval slot — not part of the tier/role scheme.
+    weight_size_gb: 12.7
+    reasoning: false
+    context_window: 16384   # card-recommended --ctx-size 16384
+    ollama_max: 16384
+    input: [text]
+    pi: false               # eval model — keep out of Pi roster
+    extra_flags: "--no-mmap --temp 1.0 --top-p 0.95 --top-k 64"
+    pi_name: Eval — agentic tool-use fine-tune (gemma 4 12B Q8_0)
+    # no hermes_context_length: not exposed to Hermes (eval only)
+    # litellm_think omitted: don't force enable_thinking on this fine-tune's template
+    notes: |
+      2026-06-20: added for eval. yuxinlu1/gemma-4-12B-agentic-fable5-
+      composer2.5-v2-3.5x-tau2 Q8_0 (12.7 GB, repo-root gemma4-v2-Q8_0.gguf).
+      Gemma 4's native tool-call protocol via --jinja + OpenAI `tools` field.
+      Card sampling: temp 1.0 / top_p 0.95 / top_k 64 (temp 0 greedy ok for
+      code; add rep_pen 1.1 if it loops). Dense 12B, runs alone well under the
+      28 GB wired budget. MTP draft files exist in the repo (MTP/) but the card
+      pins them to llama.cpp build b9553 — not enabled here.
 # in otel-local-ai). Low context so they co-load beside the 21 GB `max`
 # (qwen3.6:35b) on the 32 GB mini — a draft + brief + rubric needs < 16K tokens.
 # Not exposed to Pi or Hermes; emitted only into the LiteLLM model_list.
