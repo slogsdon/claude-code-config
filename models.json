@@ -134,6 +134,16 @@
           ],
           "contextWindow": 65536,
           "maxTokens": 16384
+        },
+        {
+          "id": "agentic",
+          "name": "Eval — agentic tool-use fine-tune (gemma 4 12B Q8_0)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 16384
         }
       ]
     }
