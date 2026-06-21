@@ -387,7 +387,7 @@ models:
     pi_name: Retained — cheap structured-output / triage (lfm2.5-thinking 1.2B)
     pi_max_tokens: 8192
     pi_thinking_map: true
-    # no hermes_context_length: classify is not exposed to Hermes
+    hermes_context_length: 128000   # exposed to Hermes; matches real 128K num_ctx
     notes: |
       2026-06-18: Ollama lfm2.5-thinking blob would NOT load on upstream
       llama.cpp (missing tensor token_embd_norm.weight) -> switched to the
