@@ -141,6 +141,7 @@ aliases:
   classify:   lfm2.5-thinking:1.2b
   dense:      qwen3.6-27b  # dense 27B w/ MTP self-speculation — see entry notes
   agentic:    gemma4-agentic:12b  # EVAL: gemma-4-12B agentic/tool-use fine-tune — see entry notes
+  qwythos:    qwythos-9b  # EVAL: Qwen3.5-9B Claude-Mythos reasoning fine-tune — see entry notes
 
 models:
   # ─── tiers ───────────────────────────────────────────────────────────────
@@ -507,6 +508,63 @@ models:
       gemma4-v2-Q4_K_M.gguf) — the card's "recommended sweet spot". Lighter
       weights/KV and ~2x faster on the bandwidth-bound dense 12B; co-loads more
       easily on the 28 GB box. Q8_0 GGUF deleted.
+
+  - alias: qwythos
+    ollama_tag: qwythos-9b
+    gguf_path: ~/models/gguf/Qwythos-9B-Claude-Mythos-5-1M-MTP-Q6_K.gguf   # empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF (MTP head baked in)
+    role_label: Eval — Qwen3.5-9B Claude-Mythos reasoning fine-tune (uncensored, vision-capable base)
+    use_case: |
+      Experimental: empero-ai Qwythos-9B — a full-parameter Qwen3.5-9B reasoning
+      fine-tune on ~500M Claude Mythos/Fable chain-of-thought traces. Native
+      function calling (Qwen3.5 spec), emits a <think> block, uncensored, and
+      1M-context capable via YaRN. Eval slot — not part of the tier/role scheme.
+    weight_size_gb: 7.09
+    reasoning: true   # emits <think>...</think> before the answer — give generous max_tokens
+    context_window: 65536   # 64K served; native train ctx is 256K, YaRN ceiling 1M (see notes)
+    ollama_max: 1048576
+    input: [text]    # vision-capable (mmproj exists in repo) but mmproj not downloaded/loaded — text-only as served
+    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --ctx-checkpoints 8 --rope-scaling none --temp 0.6 --top-p 0.95 --top-k 20 --repeat-penalty 1.05"
+    pi_name: Eval — Qwythos 9B Claude-Mythos reasoning (qwen3.5 9B Q6_K +MTP, ~16 tok/s)
+    hermes_context_length: 65536
+    # litellm_think omitted: it's a reasoning model — leave thinking enabled
+    notes: |
+      2026-06-22: added for eval. empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF
+      MTP-Q6_K (7.09 GiB / 7.62 GB, repo file Qwythos-...-MTP-Q6_K.gguf — Q6_K
+      with the Qwen3.5 MTP/NextN draft head baked in). Picked Q6_K quality over
+      Q4_K_M; fits the 28 GB wired budget. First downloaded the plain Q6_K and
+      benchmarked it (llama-bench, b9700, -fa, 3 reps):
+        pp512  200.5 tok/s    tg128  13.5 tok/s    peak RSS ~7.2 GB (min ctx)
+      tg of 13.5 tok/s on a 6.84 GiB Q6_K = ~77% of the ~17.5 tok/s the ~120 GB/s
+      M4 allows: HEAVILY BANDWIDTH-BOUND (same regime as `dense`, NOT the
+      compute-bound 9B of llama.cpp #23752) — so MTP self-speculation should help.
+      Swapped to the MTP-Q6_K variant and benchmarked draft-mtp via llama-server
+      /completion (greedy temp 0, 512-tok gen, --rope-scaling none, -c 8192):
+        spec off        13.30 tok/s   (baseline; matches the plain-file tg128)
+        n-max 0         15.14 tok/s   +13.8%   accept 1.00 (255/255), len 2.00
+        n-max 1         16.01 tok/s   +20.4%   accept 0.81 (228/283), len 1.81  <- shipped
+        n-max 2         14.01 tok/s    +5.3%   accept 0.71 (299/423), len 2.41
+        n-max 3 (deflt) 10.77 tok/s   -19.0%   accept 0.61 (330/541), len 2.82
+      Sharp optimum at n-max 1 (+20%); the llama.cpp DEFAULT n-max 3 is a NET
+      LOSS here — draft overhead beats acceptance. Same low-n-max optimum the
+      `dense` 27B showed ([[mtp-speculative-decoding-on-m4]]). Shipped flags:
+      `--spec-type draft-mtp --spec-draft-n-max 1`. CAVEAT: temp-0 greedy
+      overstates acceptance — at the card's real temp 0.6 the gain will be
+      smaller. `--ctx-checkpoints 8` bounds MTP checkpoint VRAM growth (#23371);
+      full 64K + draft-mtp config load-tested healthy (~3s, fits budget).
+      Arch (qwen35): 32 layers, 4 KV heads, key/value_length 256 -> 128 KiB/token
+      KV at f16. 64K served KV = 8 GiB f16; +6.84 weights + compute ~= 16 GB,
+      well under 28 GB. n_parallel auto=4 but kv_unified=true so the 4 slots
+      SHARE one 64K cache (not 4x). Loads healthy in ~3s.
+      YaRN CAVEAT: the GGUF bakes in STATIC YaRN (rope.scaling.type=yarn,
+      factor 4.0, original_context_length=262144) to reach 1M. Static YaRN
+      applies to EVERY request regardless of -c, degrading RoPE fidelity at
+      short context — and at any context we can actually serve (<=128K) we are
+      far inside the 256K native window, so the scaling is pure downside.
+      Hence extra_flags pins `--rope-scaling none` to restore native rope (good
+      to 256K). To actually use >256K, drop that flag to re-enable the 1M YaRN
+      (but the KV won't fit this box past ~128K f16 / ~256K q8_0 anyway).
+      Sampling defaults (temp 0.6 / top_p 0.95 / top_k 20 / rep_pen 1.05) are the
+      card's thinking-mode recommendation; avoid greedy/T<=0.3 (repetition loops).
 # in otel-local-ai). Low context so they co-load beside the 21 GB `max`
 # (qwen3.6:35b) on the 32 GB mini — a draft + brief + rubric needs < 16K tokens.
 # Not exposed to Pi or Hermes; emitted only into the LiteLLM model_list.

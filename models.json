@@ -144,6 +144,16 @@
           ],
           "contextWindow": 65536,
           "maxTokens": 16384
+        },
+        {
+          "id": "qwythos",
+          "name": "Eval — Qwythos 9B Claude-Mythos reasoning (qwen3.5 9B Q6_K +MTP, ~16 tok/s)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 16384
         }
       ]
     }
