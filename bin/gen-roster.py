@@ -7,6 +7,8 @@ models.yaml is the single source of truth. This script regenerates:
   2. ~/Code/claude-code-config/models.json          (Pi/JSON provider format)
   3. ~/Code/hermes-dispatch/hermes-home/config.yaml (Hermes models block)
   4. ~/Code/mac-mini-llm-roster/litellm-example/config.yaml (illustrative copy)
+  5. ~/.config/llama-swap/config.yaml                (llama-swap model defs)
+  6. ~/.hermes/config.yaml                           (Hermes Desktop litellm context_length map — best-effort)
 
 For (1) and (3) only the generated block is replaced; all other sections
 (litellm_settings, general_settings, the entire Hermes agent config, etc.) are
@@ -38,6 +40,10 @@ MODELS_JSON = os.path.join(HOME, "Code/claude-code-config/models.json")
 HERMES_CONFIG = os.path.join(HOME, "Code/hermes-dispatch/hermes-home/config.yaml")
 MACMINI_CONFIG = os.path.join(HOME, "Code/mac-mini-llm-roster/litellm-example/config.yaml")
 LLAMASWAP_CONFIG = os.path.join(HOME, ".config/llama-swap/config.yaml")
+# Live Hermes Desktop (Nous app) config. It discovers the litellm provider's
+# model LIST live from /v1/models; this file only declares per-model
+# context_length. Machine-specific — synced best-effort, skipped if absent.
+HERMES_DESKTOP_CONFIG = os.path.join(HOME, ".hermes/config.yaml")
 
 LLAMASWAP_HEALTH_TIMEOUT = 120  # big GGUFs cold-load in ~25-40s
 
@@ -373,6 +379,78 @@ def emit(path: str, new_content: str, dry_run: bool) -> bool:
     return True
 
 
+def update_hermes_desktop(roster: dict, dry_run: bool) -> bool:
+    """Sync the litellm custom-provider's context_length map in the live Hermes
+    Desktop config (~/.hermes/config.yaml).
+
+    Hermes Desktop discovers the model LIST live from LiteLLM /v1/models (see
+    its `/model --refresh`); this map only declares per-model context_length so
+    Desktop uses the right context window instead of a default. Round-trips with
+    ruamel to preserve the rest of this large, user-owned config. Skips
+    gracefully (no error) if the file or a litellm custom_provider is absent, so
+    the generator stays portable across machines / CI.
+    """
+    rel = HERMES_DESKTOP_CONFIG.replace(HOME, "~")
+    if not os.path.exists(HERMES_DESKTOP_CONFIG):
+        print(f"  {rel}: not present — skipped (Hermes Desktop not installed here)")
+        return False
+    try:
+        from ruamel.yaml import YAML
+        from ruamel.yaml.comments import CommentedMap
+    except ImportError:
+        print(f"  {rel}: ruamel.yaml not installed — skipped")
+        return False
+
+    yaml_rt = YAML()
+    yaml_rt.preserve_quotes = True
+    with open(HERMES_DESKTOP_CONFIG) as fh:
+        data = yaml_rt.load(fh)
+
+    providers = data.get("custom_providers") if isinstance(data, dict) else None
+    prov = None
+    if isinstance(providers, list):
+        prov = next((p for p in providers
+                     if isinstance(p, dict) and p.get("name") == "litellm"), None)
+    if prov is None:
+        print(f"  {rel}: no litellm custom_provider — skipped")
+        return False
+
+    # Same exposure rule as the hermes-dispatch block: any model carrying
+    # hermes_context_length, in roster order.
+    desired = [(m["alias"], m["hermes_context_length"])
+               for m in roster["models"] if m.get("hermes_context_length") is not None]
+    current = prov.get("models") or {}
+    current_pairs = [(k, (v or {}).get("context_length")) for k, v in current.items()]
+    if current_pairs == desired:
+        print(f"  {rel}: no changes")
+        return False
+
+    cur_map = dict(current_pairs)
+    des_map = dict(desired)
+    added = [a for a, _ in desired if a not in cur_map]
+    bumped = [a for a, cl in desired if a in cur_map and cur_map[a] != cl]
+    removed = [a for a in cur_map if a not in des_map]
+    print(f"  {rel}: CHANGED (custom_providers.litellm.models)")
+    if added:
+        print(f"    + added: {', '.join(added)}")
+    if bumped:
+        print(f"    ~ context_length updated: {', '.join(bumped)}")
+    if removed:
+        print(f"    - removed: {', '.join(removed)}")
+    print()
+
+    if not dry_run:
+        new_models = CommentedMap()
+        for alias, cl in desired:
+            entry = CommentedMap()
+            entry["context_length"] = cl
+            new_models[alias] = entry
+        prov["models"] = new_models
+        with open(HERMES_DESKTOP_CONFIG, "w") as fh:
+            yaml_rt.dump(data, fh)
+    return True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true", help="print diffs without writing")
@@ -409,6 +487,11 @@ def main() -> int:
 
     # 5. llama-swap runtime config — full regen (we own this file entirely).
     changed |= emit(LLAMASWAP_CONFIG, build_llamaswap_config(roster), args.dry_run)
+
+    # 6. Hermes Desktop (Nous app) live config — sync the litellm provider's
+    #    context_length map. Model LIST is discovered live from /v1/models, so
+    #    this only fixes context windows. Machine-specific; skipped if absent.
+    changed |= update_hermes_desktop(roster, args.dry_run)
 
     print("done." if changed else "done — everything already up to date.")
     return 0
