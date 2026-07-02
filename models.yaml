@@ -142,13 +142,16 @@ aliases:
   dense:      qwen3.6-27b  # dense 27B w/ MTP self-speculation — see entry notes
   agentic:    gemma4-agentic:12b  # EVAL: gemma-4-12B agentic/tool-use fine-tune — see entry notes
   qwythos:    qwythos-9b  # EVAL: Qwen3.5-9B Claude-Mythos reasoning fine-tune — see entry notes
+  ornith-9b:  ornith-9b   # EVAL: Ornith-1.0 9B dense agentic coder — see entry notes
+  ornith-35b: ornith-35b  # EVAL: Ornith-1.0 35B MoE agentic coder — see entry notes
+  nex-n2-mini: nex-n2-mini  # EVAL: Nex-N2-mini 35B MoE agentic — head-to-head vs ornith-35b
 
 models:
   # ─── tiers ───────────────────────────────────────────────────────────────
   - alias: fast
     tier: fast
     ollama_tag: gemma-4-e4b   # llama-swap model id (was gemma4:e4b-mlx on Ollama)
-    gguf_path: ~/models/gguf/gemma-4-E4B-it-Q4_K_M.gguf   # unsloth/gemma-4-E4B-it-GGUF
+    gguf_path: /Volumes/Dock/llm-models/gguf/gemma-4-E4B-it-Q4_K_M.gguf   # unsloth/gemma-4-E4B-it-GGUF
     role_label: Fast tier — quick triage / routing / short chat
     use_case: Short-context Q&A, quick chat, Obsidian ops, skill delegation, routing
     weight_size_gb: 9.6
@@ -170,7 +173,7 @@ models:
     ollama_tag: granite4.1:8b
     # Reused Ollama GGUF blob, read directly by llama-server (Ollama daemon not needed).
     # To fully decouple from the Ollama store, copy to ~/models/gguf/granite-4.1-8b.gguf and repoint.
-    gguf_path: ~/.ollama/models/blobs/sha256-ed902ac9eb6adce5a90c6a08c8ea201b50e23fdc5976d1cd0362006afac5309e
+    gguf_path: /Volumes/Dock/llm-models/gguf/granite-4.1-8b.gguf
     role_label: Balanced tier — solid default, review / rubric grading
     use_case: Default for most work; code review, rubric grading, structured eval, API doc work
     weight_size_gb: 5.3
@@ -187,7 +190,7 @@ models:
   - alias: max
     tier: max
     ollama_tag: qwen3.6:35b
-    gguf_path: ~/models/gguf/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf   # unsloth/Qwen3.6-35B-A3B-GGUF
+    gguf_path: /Volumes/Dock/llm-models/gguf/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf   # unsloth/Qwen3.6-35B-A3B-GGUF
     role_label: Max tier — best local quality / long context
     use_case: |
       Best local quality, long context, complex multi-step / high-consequence
@@ -215,7 +218,7 @@ models:
     tier: fast  # inherits the fast tier when unspecified
     ollama_tag: lfm2:24b
     # Reused Ollama GGUF blob (read directly by llama-server). Needs --jinja to emit output.
-    gguf_path: ~/.ollama/models/blobs/sha256-d55ab0bfb1b80102465eef8a17f05d201fb17dbe27a62f153f0db6c446aed077
+    gguf_path: /Volumes/Dock/llm-models/gguf/lfm2-24b.gguf
     role_label: Structured role — fast structured / JSON output
     use_case: |
       Automation workflows, fast structured tasks, summarization, publish
@@ -237,7 +240,7 @@ models:
     tier: balanced  # inherits the balanced tier when unspecified
     ollama_tag: qwen3-coder:30b
     # Reused Ollama GGUF blob, read directly by llama-server (Ollama daemon not needed).
-    gguf_path: ~/.ollama/models/blobs/sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a
+    gguf_path: /Volumes/Dock/llm-models/gguf/qwen3-coder-30b.gguf
     role_label: Code role — primary code generation
     use_case: Code generation, refactoring, code explanation
     weight_size_gb: 18
@@ -271,7 +274,7 @@ models:
   - alias: writing
     tier: balanced  # inherits the balanced tier when unspecified
     ollama_tag: gemma-4-26b   # llama-swap model id (was gemma4:26b-mlx on Ollama)
-    gguf_path: ~/models/gguf/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf   # unsloth/gemma-4-26B-A4B-it-GGUF
+    gguf_path: /Volumes/Dock/llm-models/gguf/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf   # unsloth/gemma-4-26B-A4B-it-GGUF
     role_label: Writing role — long-form prose
     use_case: |
       Long-form writing pipeline — blog drafts, ghostwriting, multi-section
@@ -326,7 +329,7 @@ models:
     tier: fast  # inherits the fast tier when unspecified
     ollama_tag: qwen2.5-coder:1.5b   # llama-swap model id
     # Reused Ollama GGUF blob, read directly by llama-server (Ollama daemon not needed).
-    gguf_path: ~/.ollama/models/blobs/sha256-29d8c98fa6b098e200069bfb88b9508dc3e85586d20cba59f8dda9a808165104
+    gguf_path: /Volumes/Dock/llm-models/gguf/qwen2.5-coder-1.5b.gguf
     role_label: Swarm role — parallel small-scope code grunt-work
     use_case: |
       Fan out many small, scoped coding tasks in parallel — single function,
@@ -372,7 +375,7 @@ models:
   # ─── retained (outside the tier/role scheme) ──────────────────────────────
   - alias: classify
     ollama_tag: lfm2.5-thinking:1.2b
-    gguf_path: ~/models/gguf/LFM2.5-1.2B-Thinking-Q8_0.gguf   # LiquidAI/LFM2.5-1.2B-Thinking-GGUF
+    gguf_path: /Volumes/Dock/llm-models/gguf/LFM2.5-1.2B-Thinking-Q8_0.gguf   # LiquidAI/LFM2.5-1.2B-Thinking-GGUF
     role_label: Retained — cheap structured-output / triage
     use_case: |
       Triage, classification, fast yes/no logic decisions, pre-flight
@@ -435,7 +438,7 @@ models:
 
   - alias: dense
     ollama_tag: qwen3.6-27b
-    gguf_path: ~/models/gguf/Qwen3.6-27B-Q4_K_M.gguf   # unsloth/Qwen3.6-27B-MTP-GGUF (NextN/MTP heads baked in)
+    gguf_path: /Volumes/Dock/llm-models/gguf/Qwen3.6-27B-Q4_K_M.gguf   # unsloth/Qwen3.6-27B-MTP-GGUF (NextN/MTP heads baked in)
     role_label: Retained — dense 27B with MTP speculative decoding
     use_case: |
       Dense Qwen3.6-27B for when dense-model behavior is wanted over the
@@ -476,7 +479,7 @@ models:
 
   - alias: agentic
     ollama_tag: gemma4-agentic:12b
-    gguf_path: ~/models/gemma4-agentic-v2/gemma4-v2-Q4_K_M.gguf   # yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF
+    gguf_path: /Volumes/Dock/llm-models/gguf/gemma4-v2-Q4_K_M.gguf   # yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF
     role_label: Eval — agentic tool-use / terminal fine-tune (gemma 4 12B)
     use_case: |
       Experimental: dense Gemma-4-12B fine-tuned for coding, terminal work,
@@ -511,7 +514,7 @@ models:
 
   - alias: qwythos
     ollama_tag: qwythos-9b
-    gguf_path: ~/models/gguf/Qwythos-9B-Claude-Mythos-5-1M-MTP-Q6_K.gguf   # empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF (MTP head baked in)
+    gguf_path: /Volumes/Dock/llm-models/gguf/Qwythos-9B-Claude-Mythos-5-1M-MTP-Q6_K.gguf   # empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF (MTP head baked in)
     role_label: Eval — Qwen3.5-9B Claude-Mythos reasoning fine-tune (uncensored, vision-capable base)
     use_case: |
       Experimental: empero-ai Qwythos-9B — a full-parameter Qwen3.5-9B reasoning
@@ -565,6 +568,89 @@ models:
       (but the KV won't fit this box past ~128K f16 / ~256K q8_0 anyway).
       Sampling defaults (temp 0.6 / top_p 0.95 / top_k 20 / rep_pen 1.05) are the
       card's thinking-mode recommendation; avoid greedy/T<=0.3 (repetition loops).
+  - alias: ornith-9b
+    ollama_tag: ornith-9b
+    gguf_path: /Volumes/Dock/llm-models/gguf/ornith-1.0-9b-Q8_0.gguf   # deepreinforce-ai/Ornith-1.0-9B-GGUF (Q8_0)
+    role_label: Eval — Ornith-1.0 9B dense agentic-coding (Gemma-4 base)
+    use_case: |
+      Experimental: deepreinforce-ai Ornith-1.0-9B — a dense ~9B agentic-coding
+      RL fine-tune on a Gemma-4 base. Emits a <think> block (qwen3 reasoning
+      parser) and native qwen3_xml tool calls. Eval slot — not in the tier/role
+      scheme. ON EXTERNAL DISK (/Volumes/Dock) — unloads if that disk unmounts.
+    weight_size_gb: 9.53
+    reasoning: true   # emits <think>...</think> — give generous max_tokens
+    context_window: 32768   # benchmark-safe; model trains to 262K
+    ollama_max: 262144
+    input: [text]
+    extra_flags: "--temp 0.6 --top-p 0.95 --top-k 20 --cache-ram 0 --no-warmup"  # --cache-ram 0 avoids Metal GGML_ASSERT([rsets->data count]==0) on llama.cpp b9700
+    pi_name: Eval — Ornith-1.0 9B dense agentic coder (Q8_0)
+    hermes_context_length: 65536
+    # litellm_think omitted: reasoning model — leave thinking enabled
+    notes: |
+      2026-06-25: added for eval/benchmark. deepreinforce-ai/Ornith-1.0-9B-GGUF
+      Q8_0 (9.53 GB). Dense 9B (Gemma-4 base, ~19 GB bf16) agentic-coding RL
+      model. Card sampling: temp 0.6 / top_p 0.95 / top_k 20. Qwen chat template
+      + qwen3 reasoning parser; tool-call parser qwen3_xml. Served from EXTERNAL
+      DISK /Volumes/Dock (internal disk only had 17 GB free). Caveat: card notes
+      the Qwen chat template was modified for train/infer consistency — the
+      embedded GGUF template may differ; verify if relying on tool-calling. NOT LIVE via llama-swap until fixed: the llama-swap LaunchAgent cannot read /Volumes/Dock (macOS TCC removable-volume denial; interactive shell reads it fine). Grant the llama-swap binary Full Disk Access, or move the GGUF to ~/models/gguf, to serve it. Also: --cache-ram 0 is REQUIRED (default prompt cache trips GGML_ASSERT([rsets->data count]==0) in ggml-metal on b9700).
+
+  - alias: ornith-35b
+    ollama_tag: ornith-35b
+    gguf_path: /Volumes/Dock/llm-models/gguf/ornith-1.0-35b-Q4_K_M.gguf   # deepreinforce-ai/Ornith-1.0-35B-GGUF (Q4_K_M)
+    role_label: Eval — Ornith-1.0 35B MoE agentic-coding (Qwen3.5 base)
+    use_case: |
+      Experimental: deepreinforce-ai Ornith-1.0-35B — a 35B-MoE agentic-coding
+      RL fine-tune on a Qwen3.5 base (same MoE family as max). Emits <think> and
+      native qwen3_xml tool calls. Eval slot — not in the tier/role scheme.
+      ON EXTERNAL DISK (/Volumes/Dock) — unloads if that disk unmounts.
+    weight_size_gb: 21.17
+    reasoning: true
+    context_window: 32768   # benchmark-safe on the 28 GB wired budget; model trains to 262K
+    ollama_max: 262144
+    input: [text]
+    extra_flags: "--temp 0.6 --top-p 0.95 --top-k 20 --cache-ram 0 --no-warmup"  # --cache-ram 0 avoids Metal GGML_ASSERT([rsets->data count]==0) on llama.cpp b9700
+    pi_name: Eval — Ornith-1.0 35B MoE agentic coder (Q4_K_M)
+    hermes_context_length: 65536
+    # litellm_think omitted: reasoning model — leave thinking enabled
+    notes: |
+      2026-06-25: added for eval/benchmark. deepreinforce-ai/Ornith-1.0-35B-GGUF
+      Q4_K_M (21.17 GB). 35B-MoE (Qwen3.5 base) agentic-coding RL model — same
+      slot class as max (qwen3.6:35b, 21 GB). Card sampling temp 0.6 / top_p 0.95
+      / top_k 20; Qwen chat template + qwen3 reasoning parser; tool-call
+      qwen3_xml. Served from EXTERNAL DISK /Volumes/Dock (internal had 17 GB
+      free; Q4_K_M needs 21 GB). context_window held at 32K for first load —
+      REQUIRES iogpu.wired_limit_mb raised (28672) like max; bump once
+      load-tested. Caveat: embedded GGUF chat template may differ from the
+      card modified Qwen template — verify before relying on tool-calling. NOT LIVE via llama-swap until fixed: the llama-swap LaunchAgent cannot read /Volumes/Dock (macOS TCC removable-volume denial; interactive shell reads it fine). Grant the llama-swap binary Full Disk Access, or move the GGUF to ~/models/gguf, to serve it. Also: --cache-ram 0 is REQUIRED (default prompt cache trips GGML_ASSERT([rsets->data count]==0) in ggml-metal on b9700).
+
+
+  - alias: nex-n2-mini
+    ollama_tag: nex-n2-mini
+    gguf_path: /Volumes/Dock/llm-models/gguf/nex-agi_Nex-N2-mini-Q4_K_M.gguf   # bartowski/nex-agi_Nex-N2-mini-GGUF (imatrix Q4_K_M)
+    role_label: Eval — Nex-N2-mini 35B MoE agentic (Qwen3.5-35B-A3B base)
+    use_case: |
+      Experimental: nex-agi Nex-N2-mini — 35B-A3B MoE agentic model (same
+      Qwen3.5-35B-A3B base as ornith-35b). Agentic Thinking framework; emits
+      <think> (qwen3 reasoning parser), qwen3_coder tool calls. Eval slot —
+      benchmarked head-to-head vs ornith-35b (both Q4_K_M). ON EXTERNAL DISK.
+    weight_size_gb: 21.39
+    reasoning: true
+    context_window: 32768   # benchmark-safe; trained higher
+    ollama_max: 262144
+    input: [text]
+    extra_flags: "--temp 0.7 --top-p 0.95 --top-k 40 --cache-ram 0 --no-warmup"  # card sampling; --cache-ram 0 avoids Metal GGML_ASSERT on b9700
+    pi_name: Eval — Nex-N2-mini 35B MoE agentic (Q4_K_M)
+    hermes_context_length: 65536
+    # litellm_think omitted: reasoning model — leave thinking enabled
+    notes: |
+      2026-06-28: added for head-to-head vs ornith-35b. bartowski/nex-agi_
+      Nex-N2-mini-GGUF imatrix Q4_K_M (21.39 GB). Qwen3.5-35B-A3B MoE base,
+      agentic "Agentic Thinking" model. Card sampling temp 0.7/top_p 0.95/
+      top_k 40; qwen3 reasoning parser + qwen3_coder tool parser. Official
+      nex-agi GGUF repo is gated (401) — used bartowski community imatrix quant
+      (Ornith-35b used deepreinforce static Q4_K_M; near-identical size). Served
+      from external /Volumes/Dock via llama-swap (FDA granted 2026-06-28).
 # in otel-local-ai). Low context so they co-load beside the 21 GB `max`
 # (qwen3.6:35b) on the 32 GB mini — a draft + brief + rubric needs < 16K tokens.
 # Not exposed to Pi or Hermes; emitted only into the LiteLLM model_list.
