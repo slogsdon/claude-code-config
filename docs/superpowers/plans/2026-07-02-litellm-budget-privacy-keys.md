@@ -28,15 +28,22 @@ disabled — confirmed: `/key/info` → "Database not connected").
 
 Commits: `otel-local-ai@775ba00` (DB + helper); `773cbaa` (prior NIM wiring).
 
-## Follow-on 1 — WS2 privacy allowlists (define the keys)
+## Follow-on 1 — WS2 privacy allowlists — DONE (2026-07-02, `otel-local-ai@0683b53`)
 
-Mint the standing per-workflow keys, allowlists chosen by data-sensitivity:
-- **Public/OSS workflows** → include cloud aliases: `exec-free,exec-cloud,plan-frontier,code`.
-- **Private/vault workflows** → local ONLY: `code,max,reasoning,writing,structured` — **no**
-  `free: true` cloud alias. This is the enforced privacy boundary.
+`scripts/litellm-key.sh provision [--dry-run]` derives two standing keys from `models.yaml` tags
+and mints them (rotating any existing same-alias key):
+- **`vault-private`** → allowlist = every **non-`free`** alias (all local + judges; any `free:false`
+  cloud). Unlimited budget (local is $0). For vault/private/client work.
+- **`public`** → allowlist = **all** aliases incl. free cloud. $10/30d safety cap. Public/OSS only.
 
-Add a validation step so a key tagged private can never be minted with a `free: true` alias
-(cross-check against `cloud_models[].free` in `models.yaml`).
+**Invariant enforced in code:** provision aborts if any `free:true` alias would land in
+`vault-private` (a Python `assert` over `cloud_models[].free`). Verified live: the `vault-private`
+key calling `exec-free` is REJECTED ("key can only access models=[local…]"); calling `code` is
+allowed; the `public` key can call `exec-free`. Key values are written to gitignored
+`otel-local-ai/.keys.env` (`KEY_VAULT_PRIVATE`, `KEY_PUBLIC`), `chmod 600`.
+
+Re-run `provision` whenever `models.yaml` tiers change (e.g. after enabling paid cloud) — the
+allowlists recompute from the current tags.
 
 ## Follow-on 2 — wire workflows to their keys
 
