@@ -59,3 +59,13 @@ def test_cloud_models_appear_after_locals(gr, roster):
     assert "      api_key: os.environ/OPENROUTER_API_KEY" in out
     lines = out.split("\n")  # line-based ordering: robust to substrings in slugs/aliases
     assert lines.index("  - model_name: code") < lines.index("  - model_name: exec-cloud")
+
+
+def test_llamaswap_ignores_cloud(gr, roster):
+    roster["cloud_models"] = [
+        {"alias": "exec-cloud", "slug": "openrouter/x/y", "api_key_env": "OPENROUTER_API_KEY"}
+    ]
+    # Must not raise (cloud has no gguf_path) and must not include the cloud alias.
+    cfg = gr.build_llamaswap_config(roster)
+    assert "exec-cloud" not in cfg
+    assert "qwen3-coder" in cfg  # local model still emitted
