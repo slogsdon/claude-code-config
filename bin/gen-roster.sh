@@ -27,7 +27,7 @@ for a in "$@"; do
   esac
 done
 
-python3 "$DIR/gen-roster.py" "${pyargs[@]}"
+python3 "$DIR/gen-roster.py" ${pyargs[@]+"${pyargs[@]}"}
 
 if [ "$reload" = true ] && [ "$dry" = false ]; then
   echo

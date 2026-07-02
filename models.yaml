@@ -629,3 +629,76 @@ runtime_notes: |
   Metal KV/compute memory pressure is real: on the 32 GB M4 the default GPU
   working-set is only ~21.3 GB, so the ~20.6 GB `max` weights OOM on compute
   unless iogpu.wired_limit_mb is raised (28672). See INFRASTRUCTURE.md.
+
+# ── Cloud / free tier (external providers via LiteLLM; NOT llama-swap-backed) ──
+# Added 2026-07-02. Consumed by bin/gen-roster.py -> cloud_litellm_entry().
+# Design: docs/superpowers/specs/2026-07-02-multi-model-agentic-workflow-design.md
+# Plan:   docs/superpowers/plans/2026-07-02-cloud-tier-roster-generator.md
+#
+# Slugs marked "# VERIFY" reprice/rename monthly — confirm at openrouter.ai/models
+# before regenerating. OpenRouter entries need OPENROUTER_API_KEY set (otel-local-ai
+# /.env + passed through to the litellm container in docker-compose.yml) before
+# regenerate+restart. The NIM entry is live-verified 2026-07-02 (deepseek-v4-flash
+# replied OK) and uses NVIDIA_NIM_API_KEY.
+#
+# free_eligible/free tags gate WS2 privacy enforcement: never route vault/private
+# work to a free:true alias (they train on submitted data).
+cloud_models:
+  # NIM-primary / all-free tier (2026-07-02). OpenRouter account is free-tier/no-credits, so
+  # paid OR slugs are kept DORMANT (commented) below. NVIDIA NIM hosts frontier-class open
+  # models for free and is the working cloud path. Anthropic never appears here — high-stakes
+  # planning uses the direct Claude subscription via interactive Claude Code.
+  #
+  # Routine/autonomous planner — free NIM reasoning model.
+  - alias: plan-frontier
+    slug: nvidia_nim/deepseek-ai/deepseek-v4-pro   # verified 2026-07-02 (free, reasoning)
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # verify NIM advertised window
+    reasoning: true
+    input: [text]
+    role_label: "NIM planner (free reasoning)"
+    pi_name: "Planner (NIM)"
+    free: true
+    free_eligible: true
+
+  # Strong executor — code / multi-file (free via NIM).
+  - alias: exec-cloud
+    slug: nvidia_nim/qwen/qwen3.5-122b-a10b   # verified 2026-07-02 (free, strong MoE)
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # verify NIM advertised window
+    reasoning: false
+    input: [text]
+    role_label: "NIM executor (free, strong)"
+    pi_name: "Exec (NIM strong)"
+    free: true
+    free_eligible: true
+
+  # Fast bulk executor (free via NIM) — verified end-to-end through LiteLLM.
+  - alias: exec-free
+    slug: nvidia_nim/deepseek-ai/deepseek-v4-flash   # verified 2026-07-02 via LiteLLM :4000
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # verify NIM advertised window
+    reasoning: false
+    input: [text]
+    role_label: "NIM executor (free, fast bulk)"
+    pi_name: "Exec (NIM fast)"
+    free: true
+    free_eligible: true
+
+  # ── Dormant OpenRouter PAID tier — enable ONLY after adding OpenRouter credits ──
+  # OR account is free-tier/no-credits (2026-07-02); these paid slugs 404/reject and fall back
+  # to local otherwise, so they are commented out. Slugs verified present 2026-07-02. To enable:
+  # uncomment, add the alias to router_settings.fallbacks in otel-local-ai/litellm/config.yaml,
+  # run `bin/gen-roster.sh --reload`, then recreate the litellm container (`docker compose up -d`).
+  # - alias: exec-paid
+  #   slug: openrouter/moonshotai/kimi-k2.7-code:exacto
+  #   api_key_env: OPENROUTER_API_KEY
+  #   fallbacks: [minimax/minimax-m3, z-ai/glm-5.2]
+  #   max_price: 5.0
+  #   context_window: 262144
+  #   reasoning: false
+  #   input: [text]
+  #   role_label: "OpenRouter executor (paid floor)"
+  #   pi_name: "Exec (OR paid)"
+  #   free: false
+  #   free_eligible: true

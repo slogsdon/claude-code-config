@@ -95,6 +95,33 @@ def litellm_entry(model_name: str, think, api_base: str) -> str:
     return "\n".join(lines)
 
 
+def cloud_litellm_entry(m: dict) -> str:
+    """A LiteLLM model_list entry for an external provider (OpenRouter/NIM/etc.).
+
+    Unlike llama-swap-backed locals, cloud entries carry the upstream provider
+    slug directly and read their key from the environment. Optional OpenRouter-
+    side fallback chain and per-request price ceiling are nested under extra_body.
+    """
+    lines = [
+        f"  - model_name: {m['alias']}",
+        "    litellm_params:",
+        f"      model: {m['slug']}",
+        f"      api_key: os.environ/{m['api_key_env']}",
+    ]
+    fallbacks = m.get("fallbacks") or []
+    max_price = m.get("max_price")
+    if fallbacks or max_price is not None:
+        lines.append("      extra_body:")
+        if fallbacks:
+            lines.append("        models:")
+            for slug in fallbacks:
+                lines.append(f"          - {slug}")
+        if max_price is not None:
+            lines.append("        provider:")
+            lines.append(f"          max_price: {{ completion: {max_price} }}")
+    return "\n".join(lines)
+
+
 def build_model_list_inner(roster: dict) -> str:
     """The raw `model_list:` block (no markers)."""
     api_base = roster["runtime"]["proxy_to_runtime_base"]
@@ -114,6 +141,12 @@ def build_model_list_inner(roster: dict) -> str:
         out.append("  # judge/gate aliases (LiteLLM-only; share a llama-swap model with `max`/`balanced`)")
         for j in judges:
             out.append(litellm_entry(j["alias"], j.get("litellm_think"), api_base))
+
+    cloud = roster.get("cloud_models") or []
+    if cloud:
+        out.append("  # cloud tier (external providers; not llama-swap-backed)")
+        for m in cloud:
+            out.append(cloud_litellm_entry(m))
 
     return "\n".join(out) + "\n"
 
@@ -239,6 +272,18 @@ def build_models_json(roster: dict) -> str:
         if m.get("pi_thinking_map"):
             entry["thinkingLevelMap"] = pi["thinking_level_map"]
         models.append(entry)
+
+    for m in roster.get("cloud_models", []):
+        if m.get("pi") is False:
+            continue
+        models.append({
+            "id": m["alias"],
+            "name": m.get("pi_name", m.get("role_label", m["alias"])),
+            "reasoning": bool(m.get("reasoning", False)),
+            "input": list(m.get("input", ["text"])),
+            "contextWindow": m["context_window"],
+            "maxTokens": m.get("pi_max_tokens", PI_THINKING_DEFAULT_MAX_TOKENS),
+        })
 
     data = {
         "_comment": pi["comment"],
