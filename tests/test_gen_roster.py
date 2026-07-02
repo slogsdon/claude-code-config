@@ -57,4 +57,5 @@ def test_cloud_models_appear_after_locals(gr, roster):
     assert "      model: openai/code" in out          # local still present
     assert "  - model_name: exec-cloud" in out         # cloud present
     assert "      api_key: os.environ/OPENROUTER_API_KEY" in out
-    assert out.index("code") < out.index("exec-cloud")  # cloud after locals
+    lines = out.split("\n")  # line-based ordering: robust to substrings in slugs/aliases
+    assert lines.index("  - model_name: code") < lines.index("  - model_name: exec-cloud")
