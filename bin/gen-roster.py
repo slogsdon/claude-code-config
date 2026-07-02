@@ -95,6 +95,33 @@ def litellm_entry(model_name: str, think, api_base: str) -> str:
     return "\n".join(lines)
 
 
+def cloud_litellm_entry(m: dict) -> str:
+    """A LiteLLM model_list entry for an external provider (OpenRouter/NIM/etc.).
+
+    Unlike llama-swap-backed locals, cloud entries carry the upstream provider
+    slug directly and read their key from the environment. Optional OpenRouter-
+    side fallback chain and per-request price ceiling are nested under extra_body.
+    """
+    lines = [
+        f"  - model_name: {m['alias']}",
+        "    litellm_params:",
+        f"      model: {m['slug']}",
+        f"      api_key: os.environ/{m['api_key_env']}",
+    ]
+    fallbacks = m.get("fallbacks") or []
+    max_price = m.get("max_price")
+    if fallbacks or max_price is not None:
+        lines.append("      extra_body:")
+        if fallbacks:
+            lines.append("        models:")
+            for slug in fallbacks:
+                lines.append(f"          - {slug}")
+        if max_price is not None:
+            lines.append("        provider:")
+            lines.append(f"          max_price: {{ completion: {max_price} }}")
+    return "\n".join(lines)
+
+
 def build_model_list_inner(roster: dict) -> str:
     """The raw `model_list:` block (no markers)."""
     api_base = roster["runtime"]["proxy_to_runtime_base"]
