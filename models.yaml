@@ -629,3 +629,69 @@ runtime_notes: |
   Metal KV/compute memory pressure is real: on the 32 GB M4 the default GPU
   working-set is only ~21.3 GB, so the ~20.6 GB `max` weights OOM on compute
   unless iogpu.wired_limit_mb is raised (28672). See INFRASTRUCTURE.md.
+
+# ── Cloud / free tier (external providers via LiteLLM; NOT llama-swap-backed) ──
+# Added 2026-07-02. Consumed by bin/gen-roster.py -> cloud_litellm_entry().
+# Design: docs/superpowers/specs/2026-07-02-multi-model-agentic-workflow-design.md
+# Plan:   docs/superpowers/plans/2026-07-02-cloud-tier-roster-generator.md
+#
+# Slugs marked "# VERIFY" reprice/rename monthly — confirm at openrouter.ai/models
+# before regenerating. OpenRouter entries need OPENROUTER_API_KEY set (otel-local-ai
+# /.env + passed through to the litellm container in docker-compose.yml) before
+# regenerate+restart. The NIM entry is live-verified 2026-07-02 (deepseek-v4-flash
+# replied OK) and uses NVIDIA_NIM_API_KEY.
+#
+# free_eligible/free tags gate WS2 privacy enforcement: never route vault/private
+# work to a free:true alias (they train on submitted data).
+cloud_models:
+  # Frontier planner — routine/autonomous PLAN (interactive high-stakes plans use Claude Code direct)
+  - alias: plan-frontier
+    slug: openrouter/anthropic/claude-sonnet-4.6   # VERIFY
+    api_key_env: OPENROUTER_API_KEY
+    context_window: 200000
+    reasoning: true
+    input: [text]
+    role_label: "Cloud planner (frontier)"
+    pi_name: "Cloud Planner"
+    free: false
+    free_eligible: false
+
+  # Bulk executor — paid floor, OpenRouter-side fallback chain + price ceiling
+  - alias: exec-cloud
+    slug: openrouter/moonshotai/kimi-k2.7:exacto   # VERIFY
+    api_key_env: OPENROUTER_API_KEY
+    fallbacks:
+      - minimax/minimax-m3   # VERIFY
+      - z-ai/glm-5.2         # VERIFY
+    max_price: 5.0
+    context_window: 262144
+    reasoning: false
+    input: [text]
+    role_label: "Cloud executor (paid floor)"
+    pi_name: "Cloud Exec"
+    free: false
+    free_eligible: true
+
+  # Free executor head — NVIDIA NIM, live-verified 2026-07-02 (public/OSS work only)
+  - alias: exec-free
+    slug: nvidia_nim/deepseek-ai/deepseek-v4-flash
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # approx — verify NIM advertised window
+    reasoning: false
+    input: [text]
+    role_label: "NIM executor (free)"
+    pi_name: "Free Exec (NIM)"
+    free: true
+    free_eligible: true
+
+  # Free executor overflow — OpenRouter :free (needs OPENROUTER_API_KEY; public/OSS only)
+  - alias: exec-free-or
+    slug: openrouter/deepseek/deepseek-v4-flash:free   # VERIFY
+    api_key_env: OPENROUTER_API_KEY
+    context_window: 131072
+    reasoning: false
+    input: [text]
+    role_label: "OpenRouter executor (free overflow)"
+    pi_name: "Free Exec (OR)"
+    free: true
+    free_eligible: true
