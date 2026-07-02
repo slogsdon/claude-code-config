@@ -644,54 +644,61 @@ runtime_notes: |
 # free_eligible/free tags gate WS2 privacy enforcement: never route vault/private
 # work to a free:true alias (they train on submitted data).
 cloud_models:
-  # Frontier planner — routine/autonomous PLAN (interactive high-stakes plans use Claude Code direct)
+  # NIM-primary / all-free tier (2026-07-02). OpenRouter account is free-tier/no-credits, so
+  # paid OR slugs are kept DORMANT (commented) below. NVIDIA NIM hosts frontier-class open
+  # models for free and is the working cloud path. Anthropic never appears here — high-stakes
+  # planning uses the direct Claude subscription via interactive Claude Code.
+  #
+  # Routine/autonomous planner — free NIM reasoning model.
   - alias: plan-frontier
-    slug: openrouter/anthropic/claude-sonnet-4.6   # VERIFY
-    api_key_env: OPENROUTER_API_KEY
-    context_window: 200000
+    slug: nvidia_nim/deepseek-ai/deepseek-v4-pro   # verified 2026-07-02 (free, reasoning)
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # verify NIM advertised window
     reasoning: true
     input: [text]
-    role_label: "Cloud planner (frontier)"
-    pi_name: "Cloud Planner"
-    free: false
-    free_eligible: false
+    role_label: "NIM planner (free reasoning)"
+    pi_name: "Planner (NIM)"
+    free: true
+    free_eligible: true
 
-  # Bulk executor — paid floor, OpenRouter-side fallback chain + price ceiling
+  # Strong executor — code / multi-file (free via NIM).
   - alias: exec-cloud
-    slug: openrouter/moonshotai/kimi-k2.7:exacto   # VERIFY
-    api_key_env: OPENROUTER_API_KEY
-    fallbacks:
-      - minimax/minimax-m3   # VERIFY
-      - z-ai/glm-5.2         # VERIFY
-    max_price: 5.0
-    context_window: 262144
-    reasoning: false
-    input: [text]
-    role_label: "Cloud executor (paid floor)"
-    pi_name: "Cloud Exec"
-    free: false
-    free_eligible: true
-
-  # Free executor head — NVIDIA NIM, live-verified 2026-07-02 (public/OSS work only)
-  - alias: exec-free
-    slug: nvidia_nim/deepseek-ai/deepseek-v4-flash
+    slug: nvidia_nim/qwen/qwen3.5-122b-a10b   # verified 2026-07-02 (free, strong MoE)
     api_key_env: NVIDIA_NIM_API_KEY
-    context_window: 131072   # approx — verify NIM advertised window
+    context_window: 131072   # verify NIM advertised window
     reasoning: false
     input: [text]
-    role_label: "NIM executor (free)"
-    pi_name: "Free Exec (NIM)"
+    role_label: "NIM executor (free, strong)"
+    pi_name: "Exec (NIM strong)"
     free: true
     free_eligible: true
 
-  # Free executor overflow — OpenRouter :free (needs OPENROUTER_API_KEY; public/OSS only)
-  - alias: exec-free-or
-    slug: openrouter/deepseek/deepseek-v4-flash:free   # VERIFY
-    api_key_env: OPENROUTER_API_KEY
-    context_window: 131072
+  # Fast bulk executor (free via NIM) — verified end-to-end through LiteLLM.
+  - alias: exec-free
+    slug: nvidia_nim/deepseek-ai/deepseek-v4-flash   # verified 2026-07-02 via LiteLLM :4000
+    api_key_env: NVIDIA_NIM_API_KEY
+    context_window: 131072   # verify NIM advertised window
     reasoning: false
     input: [text]
-    role_label: "OpenRouter executor (free overflow)"
-    pi_name: "Free Exec (OR)"
+    role_label: "NIM executor (free, fast bulk)"
+    pi_name: "Exec (NIM fast)"
     free: true
     free_eligible: true
+
+  # ── Dormant OpenRouter PAID tier — enable ONLY after adding OpenRouter credits ──
+  # OR account is free-tier/no-credits (2026-07-02); these paid slugs 404/reject and fall back
+  # to local otherwise, so they are commented out. Slugs verified present 2026-07-02. To enable:
+  # uncomment, add the alias to router_settings.fallbacks in otel-local-ai/litellm/config.yaml,
+  # run `bin/gen-roster.sh --reload`, then recreate the litellm container (`docker compose up -d`).
+  # - alias: exec-paid
+  #   slug: openrouter/moonshotai/kimi-k2.7-code:exacto
+  #   api_key_env: OPENROUTER_API_KEY
+  #   fallbacks: [minimax/minimax-m3, z-ai/glm-5.2]
+  #   max_price: 5.0
+  #   context_window: 262144
+  #   reasoning: false
+  #   input: [text]
+  #   role_label: "OpenRouter executor (paid floor)"
+  #   pi_name: "Exec (OR paid)"
+  #   free: false
+  #   free_eligible: true
