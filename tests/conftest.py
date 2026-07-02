@@ -18,7 +18,7 @@ def gr():
 
 @pytest.fixture
 def roster():
-    """Minimal roster: one local model, one judge, no cloud."""
+    """Minimal roster: one local model, no judges, no cloud."""
     return {
         "runtime": {"proxy_to_runtime_base": "http://localhost:8081/v1"},
         "proxy": {"base_url": "http://localhost:4000/v1"},
