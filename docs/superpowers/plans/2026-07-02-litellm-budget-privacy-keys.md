@@ -45,12 +45,16 @@ allowed; the `public` key can call `exec-free`. Key values are written to gitign
 Re-run `provision` whenever `models.yaml` tiers change (e.g. after enabling paid cloud) — the
 allowlists recompute from the current tags.
 
-## Follow-on 2 — wire workflows to their keys
+## Follow-on 2 — wire workflows to their keys — DONE (2026-07-02, hermes-dispatch `bfb06d8`)
 
-Point each consumer at its own key instead of the master key:
-- **ralph** — `RALPH_*` env / `lib/common.sh` provider key.
-- **hermes-dispatch** — per-agent or per-pipeline key (the pipeline run seeds it).
-Store minted key values where the workflow reads them (not in git).
+pi-loop consumes a per-workflow key: a pi-loop step's `llm_key_env` field (e.g. `KEY_PUBLIC`,
+`KEY_VAULT_PRIVATE`) names a var in the keys file (`LLM_KEYS_ENV`, default
+`otel-local-ai/.keys.env`); `pipeline_pi_loop` resolves it and passes it to the worker as
+`PI_LLM_KEY`, which `bin/pi-implement.sh` forwards to pi via `--api-key`. Without it, pi falls back
+to the master key. `coding-loop.json`/`coding-loop-seeded.json` set `llm_key_env: KEY_PUBLIC`. A
+private/vault pipeline sets `llm_key_env: KEY_VAULT_PRIVATE` + a local `model` (the vault-private key
+rejects cloud aliases — enforced by LiteLLM). Tested offline (fake pi captures `--api-key`; the loop
+resolves the named key). ralph retired (WS5) so no ralph wiring needed.
 
 ## Note on current priority
 
