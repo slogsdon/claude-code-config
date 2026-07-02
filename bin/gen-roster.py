@@ -142,6 +142,12 @@ def build_model_list_inner(roster: dict) -> str:
         for j in judges:
             out.append(litellm_entry(j["alias"], j.get("litellm_think"), api_base))
 
+    cloud = roster.get("cloud_models") or []
+    if cloud:
+        out.append("  # cloud tier (external providers; not llama-swap-backed)")
+        for m in cloud:
+            out.append(cloud_litellm_entry(m))
+
     return "\n".join(out) + "\n"
 
 

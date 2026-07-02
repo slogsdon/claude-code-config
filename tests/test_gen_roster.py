@@ -46,3 +46,15 @@ def test_cloud_entry_max_price_zero_is_emitted(gr):
     out = gr.cloud_litellm_entry(m)
     assert "      extra_body:" in out
     assert "          max_price: { completion: 0 }" in out
+
+
+def test_cloud_models_appear_after_locals(gr, roster):
+    roster["cloud_models"] = [
+        {"alias": "exec-cloud", "slug": "openrouter/moonshotai/kimi-k2.7:exacto",
+         "api_key_env": "OPENROUTER_API_KEY", "fallbacks": ["minimax/minimax-m3"]}
+    ]
+    out = gr.build_model_list_inner(roster)
+    assert "      model: openai/code" in out          # local still present
+    assert "  - model_name: exec-cloud" in out         # cloud present
+    assert "      api_key: os.environ/OPENROUTER_API_KEY" in out
+    assert out.index("code") < out.index("exec-cloud")  # cloud after locals
