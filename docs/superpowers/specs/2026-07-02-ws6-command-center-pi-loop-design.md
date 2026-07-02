@@ -1,7 +1,10 @@
 # WS6 — Command-Center Exposure of the pi-loop
 
 - **Date:** 2026-07-02
-- **Status:** design (pending implementation plan)
+- **Status:** DONE 2026-07-02 (merged: hermes-dispatch `ca3bac8`, command-center `ed34cd0`). Backend
+  data-path verified live (real pi-loop markers → `server.py` frames + `backlog_progress`); 30 bash +
+  63 python tests green. Remaining manual: browser-visual UI verification (needs dispatch server
+  restart on the merged main + a PWA pass).
 - **Parent spec:** `2026-07-02-multi-model-agentic-workflow-design.md` §5 (WS6), `2026-07-02-ws5-ralph-dispatch-convergence-design.md`
 - **Scope (user-selected):** observability (backlog progress + halt reason) **+ interactive resume**
 
