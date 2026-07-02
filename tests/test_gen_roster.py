@@ -1,4 +1,7 @@
 # tests/test_gen_roster.py
+import json
+
+
 def test_local_model_list_unchanged(gr, roster):
     out = gr.build_model_list_inner(roster)
     assert "model_list:" in out
@@ -69,3 +72,19 @@ def test_llamaswap_ignores_cloud(gr, roster):
     cfg = gr.build_llamaswap_config(roster)
     assert "exec-cloud" not in cfg
     assert "qwen3-coder" in cfg  # local model still emitted
+
+
+def test_pi_models_json_includes_cloud(gr, roster):
+    roster["cloud_models"] = [
+        {"alias": "exec-cloud", "slug": "openrouter/x/y", "api_key_env": "OPENROUTER_API_KEY",
+         "context_window": 262144, "reasoning": False, "input": ["text"], "role_label": "Cloud exec"},
+        {"alias": "exec-free", "slug": "openrouter/z:free", "api_key_env": "OPENROUTER_API_KEY",
+         "context_window": 131072, "pi": False},  # pi:false -> excluded
+    ]
+    data = json.loads(gr.build_models_json(roster))
+    ids = [m["id"] for m in data["providers"]["litellm"]["models"]]
+    assert "code" in ids           # local still present
+    assert "exec-cloud" in ids     # cloud with pi enabled present
+    assert "exec-free" not in ids  # pi:false excluded
+    cloud = next(m for m in data["providers"]["litellm"]["models"] if m["id"] == "exec-cloud")
+    assert cloud["contextWindow"] == 262144

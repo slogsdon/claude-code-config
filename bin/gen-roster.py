@@ -273,6 +273,18 @@ def build_models_json(roster: dict) -> str:
             entry["thinkingLevelMap"] = pi["thinking_level_map"]
         models.append(entry)
 
+    for m in roster.get("cloud_models", []):
+        if m.get("pi") is False:
+            continue
+        models.append({
+            "id": m["alias"],
+            "name": m.get("pi_name", m.get("role_label", m["alias"])),
+            "reasoning": bool(m.get("reasoning", False)),
+            "input": list(m.get("input", ["text"])),
+            "contextWindow": m["context_window"],
+            "maxTokens": m.get("pi_max_tokens", PI_THINKING_DEFAULT_MAX_TOKENS),
+        })
+
     data = {
         "_comment": pi["comment"],
         "workflows": pi["workflows"],
