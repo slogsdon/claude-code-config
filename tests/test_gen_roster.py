@@ -37,3 +37,12 @@ def test_cloud_entry_fallbacks_and_price(gr):
     assert "          - z-ai/glm-5.2" in out
     assert "        provider:" in out
     assert "          max_price: { completion: 5.0 }" in out
+
+
+def test_cloud_entry_max_price_zero_is_emitted(gr):
+    # max_price: 0 must NOT be swallowed by a truthiness check (guarded by `is not None`)
+    m = {"alias": "exec-free", "slug": "openrouter/z:free",
+         "api_key_env": "OPENROUTER_API_KEY", "max_price": 0}
+    out = gr.cloud_litellm_entry(m)
+    assert "      extra_body:" in out
+    assert "          max_price: { completion: 0 }" in out
