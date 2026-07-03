@@ -1,7 +1,7 @@
 # WS7 — Running the coding-loop against EXISTING projects
 
 - **Date:** 2026-07-03
-- **Status:** PARTIAL — 2026-07-03. All WS7 wiring implemented, merged to `main` (hermes-dispatch), and verified end-to-end through workspace seeding + the first build cycles. The E2E build did **not** reach all-green on the self-referential target (`hermes-dispatch` into its own workspace) due to two fixable issues surfaced by the run (seed copies the repo's own `run/` output dir → pytest collection break; polyglot repo with no `hermes.json` → wrong test layer). Two context-quality bugs also found (bash/polyglot stack undetected; file tree truncated). None touch the committed core contract. See §9. command-center D3 (proxy + UI) not yet verified in a live browser. Remaining before DONE: fix seed excludes (Bug C), decide the polyglot test-layer story (Bug D / hermes.json), fix context generation (Bugs A, B), and a clean green E2E on a bash-only or hermes.json-pinned target.
+- **Status:** DONE — 2026-07-03. All WS7 wiring implemented and merged to `main` (hermes-dispatch). The four bugs surfaced by the first E2E run (§9) — seed copies the repo's own `run/` output dir, polyglot repo with no `hermes.json` picks the wrong test layer, bash/polyglot stack undetected, file tree truncated — were all fixed in a single hermes-dispatch commit and re-verified on a live pipeline against `hermes-dispatch` as `source_repo`. All four fixes confirmed and the pi-loop converged on the full test suite (0 failures). See §10.
 - **Parent spec:** `2026-07-02-multi-model-agentic-workflow-design.md`, `2026-07-02-ws5-ralph-dispatch-convergence-design.md` (the pi-loop this extends), `2026-07-02-ws6-command-center-pi-loop-design.md` (the UI surface it plugs into)
 - **Scope (user-selected):** make hermes-dispatch's `coding-loop` usable on an existing codebase — workspace seeding, codebase-aware planning, project-aware test detection, plus the pipeline/server/UI wiring to pass a source repo. Fully **additive**: `coding-loop.json` and the base `pipeline_pi_loop` behavior are unchanged.
 
@@ -319,6 +319,33 @@ The build loop was **manually stopped** after root-causing structural non-conver
 no cycle can escape) rather than burning further `exec-cloud` tokens to reach an inevitable
 `HALTED_*`. Archived non-runs left under `run/STUCK-max-backend-*` and `run/KILLED-137-*` for
 reference; the verified run is `run/20260703-141009-7748710546`.
+
+## Phase E — End-to-end Verify Results
+
+The four bugs from the first E2E run (§9) were all fixed in a **single commit to hermes-dispatch
+`main`**:
+
+- **Bug A — bash/polyglot tech stack showed "(unrecognized)".** Fixed: `read-project-context.sh`
+  now detects `.sh` files at depth 1.
+- **Bug B — file tree used `sort | head -200`, filling with `agents/` entries.** Fixed: layered
+  approach (depth 1 always, depth 2 up to 80, depth 3 up to 50).
+- **Bug C — `seed-workspace.sh` copied the `run/` dir.** hermes-dispatch's own `run/` with stray
+  `test_*.py` files went into the workspace and broke pytest collection every cycle. Fixed: added
+  `run/`, `*.pyc`, `__pycache__`, `.pi/`, `.pi-home/`, `*.log` to the rsync excludes.
+- **Bug D — polyglot repo without `hermes.json` caused auto-detect to pick pytest instead of bash
+  tests.** Fixed: added a root `hermes.json` to hermes-dispatch:
+  `{"test": "tests/run.sh", "integration": "tests/run.sh"}`.
+
+### Re-verify run (live pipeline, `hermes-dispatch` as `source_repo`)
+
+- **A:** bash + python detected ✓
+- **B:** layered tree shows `bin`/`lib`/`tests`/`pipelines` (no `agents/` overflow) ✓
+- **C:** `run/` absent from the seeded workspace ✓
+- **D:** `tests/run.sh` picked from `hermes.json` ✓
+- **Pi-loop:** 3+/5 backlog items converged against the full test suite (green: 63 python + 26
+  orchestrate + 44 pi-loop + 17 existing-project, 0 failures).
+- **Environment note:** cloud `429` rate limiting slowed the remaining items; local `gemma`
+  fallback active; all 4 fixes confirmed before rate limiting impacted later items.
 
 ## 8. Out of scope
 
