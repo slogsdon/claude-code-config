@@ -342,10 +342,17 @@ The four bugs from the first E2E run (§9) were all fixed in a **single commit t
 - **B:** layered tree shows `bin`/`lib`/`tests`/`pipelines` (no `agents/` overflow) ✓
 - **C:** `run/` absent from the seeded workspace ✓
 - **D:** `tests/run.sh` picked from `hermes.json` ✓
-- **Pi-loop:** 3+/5 backlog items converged against the full test suite (green: 63 python + 26
-  orchestrate + 44 pi-loop + 17 existing-project, 0 failures).
-- **Environment note:** cloud `429` rate limiting slowed the remaining items; local `gemma`
-  fallback active; all 4 fixes confirmed before rate limiting impacted later items.
+- **Pi-loop:** **5/5 backlog items converged — run COMPLETE, status `complete`, exit 0**
+  (`run/20260703-150422-1265711807`). The worker added `--dry-run` parsing to
+  `bin/extract-backlog.sh` and a real bash test in `tests/test_project.sh`; the seeded workspace
+  suite went from 17→**22 passed, 0 failed** (63 python + 26 orchestrate + 44 pi-loop + 22
+  existing-project). `--dry-run` verified live: prints the checklist, exits 0, writes nothing.
+- **Environment note:** cloud `429` rate limiting throttled every model turn down the
+  `exec-cloud → exec-free → code` fallback chain. Item 4 stalled ~5+ min waiting on a
+  `code → qwen3-coder:30b` (~20 GB) local swap that llama-swap did not surface, but it recovered
+  and the loop finished green. Planner reused the `AGENT_HERMES_MODEL=plan-frontier` workaround
+  (the `max`→local hang from §9 recurred). Neither is a WS7 defect — both are model-backend
+  availability issues (see `otel-local-ai/litellm` routing for `max`/`code`).
 
 ## 8. Out of scope
 
