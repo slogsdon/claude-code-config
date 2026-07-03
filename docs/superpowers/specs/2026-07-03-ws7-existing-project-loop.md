@@ -1,7 +1,7 @@
 # WS7 — Running the coding-loop against EXISTING projects
 
 - **Date:** 2026-07-03
-- **Status:** DRAFT (not started)
+- **Status:** PARTIAL — 2026-07-03. All WS7 wiring implemented, merged to `main` (hermes-dispatch), and verified end-to-end through workspace seeding + the first build cycles. The E2E build did **not** reach all-green on the self-referential target (`hermes-dispatch` into its own workspace) due to two fixable issues surfaced by the run (seed copies the repo's own `run/` output dir → pytest collection break; polyglot repo with no `hermes.json` → wrong test layer). Two context-quality bugs also found (bash/polyglot stack undetected; file tree truncated). None touch the committed core contract. See §9. command-center D3 (proxy + UI) not yet verified in a live browser. Remaining before DONE: fix seed excludes (Bug C), decide the polyglot test-layer story (Bug D / hermes.json), fix context generation (Bugs A, B), and a clean green E2E on a bash-only or hermes.json-pinned target.
 - **Parent spec:** `2026-07-02-multi-model-agentic-workflow-design.md`, `2026-07-02-ws5-ralph-dispatch-convergence-design.md` (the pi-loop this extends), `2026-07-02-ws6-command-center-pi-loop-design.md` (the UI surface it plugs into)
 - **Scope (user-selected):** make hermes-dispatch's `coding-loop` usable on an existing codebase — workspace seeding, codebase-aware planning, project-aware test detection, plus the pipeline/server/UI wiring to pass a source repo. Fully **additive**: `coding-loop.json` and the base `pipeline_pi_loop` behavior are unchanged.
 
@@ -233,6 +233,92 @@ variant would set `KEY_VAULT_PRIVATE` + a local model, out of scope here.
   new variable in their environment — noted so a future tool author isn't surprised.
 - **Test-runner already detects stacks:** WS7's contribution here is the `hermes.json` *override*,
   not detection from zero (the original WS7 framing overstated the gap). Spec §3.4 reflects reality.
+
+## 9. End-to-end verification (E1/E2) — 2026-07-03
+
+Ran `existing-project-loop` against `~/Code/hermes-dispatch` itself, goal: *"add a `--dry-run`
+flag to extract-backlog.sh that prints what would be extracted without outputting, with a test in
+tests/test_project.sh"*. Invocation (source repo rides `SOURCE_REPO`, not a CLI flag):
+`SOURCE_REPO=~/Code/hermes-dispatch bin/run-pipeline.sh existing-project-loop "<goal>"`, then
+`bin/run-pipeline.sh --resume <run-id>` to approve the gate.
+
+### What worked (verified)
+
+- **LiteLLM** up on `:4000`; `exec-cloud` / `exec-free` / `plan-frontier` all respond.
+- **`source_repo` threading:** `SOURCE_REPO` env → `run-pipeline.sh` → `state.json.source_repo`
+  (confirmed `"source_repo":"/Users/shane/Code/hermes-dispatch"` in state.json).
+- **context tool step + `RUN_DIR` export:** `read-project-context.sh` found `state.json`, emitted a
+  well-formed `## Project context` (README embedded, file tree, greenfield fallback all fire).
+- **plan step:** consumed the `["context","input"]` array reads; correctly treated
+  `extract-backlog.sh` as an **edit** (create→edit reframing from the SOUL rule held); emitted a
+  clean 5-item `- [ ]` backlog. `extract-backlog.sh` distilled it into `backlog` with no stray lines.
+- **gate:** halted at `spec-approval`; `--resume <run-id>` approved and continued (WS5/6 resume
+  semantics intact).
+- **workspace seeding (the headline WS7 mechanic):** `⤵ build: seeding workspace from …` fired
+  under the empty-workspace guard; the real `bin/extract-backlog.sh` was present in
+  `run/<id>/workspace/bin/` **before** the first pi cycle.
+- **pi-loop:** drove `exec-cloud`, edited the workspace, and re-verified with the test-runner each
+  cycle. The worker implemented the feature competently (correct `--dry-run` parsing + a real bash
+  test with strong assertions in `tests/test_project.sh`).
+
+### Bugs found (build did NOT converge)
+
+- **Bug C — seed copies the source repo's own `run/` output dir (blocker).** `bin/seed-workspace.sh`
+  `EXCLUDES=(.git node_modules vendor .venv __pycache__)` omits `run/` (and generic build/output
+  dirs). Seeding `hermes-dispatch` into its own workspace copied `run/` — which holds prior pipeline
+  runs' workspaces with stray `test_mathx.py` files — so `python3 -m pytest -q` fails at
+  **collection** (`import file mismatch`, duplicate test basenames) on *every* cycle, **independent
+  of anything pi edits**. The pi-loop's ground truth can never green ⇒ structural non-convergence.
+  The self-referential target triggers it, but any project whose output dir contains test files
+  hits it. **Fix:** add `run/ dist/ build/ target/ .next/ coverage/ .pytest_cache/ .ruff_cache/` to
+  `EXCLUDES` (or exclude the dispatch run root explicitly).
+
+- **Bug D — polyglot test-layer mismatch, no `hermes.json` override present.** The goal is a bash
+  script + bash test (`tests/test_project.sh`), but auto-detection picks `python3 -m pytest -q`
+  (repo has Python dispatch tests). pytest never runs the bash test, so even a correct bash
+  implementation can't green. This is exactly the case WS7's `hermes.json` `.test` override (C1)
+  exists for — but hermes-dispatch ships no root `hermes.json`, so it defaults to pytest. Validates
+  the *need* for C1. **Fix options:** pin the target with `hermes.json {"test":"tests/run.sh"}`
+  before an E2E; and/or have `read-project-context.sh` warn when a repo has >1 stack and no
+  `hermes.json`.
+
+- **Bug A — bash/polyglot tech-stack undetected.** `read-project-context.sh` only probes
+  `package.json`/`pyproject.toml`/`setup.py`/`composer.json`/`go.mod`/`Makefile`. hermes-dispatch
+  (bash + python, none of those at root) rendered `## Tech stack\n(unrecognized)` — E1 predicted
+  "make/bash". **Fix:** detect bash (`bin/*.sh`, root `*.sh`, `setup.sh`) and python-via-tests
+  (`tests/`, `pytest.ini`, `.pytest_cache`, `conftest.py`).
+
+- **Bug B — file tree truncated at 200 sorted entries (starves the planner).** The tree is
+  `find … | sort | head -200`. Alphabetical sort means the dominant `agents/` dir fills all 200
+  lines; `bin/`, `lib/`, `tests/`, `pipelines/` — including the target `bin/extract-backlog.sh`
+  (position 260) — are cut off. Consequence: the planner never saw the target file, **guessed its
+  path** ("assumed location — verify in `bin/` or project root") **and hallucinated its interface**
+  (positional `input.md output.md` args vs the real stdin→stdout `grep`). **Fix:** breadth-first
+  with per-dir caps, or list top-level dirs + shallow file counts instead of a flat sorted head.
+
+- **Secondary — context truncation induced a backward-incompatible rewrite.** Because of Bug B the
+  plan pinned the wrong interface, and the pi worker faithfully **rewrote `extract-backlog.sh` to
+  positional file args, destroying the original stdin→stdout contract** — which the pipeline's own
+  `backlog` step depends on (it pipes `spec` to `extract-backlog.sh` via stdin). Seeding + a thin
+  tree can thus drive backward-incompatible rewrites of existing files. **Mitigation:** the planner
+  should mark inferred interfaces `(assumed — verify)` (it did) *and* the SOUL "create→edit" rule
+  should extend to "preserve an existing file's public interface unless the goal says otherwise."
+
+### Environment note (not a WS7 defect)
+
+The `impl-planner` default alias `max` (local `qwen3.6:35b-mlx`) was **unavailable**: LiteLLM maps
+`max` → llama-swap `:8081`, which serves no `max` model (`ornith-35b`, `gemma-4-26b`, … present).
+Requests hung ~90 s with no tokens; the planner sat at 0 bytes for ~25 min. Worked around with
+`AGENT_HERMES_MODEL=plan-frontier` (cloud) to exercise the pipeline. Recommend verifying the `max`
+alias in `otel-local-ai/litellm/config.yaml` and/or a cloud fallback when the local reasoner is
+unreachable.
+
+### Disposition
+
+The build loop was **manually stopped** after root-causing structural non-convergence (Bug C, which
+no cycle can escape) rather than burning further `exec-cloud` tokens to reach an inevitable
+`HALTED_*`. Archived non-runs left under `run/STUCK-max-backend-*` and `run/KILLED-137-*` for
+reference; the verified run is `run/20260703-141009-7748710546`.
 
 ## 8. Out of scope
 
