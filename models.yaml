@@ -201,6 +201,7 @@ models:
     context_window: 131072  # bumped 64K -> 128K 2026-05-24 — MoE absorbs KV growth without losing tps
     ollama_max: 262144
     input: [text, image]
+    extra_flags: "--chat-template-file /Users/shane/.config/llama-swap/templates/chat_template.jinja"  # froggeric fixed qwen3.5/3.6 template (v21) — also applies to reasoning/*-judge (shared id)
     pi_name: Max tier — best local quality / long context (qwen3.6 35B MoE — vision-capable)
     pi_thinking_map: true
     hermes_context_length: 131072
@@ -451,7 +452,7 @@ models:
     ollama_max: 65536
     input: [text]
     litellm_think: false
-    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --cache-type-k q8_0 --cache-type-v q8_0 --ctx-checkpoints 8"
+    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --cache-type-k q8_0 --cache-type-v q8_0 --ctx-checkpoints 8 --chat-template-file /Users/shane/.config/llama-swap/templates/chat_template.jinja"  # froggeric fixed qwen3.6 template (v21)
     pi_name: Dense 27B — MTP speculative (qwen3.6 27B, ~6.5 tok/s)
     hermes_context_length: 65536  # exposed to Hermes 2026-06-20 (real 64K meets the floor) for devrel-sample + dev-workflow escalation
     notes: |
@@ -526,7 +527,7 @@ models:
     context_window: 65536   # 64K served; native train ctx is 256K, YaRN ceiling 1M (see notes)
     ollama_max: 1048576
     input: [text]    # vision-capable (mmproj exists in repo) but mmproj not downloaded/loaded — text-only as served
-    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --ctx-checkpoints 8 --rope-scaling none --temp 0.6 --top-p 0.95 --top-k 20 --repeat-penalty 1.05"
+    extra_flags: "--spec-type draft-mtp --spec-draft-n-max 1 --ctx-checkpoints 8 --rope-scaling none --temp 0.6 --top-p 0.95 --top-k 20 --repeat-penalty 1.05 --chat-template-file /Users/shane/.config/llama-swap/templates/chat_template.jinja"  # froggeric fixed qwen3.5 template (v21); CAVEAT: card modified base template for train/infer — verify tool-calling
     pi_name: Eval — Qwythos 9B Claude-Mythos reasoning (qwen3.5 9B Q6_K +MTP, ~16 tok/s)
     hermes_context_length: 65536
     # litellm_think omitted: it's a reasoning model — leave thinking enabled
