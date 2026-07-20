@@ -68,7 +68,7 @@ memory-loader turns on automatically every time you open it. You capture ideas
 (including from your phone, if you point the Obsidian mobile app at the same
 folder), and the agent triages and files them on your say-so.
 
-Repo: **github.com/slogsdon/second-brain-agent**
+Repo: **[github.com/slogsdon/second-brain-agent](https://github.com/slogsdon/second-brain-agent)**
 
 ### The Build Kit — `loop-and-gate-build-kit`
 
@@ -89,7 +89,7 @@ build loop, so you also install two free public plugins that provide the loop
 itself (`superpowers` and `agent-skills`). It works with or without the Foundation,
 but it's better with it.
 
-Repo: **github.com/slogsdon/loop-and-gate-build-kit**
+Repo: **[github.com/slogsdon/loop-and-gate-build-kit](https://github.com/slogsdon/loop-and-gate-build-kit)**
 
 ### The Grow Kit — `loop-and-gate-grow-kit`
 
@@ -106,7 +106,7 @@ work (`skills-design` and `skills-writing`), and optionally a free-tier schedule
 You can post everything by hand if you'd rather — the gate is the decision, not the
 tool.
 
-Repo: **github.com/slogsdon/loop-and-gate-grow-kit**
+Repo: **[github.com/slogsdon/loop-and-gate-grow-kit](https://github.com/slogsdon/loop-and-gate-grow-kit)**
 
 ### The Accountability Kit — `loop-and-gate-accountability-kit`
 
@@ -123,7 +123,7 @@ alone, no extra plugins, no account, no local model. It keeps its own plain-text
 state by default, and if you already have an Obsidian vault (from the Foundation or
 otherwise), it uses that instead.
 
-Repo: **github.com/slogsdon/loop-and-gate-accountability-kit**
+Repo: **[github.com/slogsdon/loop-and-gate-accountability-kit](https://github.com/slogsdon/loop-and-gate-accountability-kit)**
 
 ---
 
@@ -156,7 +156,7 @@ setup. Budget about 20 minutes, most of it one-time.
 
 ### Step 1 — get a paid Claude plan
 
-Go to **claude.ai** and make sure you're on **Pro** or **Max**, not the free plan.
+Go to **[claude.ai](https://claude.ai)** and make sure you're on **Pro** or **Max**, not the free plan.
 This is the step people miss, and nothing here works without it. Pro is the usual
 starting point.
 
@@ -168,7 +168,7 @@ A normal app you double-click, no terminal required.
 - **Windows:** download the `.exe` and run it. If it asks you to install **Git**
   first, say yes, then reopen the app.
 
-Get the installers from Anthropic's download page (**code.claude.com/docs**). Open
+Get the installers from Anthropic's download page (**[code.claude.com/docs](https://code.claude.com/docs)**). Open
 the app, sign in (a browser window opens for a second), and click the **Code** tab.
 
 ### Step 3 — set up the Foundation first
@@ -176,7 +176,7 @@ the app, sign in (a browser window opens for a second), and click the **Code** t
 The Foundation is the base everything else builds on, so start there.
 
 1. On the Foundation repo's GitHub page
-   (**github.com/slogsdon/second-brain-agent**), click the green **Code** button,
+   ([github.com/slogsdon/second-brain-agent](https://github.com/slogsdon/second-brain-agent)), click the green **Code** button,
    then **Download ZIP**. Unzip it — you'll get a `second-brain-agent` folder. Move
    it somewhere you'll find it, like Documents.
 2. In the Claude Code Desktop app: **File → Open folder**, and pick that folder.
@@ -306,11 +306,11 @@ voice, and stay honest about whether you actually did it.
 ## Reference
 
 - **The story behind it** — "Building on the Margins" is the essay this whole system
-  came out of: https://shane.logsdon.io/articles/strategic-insights/building-on-the-margins/
-- **Foundation** — github.com/slogsdon/second-brain-agent
-- **Build Kit** — github.com/slogsdon/loop-and-gate-build-kit
-- **Grow Kit** — github.com/slogsdon/loop-and-gate-grow-kit
-- **Accountability Kit** — github.com/slogsdon/loop-and-gate-accountability-kit
+  came out of: [Building on the Margins](https://shane.logsdon.io/articles/strategic-insights/building-on-the-margins/)
+- **Foundation** — [github.com/slogsdon/second-brain-agent](https://github.com/slogsdon/second-brain-agent)
+- **Build Kit** — [github.com/slogsdon/loop-and-gate-build-kit](https://github.com/slogsdon/loop-and-gate-build-kit)
+- **Grow Kit** — [github.com/slogsdon/loop-and-gate-grow-kit](https://github.com/slogsdon/loop-and-gate-grow-kit)
+- **Accountability Kit** — [github.com/slogsdon/loop-and-gate-accountability-kit](https://github.com/slogsdon/loop-and-gate-accountability-kit)
 
 Every repo has its own `GETTING-STARTED.md` (a no-terminal walkthrough) and a
 `reference/` folder with the gates in plain language. This page is the map; those
