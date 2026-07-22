@@ -4,9 +4,6 @@
 [submodule "plugins/shane/skills-vault-knowledge"]
 	path = plugins/shane/skills-vault-knowledge
 	url = ssh://git@github.com/slogsdon/skills-vault-knowledge.git
-[submodule "plugins/shane/skills-vault-rituals"]
-	path = plugins/shane/skills-vault-rituals
-	url = ssh://git@github.com/slogsdon/skills-vault-rituals.git
 [submodule "plugins/shane/skills-writing"]
 	path = plugins/shane/skills-writing
 	url = ssh://git@github.com/slogsdon/skills-writing.git
