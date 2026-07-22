@@ -19,11 +19,6 @@
       "description": "Vault knowledge exploration and synthesis — obsidian access, backlinks, and 22 knowledge-work skills"
     },
     {
-      "name": "skills-vault-rituals",
-      "source": { "source": "github", "repo": "slogsdon/skills-vault-rituals" },
-      "description": "Daily and session ritual skills — morning, eod, plan-tomorrow, log, inbox-process"
-    },
-    {
       "name": "skills-writing",
       "source": { "source": "github", "repo": "slogsdon/skills-writing" },
       "description": "Writing quality and style skills — humanize and ms-style-pass"
